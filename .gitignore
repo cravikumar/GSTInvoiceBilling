@@ -187,3 +187,10 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+*.isproj
+*.dll
+/GST_InvoiceApplication/packages
+/GST_InvoiceApplication/Invoice.Installer
+/GST_InvoiceApplication/Invoice.DataAccess/SqlServerTypes
+/GST_InvoiceApplication/GST_InvoiceApplication/SqlServerTypes
+/GST_InvoiceApplication/GST.ico
