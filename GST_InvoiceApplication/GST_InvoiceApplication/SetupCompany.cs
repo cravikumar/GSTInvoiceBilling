@@ -26,10 +26,10 @@ namespace GST_InvoiceApplication
         public SetupCompany()
         {
             progressBar1 = new ProgressBar();
-            
+
             progressBar1.Minimum = 0;
             progressBar1.Minimum = 100;
-            
+
 
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
@@ -161,14 +161,14 @@ namespace GST_InvoiceApplication
                 return;
             }
 
-            string sql = "Delete * from InvoiceProductDetails where SaleId in (select Saleid from SalesInvoiceDetail where CompanyId = "+textBox11.Text+")";
+            string sql = "Delete * from InvoiceProductDetails where SaleId in (select Saleid from SalesInvoiceDetail where CompanyId = " + textBox11.Text + ")";
             Functions.RunExecuteNonQuery(sql);
             sql = "Delete * from SalesInvoiceDetail where CompanyId = " + textBox11.Text;
             Functions.RunExecuteNonQuery(sql);
             sql = "update CompanyData set BillNo = 0 where Id = " + textBox11.Text;
             Functions.RunExecuteNonQuery(sql);
             MessageBox.Show("Bills Deleted, Next bill start with 0 now.");
-            
+
         }
 
         private string downloadLatestFile()
@@ -177,7 +177,7 @@ namespace GST_InvoiceApplication
             string fileId = "";
             try
             {
-                
+
                 UserCredential credential;
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                           new ClientSecrets { ClientId = "49588927530-r4nbmm11rvmcftdlugihs46m3klss9p4.apps.googleusercontent.com", ClientSecret = "6CeiaTu3pgIH81DAyM_P3K9z" },
@@ -196,37 +196,37 @@ namespace GST_InvoiceApplication
                 List<File> result = new List<File>();
                 FilesResource.ListRequest request = service.Files.List();
 
-                 FileList files = request.Execute();
+                FileList files = request.Execute();
 
-                 foreach (var file in files.Files)
-                 {
-                     if (file.Name.Contains("Invoice"))
-                     {
-                         if (String.IsNullOrEmpty(currentFile))
-                         {
-                             currentFile = file.Name;
-                             fileId = file.Id;
-                         }
+                foreach (var file in files.Files)
+                {
+                    if (file.Name.Contains("Invoice"))
+                    {
+                        if (String.IsNullOrEmpty(currentFile))
+                        {
+                            currentFile = file.Name;
+                            fileId = file.Id;
+                        }
 
-                         else
-                         {
-                             string currentcreated = file.Name.Replace("InvoiceBackup", "").Replace(".mdb", "");//"InvoiceBackup" + DateTime.Now.ToString("ddMMyyyyhhmmsstt") + ".mdb",
-                             string existing = currentFile.Replace("InvoiceBackup", "").Replace(".mdb", "");//"InvoiceBackup" + DateTime.Now.ToString("ddMMyyyyhhmmsstt") + ".mdb",
+                        else
+                        {
+                            string currentcreated = file.Name.Replace("InvoiceBackup", "").Replace(".mdb", "");//"InvoiceBackup" + DateTime.Now.ToString("ddMMyyyyhhmmsstt") + ".mdb",
+                            string existing = currentFile.Replace("InvoiceBackup", "").Replace(".mdb", "");//"InvoiceBackup" + DateTime.Now.ToString("ddMMyyyyhhmmsstt") + ".mdb",
 
-                             DateTime currentCreate = DateTime.ParseExact(currentcreated, "ddMMyyyyhhmmsstt", System.Globalization.CultureInfo.InvariantCulture);
-                             DateTime existingCreate = DateTime.ParseExact(existing, "ddMMyyyyhhmmsstt", System.Globalization.CultureInfo.InvariantCulture);
+                            DateTime currentCreate = DateTime.ParseExact(currentcreated, "ddMMyyyyhhmmsstt", System.Globalization.CultureInfo.InvariantCulture);
+                            DateTime existingCreate = DateTime.ParseExact(existing, "ddMMyyyyhhmmsstt", System.Globalization.CultureInfo.InvariantCulture);
 
-                             if (currentCreate > existingCreate)
-                             {
-                                 currentFile = file.Name;
-                                 fileId = file.Id;
-                             }
+                            if (currentCreate > existingCreate)
+                            {
+                                currentFile = file.Name;
+                                fileId = file.Id;
+                            }
 
-                         }
- 
-                     }
-                 }
-                
+                        }
+
+                    }
+                }
+
                 //do
                 //{
                 //    try
@@ -244,7 +244,7 @@ namespace GST_InvoiceApplication
                 //} while (!String.IsNullOrEmpty(request.PageToken));
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("An Error Occured..!!");
             }
@@ -283,12 +283,12 @@ namespace GST_InvoiceApplication
             }
             catch { }
             return true;
- 
+
         }
 
         private bool doDataBackup()
         {
-            
+
             //downloadFileById(downloadLatestFile());
 
             //return true;
@@ -298,7 +298,7 @@ namespace GST_InvoiceApplication
             {
                 UserCredential credential;
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                          new ClientSecrets { ClientId = "49588927530-r4nbmm11rvmcftdlugihs46m3klss9p4.apps.googleusercontent.com", ClientSecret = "6CeiaTu3pgIH81DAyM_P3K9z" },
+                          new ClientSecrets { ClientId = System.Configuration.ConfigurationManager.AppSettings["DriveClientId"].ToString(), ClientSecret = System.Configuration.ConfigurationManager.AppSettings["DriveClientSecret"].ToString() },
                           new[] { DriveService.Scope.Drive,
                                   DriveService.Scope.DriveFile },
                           "user",
@@ -310,6 +310,7 @@ namespace GST_InvoiceApplication
                     HttpClientInitializer = credential,
                     ApplicationName = "Drive API Sample",
                 });
+                driveService.HttpClient.Timeout = TimeSpan.FromMinutes(20);
 
                 //string mimeType = MimeMapping.GetMimeMapping(fileName);
 
@@ -329,6 +330,7 @@ namespace GST_InvoiceApplication
 
                     request.ProgressChanged += Upload_ProgressChanged;
                     request.Fields = "id";
+
                     request.Upload();
                 }
                 var file = request.ResponseBody;
@@ -337,7 +339,24 @@ namespace GST_InvoiceApplication
             }
             catch (Exception ex)
             {
+                string filePath = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString()+"\\Error.txt";
 
+
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                {
+                    writer.WriteLine("-----------------------------------------------------------------------------");
+                    writer.WriteLine("Date : " + DateTime.Now.ToString());
+                    writer.WriteLine();
+
+                    while (ex != null)
+                    {
+                        writer.WriteLine(ex.GetType().FullName);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+
+                        ex = ex.InnerException;
+                    }
+                }
             }
 
             if (fileID.Length > 0)

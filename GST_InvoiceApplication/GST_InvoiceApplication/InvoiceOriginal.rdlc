@@ -1431,7 +1431,7 @@
       </RightBorder>
     </Style>
   </Body>
-  <Width>7.41073in</Width>
+  <Width>10.08208in</Width>
   <Page>
     <PageHeader>
       <Height>0.22386in</Height>
@@ -1484,7 +1484,7 @@
       </Style>
     </PageHeader>
     <PageFooter>
-      <Height>2.356in</Height>
+      <Height>3.44858in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -2768,11 +2768,11 @@
         <Image Name="Image5">
           <Source>Embedded</Source>
           <Value>sign2</Value>
-          <Sizing>Fit</Sizing>
+          <Sizing>FitProportional</Sizing>
           <Top>1.7715in</Top>
           <Left>3.03in</Left>
-          <Height>0.23511in</Height>
-          <Width>1.2425in</Width>
+          <Height>0.58085cm</Height>
+          <Width>2.60522cm</Width>
           <ZIndex>17</ZIndex>
           <Style>
             <Border>
