@@ -145,18 +145,22 @@ namespace GST_InvoiceApplication
             DataSet ds = Functions.RunSelectSql(sql);
             System.Data.DataTable dt = ds.Tables[0];
 
-            //System.Data.DataTable dtCloned = dt.Clone();
-            //dtCloned.Columns[2].DataType = typeof(Int32);
-            //foreach (DataRow row in dt.Rows)
-            //{
-            //    dtCloned.ImportRow(row);
-            //}
-            //dataGridView1.DataSource = dtCloned;
+            if (!checkBox1.Checked)
+            {
+                System.Data.DataTable dtCloned = dt.Clone();
+                dtCloned.Columns[2].DataType = typeof(Int32);
+                foreach (DataRow row in dt.Rows)
+                {
+                    dtCloned.ImportRow(row);
+                }
+                dataGridView1.DataSource = dtCloned;
 
 
-            dataGridView1.DataSource = dt;
-            //dataGridView1.Sort(dataGridView1.Columns[2], ListSortDirection.Ascending);
-
+                //dataGridView1.DataSource = dt;
+                dataGridView1.Sort(dataGridView1.Columns[2], ListSortDirection.Ascending);
+            }
+            else
+                dataGridView1.DataSource = dt;
         }
 
 
