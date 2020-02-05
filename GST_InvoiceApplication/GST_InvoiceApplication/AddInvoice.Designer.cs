@@ -139,8 +139,6 @@
             this.comboBox1.Size = new System.Drawing.Size(548, 41);
             this.comboBox1.TabIndex = 9;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-
-            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -747,17 +745,17 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(182, 477);
+            this.label26.Location = new System.Drawing.Point(190, 477);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(60, 13);
+            this.label26.Size = new System.Drawing.Size(51, 13);
             this.label26.TabIndex = 74;
-            this.label26.Text = "CompanyId";
+            this.label26.Text = "Company";
             // 
             // textBox22
             // 
             this.textBox22.Location = new System.Drawing.Point(248, 511);
             this.textBox22.Name = "textBox22";
-            this.textBox22.Size = new System.Drawing.Size(102, 20);
+            this.textBox22.Size = new System.Drawing.Size(121, 20);
             this.textBox22.TabIndex = 77;
             this.textBox22.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -790,6 +788,7 @@
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(121, 21);
             this.comboBox3.TabIndex = 79;
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // AddInvoice
             // 

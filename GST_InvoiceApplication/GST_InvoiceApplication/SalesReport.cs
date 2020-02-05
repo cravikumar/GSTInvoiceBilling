@@ -1,4 +1,5 @@
 ﻿using Invoice.DataAccess;
+using Invoice.Models;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Reporting.WinForms;
 using System;
@@ -29,7 +30,7 @@ namespace GST_InvoiceApplication
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
 
-            
+            LoadCompanyData();
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -38,6 +39,61 @@ namespace GST_InvoiceApplication
             var form2 = new MasterPage();
             form2.Closed += (s, args) => this.Close();
             form2.Show();
+        }
+
+        private List<CompanyDetails> GetCompanyData()
+        {
+
+            string sql = "select * from CompanyData";
+            if (!checkBox2.Checked)
+                sql = sql + " where IsGSTApplicable = 'True'";
+            var ds = Functions.RunSelectSql(sql);
+            List<CompanyDetails> companyList = new List<CompanyDetails>();
+
+
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                CompanyDetails currentCompany = new CompanyDetails();
+                currentCompany.CompanyID = Convert.ToInt32(dr["ID"]);
+                currentCompany.CompanyName = dr["CompanyName"].ToString();
+                currentCompany.Address = dr["Address"].ToString();
+                currentCompany.PhoneNumbers = dr["PhoneNo"].ToString();
+                currentCompany.GSTIN = dr["GSTIN"].ToString();
+                currentCompany.IsGSTApplicable = Convert.ToBoolean(dr["IsGSTApplicable"]);
+                currentCompany.GSTIN = dr["GSTIN"].ToString();
+                currentCompany.PANCard = dr["PANCard"].ToString();
+                currentCompany.Aadhaar = dr["Aadhaar"].ToString();
+                currentCompany.PropriterName = dr["PropriterName"].ToString();
+                currentCompany.BankName = dr["BankName"].ToString();
+                currentCompany.BankAccNo = dr["BankAccNo"].ToString();
+                currentCompany.BankBranchAddress = dr["BankBranchAddress"].ToString();
+                currentCompany.IFSCCode = dr["IFSCCode"].ToString();
+                currentCompany.BOAddress = dr["BOAddress"].ToString();
+                currentCompany.BillNo = Convert.ToInt32(dr["BillNo"]);
+                currentCompany.BillDate = Convert.ToDateTime(dr["BillDate"]);
+                currentCompany.BillPrefix = dr["BillPrefix"].ToString();
+                companyList.Add(currentCompany);
+
+            }
+            return companyList;
+        }
+
+
+        public void LoadCompanyData()
+        {
+            List<CompanyDetails> companies = GetCompanyData();
+
+            SortedDictionary<int, string> userCache = new SortedDictionary<int, string>();
+            userCache.Add(0, "--Select--");
+            foreach (CompanyDetails curr in companies)
+            {
+                userCache.Add(curr.CompanyID, curr.CompanyName);
+
+            }
+            
+            comboBox3.DataSource = new BindingSource(userCache, null);
+            comboBox3.DisplayMember = "Value";
+            comboBox3.ValueMember = "Key";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -56,7 +112,18 @@ namespace GST_InvoiceApplication
             string whereCondition = "";
             if(!checkBox2.Checked)
             {
-                whereCondition = "C.IsGSTApplicable = 'True' and";
+                whereCondition = " C.IsGSTApplicable = 'True' and";
+            }
+
+            if (!string.IsNullOrEmpty(textBox2.Text))
+            {
+                whereCondition = whereCondition+ " S.InvoiceId like '%" + textBox2.Text + "%' and";
+ 
+            }
+
+            if (comboBox3.SelectedItem != null && comboBox3.SelectedValue.ToString() != "0")       
+            {
+                whereCondition = whereCondition+ " s.CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and";
             }
 
 
@@ -429,6 +496,11 @@ namespace GST_InvoiceApplication
             {
                 new AddInvoice(InvoiceId, CompanyId).Show();
             }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadCompanyData();
         }
 
 
