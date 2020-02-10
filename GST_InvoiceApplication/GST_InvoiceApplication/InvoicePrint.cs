@@ -57,7 +57,7 @@ namespace GST_InvoiceApplication
                 report.ReportPath = path + "\\InvoiceOriginal.rdlc";
             else
                 report.ReportPath = path + "\\InvoiceOriginalNoGST.rdlc";
-
+            report.EnableExternalImages = true;
             DataTable table = new DataTable();
             table.Columns.Add("ProductName", typeof(string));
             table.Columns.Add("HSNCode", typeof(string));
@@ -402,7 +402,7 @@ namespace GST_InvoiceApplication
                 this.reportViewer1.LocalReport.ReportPath = path + "\\InvoiceOriginalNoGST.rdlc";
 
             //this.reportViewer1.LocalReport.ReportPath = path + "\\InvoiceRollerOriginal.rdlc";
-
+            this.reportViewer1.LocalReport.EnableExternalImages = true;
             DataTable table = new DataTable();
             table.Columns.Add("ProductName", typeof(string));
             table.Columns.Add("HSNCode", typeof(string));
@@ -428,7 +428,7 @@ namespace GST_InvoiceApplication
             }
 
             ReportDataSource rdsprod = new ReportDataSource("InvoiceProductSet", table);
-            reportViewer1.LocalReport.DataSources.Add(rdsprod);
+            reportViewer1.LocalReport.DataSources.Add(rdsprod);            
             ReportParameter p1 = new ReportParameter("CompanyName", _currentCompany.CompanyName);
             ReportParameter p2 = new ReportParameter("CompanyAddressOneLine", _currentCompany.Address);
             ReportParameter p3 = new ReportParameter("PhoneNumbers", _currentCompany.PhoneNumbers);
