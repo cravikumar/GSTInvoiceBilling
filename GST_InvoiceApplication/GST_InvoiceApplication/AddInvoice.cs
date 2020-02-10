@@ -442,10 +442,10 @@ namespace GST_InvoiceApplication
             int column = dataGridView2.CurrentCell.ColumnIndex;
             if (column == 0 )
             {
-                    SendKeys.Send("{Up}");
+                SendKeys.Send("{Up}");
                 SendKeys.Send("{Right}");
-            
-                dataGridView2.CurrentRow.Cells[1].Value = getCustomerPrice(dataGridView2.CurrentRow.Cells[0].Value.ToString());
+                if (dataGridView2.CurrentRow.Cells[0].Value != null && dataGridView2.CurrentRow.Cells[0].Value.ToString().Length > 0 && ConfigurationManager.AppSettings["PredictionEnabled"] == "true")
+                    dataGridView2.CurrentRow.Cells[1].Value = getCustomerPrice(dataGridView2.CurrentRow.Cells[0].Value.ToString());
             }
 
             if (column == 3)
@@ -1106,7 +1106,7 @@ namespace GST_InvoiceApplication
         {
             int column = dataGridView2.CurrentCell.ColumnIndex;
 
-            if (false && column == 0 && ConfigurationManager.AppSettings["isAutoCompleteEnabled"] == "true")
+            if (column == 0 && ConfigurationManager.AppSettings["isAutoCompleteEnabled"] == "true")
             {
                 TextBox tb = e.Control as TextBox;
                 if (tb != null)
