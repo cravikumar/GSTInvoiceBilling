@@ -23,6 +23,7 @@ namespace GST_InvoiceApplication
         bool notlastColumn = true; //class level variable--- to check either last column is reached or not
 
         AutoCompleteStringCollection _productList;
+        public bool isFormModified = false;
         public AutoCompleteStringCollection productList
         {
             get
@@ -280,6 +281,18 @@ namespace GST_InvoiceApplication
 
         private void button6_Click(object sender, EventArgs e)
         {
+            if (isFormModified)
+            {
+                if (MessageBox.Show("Bill has been modified, all the unsaved data will be lost. Are you ok to close?", "Close Form",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+                else
+                {
+                    isFormModified = false;
+                }
+            }
             this.Hide();
             var form2 = new MasterPage();
             form2.Closed += (s, args) => this.Close();
@@ -308,6 +321,18 @@ namespace GST_InvoiceApplication
             //textBox5.Text = ds.Tables[0].Rows[0]["PanNumber"].ToString();
             textBox6.Text = ds.Tables[0].Rows[0]["GSTIN"].ToString();
 
+
+            if (textBox6.Text.Length > 3 && !textBox6.Text.StartsWith("37"))
+            {
+                textBox18.Text = "5";
+            }
+            else
+            {
+                textBox18.Text = "";
+                textBox16.Text = "2.5";
+                textBox17.Text = "2.5";
+            }
+            updateTotalBill();
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -395,6 +420,9 @@ namespace GST_InvoiceApplication
                     textBox11.Text = String.Format("{0:n}", totaligst);//IGST
                     textBox8.Text = textBox9.Text = string.Empty;
                 }
+                else
+                    textBox11.Text = string.Empty;
+
                 textBox14.Text = String.Format("{0:n}", (beforeRound));//.ToString("C", CultureInfo.CurrentCulture);//TotalAfterTax
                 textBox15.Text = String.Format("{0:n}", (rounded - beforeRound));//.ToString("C", CultureInfo.CurrentCulture);//Rounded
 
@@ -432,7 +460,14 @@ namespace GST_InvoiceApplication
 
         private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            
+            SetTextChanged(sender, e);
+            if (button1.Enabled || button5.Enabled)
+            { }
+            else
+            {
+                MessageBox.Show("Save/Update bill is disabled. Please click on Search button before editing..");
+                return;
+            }
 
             if (dataGridView2.CurrentCell == null)
                 return;
@@ -792,6 +827,8 @@ namespace GST_InvoiceApplication
 
                 new InvoicePrint(inv, _selectedCompany).Show();
                 _savedInvoice = inv;
+
+                isFormModified = false;
             }
         }
 
@@ -998,6 +1035,11 @@ namespace GST_InvoiceApplication
         }
         private void button3_Click(object sender, EventArgs e)
         {
+            if (isFormModified)
+            {
+                ShowMsgToSave();
+                return;
+            }
             if (_selectedCompany == null || _selectedCompany.CompanyID < 1 || textBox12.Text.Length < 1)
             {
                 MessageBox.Show("Please select Company and correct bill no to search");
@@ -1187,6 +1229,11 @@ namespace GST_InvoiceApplication
 
         private void button4_Click_1(object sender, EventArgs e)
         {
+            if (isFormModified)
+            {
+                ShowMsgToSave();
+                return;
+            }
             this.Hide();
             var form2 = new AddInvoice();
             form2.Closed += (s, args) => this.Close();
@@ -1202,6 +1249,8 @@ namespace GST_InvoiceApplication
             textBox16.Text = "";
 
             updateTotalBill();
+
+            SetTextChanged(sender, e);
         }
 
         private void comboBox2_KeyPress(object sender, KeyPressEventArgs e)
@@ -1336,6 +1385,7 @@ namespace GST_InvoiceApplication
             button5.Enabled = false;
             button7.Enabled = false;
             MessageBox.Show("Bill details updated successfully.");
+            isFormModified = false;
 
             new InvoicePrint(inv, _selectedCompany).Show();
             _savedInvoice = inv;
@@ -1422,13 +1472,7 @@ namespace GST_InvoiceApplication
 
         private void textBox17_TextChanged(object sender, EventArgs e)
         {
-            //if (string.IsNullOrEmpty(textBox18.Text))
-            //    return;
-
-            //textBox17.Text = "";
-            //textBox16.Text = "";
-
-            //updateTotalBill();
+            SetTextChanged(sender, e);
         }
         private void dgvUserDetails_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
@@ -1594,6 +1638,7 @@ namespace GST_InvoiceApplication
 
                 new InvoicePrint(inv, _selectedCompany, true);
                 _savedInvoice = inv;
+                isFormModified = false;
             }
         }
 
@@ -1697,7 +1742,7 @@ namespace GST_InvoiceApplication
             button5.Enabled = false;
             button7.Enabled = false;
             MessageBox.Show("Bill details updated successfully.");
-
+            isFormModified = false;
             new InvoicePrint(inv, _selectedCompany, true);
             _savedInvoice = inv;
         }
@@ -1873,8 +1918,40 @@ namespace GST_InvoiceApplication
 
         }
 
+        private void textBox6_Leave(object sender, EventArgs e)
+        {
+            if (textBox6.Text.Length>3 &&    !textBox6.Text.StartsWith("37"))
+            {
+                textBox18.Text = "5";
+            }
+            else
+            {
+                textBox18.Text = "";
+                textBox16.Text = "2.5";
+                textBox17.Text = "2.5";
+            }
+            updateTotalBill();
+        }
 
+        private void AddInvoice_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (isFormModified)
+            {
+                ShowMsgToSave();
+                e.Cancel = true;
+            }
+        }
 
+        private void ShowMsgToSave()
+        {
+            MessageBox.Show("Looks that Bill has modified, Please click Save/Update belore closing..");
+
+        }
+
+        public void SetTextChanged(object sender, EventArgs e)
+        {
+            isFormModified = true;
+        }
 
 
     }

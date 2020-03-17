@@ -176,6 +176,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(366, 20);
             this.textBox1.TabIndex = 14;
+            this.textBox1.TextChanged += new System.EventHandler(this.SetTextChanged);
             // 
             // label4
             // 
@@ -192,6 +193,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(366, 20);
             this.textBox2.TabIndex = 16;
+            this.textBox2.TextChanged += new System.EventHandler(this.SetTextChanged);
             // 
             // label5
             // 
@@ -208,6 +210,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(163, 20);
             this.textBox3.TabIndex = 18;
+            this.textBox3.TextChanged += new System.EventHandler(this.SetTextChanged);
             // 
             // label6
             // 
@@ -224,6 +227,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(163, 20);
             this.textBox4.TabIndex = 20;
+            this.textBox4.TextChanged += new System.EventHandler(this.SetTextChanged);
             // 
             // button1
             // 
@@ -251,6 +255,8 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(367, 20);
             this.textBox6.TabIndex = 30;
+            this.textBox6.TextChanged += new System.EventHandler(this.SetTextChanged);
+            this.textBox6.Leave += new System.EventHandler(this.textBox6_Leave);
             // 
             // label10
             // 
@@ -493,6 +499,7 @@
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(121, 21);
             this.comboBox4.TabIndex = 46;
+            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.SetTextChanged);
             // 
             // dateTimePicker1
             // 
@@ -653,6 +660,7 @@
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(163, 20);
             this.textBox5.TabIndex = 64;
+            this.textBox5.TextChanged += new System.EventHandler(this.SetTextChanged);
             // 
             // textBox19
             // 
@@ -660,6 +668,7 @@
             this.textBox19.Name = "textBox19";
             this.textBox19.Size = new System.Drawing.Size(163, 20);
             this.textBox19.TabIndex = 65;
+            this.textBox19.TextChanged += new System.EventHandler(this.SetTextChanged);
             // 
             // button4
             // 
@@ -860,6 +869,7 @@
             this.Controls.Add(this.button6);
             this.Name = "AddInvoice";
             this.Text = "AddInvoice";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AddInvoice_FormClosing);
             this.Load += new System.EventHandler(this.AddInvoice_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceProductsBindingSource)).EndInit();
