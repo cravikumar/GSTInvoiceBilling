@@ -75,6 +75,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.customerDetailsBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -413,7 +414,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(177, 465);
+            this.button2.Location = new System.Drawing.Point(132, 465);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(94, 23);
             this.button2.TabIndex = 43;
@@ -423,9 +424,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(335, 465);
+            this.button3.Location = new System.Drawing.Point(241, 465);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(94, 23);
+            this.button3.Size = new System.Drawing.Size(103, 23);
             this.button3.TabIndex = 44;
             this.button3.Text = "Update Customer";
             this.button3.UseVisualStyleBackColor = true;
@@ -451,7 +452,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(39, 465);
+            this.button4.Location = new System.Drawing.Point(19, 465);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(94, 23);
             this.button4.TabIndex = 47;
@@ -459,11 +460,22 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(354, 465);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(94, 23);
+            this.button5.TabIndex = 48;
+            this.button5.Text = "Delete Customer";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // AddCustomer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1275, 508);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label9);
@@ -561,6 +573,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn gSTINDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewButtonColumn EDIT;
+        private System.Windows.Forms.Button button5;
 
     }
 }

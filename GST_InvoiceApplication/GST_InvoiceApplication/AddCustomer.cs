@@ -168,5 +168,23 @@ namespace GST_InvoiceApplication
             button3.Enabled = false;
             button2.Enabled = true;
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            string query = "Delete * From CustomerData " +
+         " where Id = " + textBox1.Text;
+            try { Functions.RunExecuteNonQuery(query); }
+            catch
+            {
+
+            }
+
+            MessageBox.Show("Deleted");
+
+            button4_Click(sender, e);
+            button1_Click(sender, e);
+
+
+        }
     }
 }
