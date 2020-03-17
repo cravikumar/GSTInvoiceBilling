@@ -444,7 +444,7 @@ namespace GST_InvoiceApplication
             {
                 SendKeys.Send("{Up}");
                 SendKeys.Send("{Right}");
-                if (dataGridView2.CurrentRow.Cells[0].Value != null && dataGridView2.CurrentRow.Cells[0].Value.ToString().Length > 0 && ConfigurationManager.AppSettings["PredictionEnabled"] == "true")
+                if (dataGridView2.CurrentRow.Cells[0].Value != null && dataGridView2.CurrentRow.Cells[0].Value.ToString().Length > 0 && ConfigurationManager.AppSettings["PricePredictionEnabled"] == "true")
                     dataGridView2.CurrentRow.Cells[1].Value = getCustomerPrice(dataGridView2.CurrentRow.Cells[0].Value.ToString());
             }
 
