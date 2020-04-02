@@ -38,7 +38,7 @@ namespace GST_InvoiceApplication
 
         private AutoCompleteStringCollection LoadProducts()
         {
-            string sql = "Select DISTINCT ProductName from InvoiceProductDetails;";
+            string sql = "Select DISTINCT ProductName from ProductMaster;";
             DataSet ds = Functions.RunSelectSql(sql);
 
             AutoCompleteStringCollection str = new AutoCompleteStringCollection();
@@ -52,12 +52,37 @@ namespace GST_InvoiceApplication
 
         private string getCustomerPrice(string ProductName)
         {
-            string sql = "Select top 1 Rate from InvoiceProductDetails where ProductName='" + ProductName + "' Order by ModifiedOn desc";
+            string sql = "Select top 1 Price from ProductMaster where ProductName='" + ProductName + "'";
             DataSet ds = Functions.RunSelectSql(sql);
             foreach (DataRow dr in ds.Tables[0].Rows)
-                return dr["Rate"].ToString();
+                return dr["Price"].ToString();
 
             return "";
+        }
+
+        private void updatePriceMaster(string ProductName, string Price)
+        {
+            try {
+                if (!string.IsNullOrEmpty(getCustomerPrice(ProductName)))
+                {
+                    string query = "Update ProductMaster Set Price = '" + Price + "' where ProductName = '" + ProductName+"';";
+                    Functions.RunExecuteNonQuery(query);
+
+                }
+                else
+                {
+                    string sql = "insert into ProductMaster " +
+                                "(ProductName,Price) values " +
+                                " ('" + ProductName.Replace("'", "") +
+                                 "','" + Price +"');";
+
+                    Functions.RunExecuteNonQuery(sql);
+ 
+                }
+            }
+            catch
+            {}
+ 
         }
 
         // AutoComplete
@@ -840,6 +865,8 @@ namespace GST_InvoiceApplication
 
         public int SaveInvoiceTableData(InvoiceProducts pro)
         {
+            updatePriceMaster(pro.ProductName, pro.Rate);
+
             string query = "insert into InvoiceProductDetails " +
                 "(SaleId,ProductName,HSNCode,Rate,Quantity,Total,MtsDescription,Mts,isActive,CreatedOn,ModifiedOn) Values " +
                  " (" + pro.SaleId +
