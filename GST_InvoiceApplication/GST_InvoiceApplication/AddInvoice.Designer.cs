@@ -477,6 +477,7 @@
             this.textBox12.Size = new System.Drawing.Size(130, 41);
             this.textBox12.TabIndex = 44;
             this.textBox12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox12.TextChanged += new System.EventHandler(this.textBox12_TextChanged);
             // 
             // button3
             // 

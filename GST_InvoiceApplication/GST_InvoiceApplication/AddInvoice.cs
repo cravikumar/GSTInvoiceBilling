@@ -24,6 +24,7 @@ namespace GST_InvoiceApplication
 
         AutoCompleteStringCollection _productList;
         public bool isFormModified = false;
+        public bool isFirstSearchClick = false;
         public AutoCompleteStringCollection productList
         {
             get
@@ -1062,6 +1063,7 @@ namespace GST_InvoiceApplication
         }
         private void button3_Click(object sender, EventArgs e)
         {
+            isFirstSearchClick = true;
             if (isFormModified)
             {
                 ShowMsgToSave();
@@ -1977,7 +1979,16 @@ namespace GST_InvoiceApplication
 
         public void SetTextChanged(object sender, EventArgs e)
         {
-            isFormModified = true;
+            if(!isFirstSearchClick)
+              isFormModified = true;
+        }
+
+        private void textBox12_TextChanged(object sender, EventArgs e)
+        {
+            if (isFormModified)
+            {
+ 
+            }
         }
 
 

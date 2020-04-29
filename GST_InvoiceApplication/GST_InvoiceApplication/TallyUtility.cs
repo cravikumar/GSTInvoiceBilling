@@ -36,9 +36,47 @@ namespace GST_InvoiceApplication
 
         private void button2_Click(object sender, EventArgs e)
         {
-            downloadFileById("","");
 
-            ProcessDownloadedFile("");
+            SearchFiles();
+            //downloadFileById("","");
+
+            //ProcessDownloadedFile("");
+        }
+
+        private void SearchFiles()
+        {
+            string path = @"C:\Users\SAIRAM\Downloads\2019 Shop Bills-20200407T073800Z-001\2019 Shop Bills";
+            //string path = @"C:\Users\SAIRAM\Downloads\2019 Shop Bills-20200407T073800Z-001\";
+            string[] filePaths = Directory.GetFiles(path);
+
+            StringBuilder filesList = new StringBuilder();
+            filesList.Append("SearchResult::::::");
+            foreach (string con in filePaths)
+            {
+                string sql = "Select InvoiceId,CompanyID from SalesInvoiceDetail where StrTotalPayable like '%" + textBox2.Text + "%'";
+                DataSet ds = Functions.RunSelectSqlWithCon(sql,con);
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow dr in ds.Tables[0].Rows)
+                        filesList.Append("\n\r Found-----" + Path.GetFileName(con) + "---" + dr["CompanyID"] + "--" + dr["InvoiceId"]);
+                }
+
+            }
+
+            foreach (string con in filePaths)
+            {
+                string sql = "Select InvoiceId,CompanyID from SalesInvoiceDetail where StrTotalAfterDiscountOrBeforeTax like '%" + textBox2.Text + "%'";
+                DataSet ds = Functions.RunSelectSqlWithCon(sql, con);
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow dr in ds.Tables[0].Rows)
+                        filesList.Append("\n\r Found-----" + Path.GetFileName(con) + "---" + dr["CompanyID"] + "--" + dr["InvoiceId"]);
+                }
+
+            }
+
+            MessageBox.Show(filesList.ToString());
+            MessageBox.Show("Completed Search");
         }
 
         private void ProcessDownloadedFile(string path)

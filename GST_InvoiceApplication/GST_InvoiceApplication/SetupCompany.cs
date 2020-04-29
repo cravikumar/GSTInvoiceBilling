@@ -310,14 +310,16 @@ namespace GST_InvoiceApplication
                     HttpClientInitializer = credential,
                     ApplicationName = "Drive API Sample",
                 });
-                driveService.HttpClient.Timeout = TimeSpan.FromMinutes(20);
-
-                //string mimeType = MimeMapping.GetMimeMapping(fileName);
+                driveService.HttpClient.Timeout = TimeSpan.FromMinutes(30);
 
                 var fileMetadata = new File()
                 {
-                    Name = "InvoiceBackup" + DateTime.Now.ToString("ddMMyyyyhhmmsstt") + ".mdb",
-                    MimeType = "application/mdb"
+                    Name = "InvoiceBackup_" + DateTime.Now.ToString("dd_MMM_yy_HH_mm") + ".mdb",
+                    MimeType = "application/mdb",
+                    Parents = new List<string>
+                    {
+                        "1-32FlVNQHVUFz9Qr0MxCWEDuxHjfOCdl"
+                    }
                 };
                 FilesResource.CreateMediaUpload request;
                 using (var stream = new System.IO.FileStream(System.Configuration.ConfigurationManager.AppSettings["ConnectionString"].ToString(),
