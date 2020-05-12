@@ -27,6 +27,13 @@ namespace Invoice.DataAccess
             return RunSelectSql( sql,GetDatabaseConnectionString());
         }
 
+        public static string GetYearConnectionString(string year)
+        {
+            string connectionString = GetDatabaseConnectionString();
+            connectionString = connectionString.Replace("GST.mdb", "GST" + year+".mdb");
+            return connectionString;
+
+        }
         public static DataSet RunSelectSqlWithCon(string sql,string con)
         {
             return RunSelectSql(sql, GetDatabaseConnectionString(con));
@@ -87,6 +94,40 @@ namespace Invoice.DataAccess
                 }
             }
             return identity;
+        }
+
+
+        public static bool isCurrentFinancialYear(DateTime invDate)
+        {
+
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+
+            DateTime FinancialYearStart = new DateTime();
+            DateTime FinancialYearEnd = new DateTime();
+
+            bool isCurrentYearBill = true;
+
+            if (month > 3)
+            {
+                FinancialYearStart = Convert.ToDateTime("01/04/" + year);
+                FinancialYearEnd = Convert.ToDateTime("31/03/" + (year + 1));
+            }
+            else if (month < 4)
+            {
+                FinancialYearStart = Convert.ToDateTime("01/04/" + (year - 1));
+                FinancialYearEnd = Convert.ToDateTime("31/03/" + year);
+            }
+
+            if (invDate >= FinancialYearStart && invDate <= FinancialYearEnd)
+            {
+                isCurrentYearBill = true;
+            }
+            else
+                isCurrentYearBill = false;
+
+            return isCurrentYearBill;
+
         }
 
         public static DataSet RunSelectSql( String sql,String dbConnStr)

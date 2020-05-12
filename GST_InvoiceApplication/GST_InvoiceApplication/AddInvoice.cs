@@ -25,6 +25,7 @@ namespace GST_InvoiceApplication
         AutoCompleteStringCollection _productList;
         public bool isFormModified = false;
         public bool isFirstSearchClick = false;
+        public InvoiceDetails searchInv1;
         public AutoCompleteStringCollection productList
         {
             get
@@ -143,16 +144,17 @@ namespace GST_InvoiceApplication
             this.WindowState = FormWindowState.Maximized;
             LoadCustomerData();
             LoadCompanyData();
+            searchInv1 = null;
         }
 
-        public AddInvoice(int InvoiceId, int companyId)
+        public AddInvoice(int InvoiceId, int companyId, string year="")
         {
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
             //LoadCompanyData();
 
             //comboBox1.SelectedItem = "Test";
-            
+            isFirstSearchClick = true;
             string sql = "select * from CompanyData where ID = " + companyId.ToString();
             var ds = Functions.RunSelectSql(sql);
             DataRow dr = ds.Tables[0].Rows[0];
@@ -234,7 +236,7 @@ namespace GST_InvoiceApplication
                 textBox6.Visible = true;
                 label10.Visible = true;
             }
-            InvoiceDetails searchInv = getInvoiceDetails(_selectedCompany.CompanyID, InvoiceId.ToString());
+            InvoiceDetails searchInv = getInvoiceDetails(_selectedCompany.CompanyID, InvoiceId.ToString(),false,year);
             
             SortedDictionary<int, string> userCache = new SortedDictionary<int, string>();
             userCache.Add(0, _selectedCompany.CompanyName);
@@ -1063,7 +1065,31 @@ namespace GST_InvoiceApplication
         }
         private void button3_Click(object sender, EventArgs e)
         {
+            isFormModified = false;
             isFirstSearchClick = true;
+
+            int billNo = 0;
+            int billYear = 0;
+
+            if (!int.TryParse(textBox12.Text, out billNo))
+            { 
+                if(textBox12.Text.Contains("-"))
+                {
+                    if (int.TryParse(textBox12.Text.Split('-')[0], out billNo))
+                    {
+                        if (int.TryParse(textBox12.Text.Split('-')[1], out billYear))
+                        {
+                             searchInv1 = getInvoiceDetails(_selectedCompany.CompanyID, billNo.ToString(),false, billYear.ToString());
+                        }
+                        return;
+                    }
+                    return;
+                }
+                return;
+            }
+
+
+
             if (isFormModified)
             {
                 ShowMsgToSave();
@@ -1084,10 +1110,15 @@ namespace GST_InvoiceApplication
 
         }
 
-        private InvoiceDetails getInvoiceDetails(int companyId, string billNo,bool lazyLoad = false)
+        private InvoiceDetails getInvoiceDetails(int companyId, string billNo,bool lazyLoad = false,string billYear = "")
         {
             string invoiceQuery = "Select * from SalesInvoiceDetail where CompanyId = " + companyId + " and InvoiceId= '" + billNo + "'";
-            DataSet ds = Functions.RunSelectSql(invoiceQuery);
+            
+            DataSet ds = null;
+            if (string.IsNullOrEmpty(billYear))
+                ds = Functions.RunSelectSql(invoiceQuery);
+            else
+                ds = Functions.RunSelectSql(invoiceQuery, Functions.GetYearConnectionString(billYear));
 
             if ((ds.Tables.Count < 1 || ds.Tables[0].Rows.Count < 1) && lazyLoad)
             {
@@ -1114,11 +1145,11 @@ namespace GST_InvoiceApplication
             
             }
 
-
+            inv.InvoiceDate = dateTimePicker1.Value = Convert.ToDateTime(dr["InvoiceDate"]);
             inv.InvoiceId = textBox12.Text = dr["InvoiceId"].ToString();
             button5.Enabled = true;//Update
             button7.Enabled = true;//Update
-            inv.InvoiceDate = dateTimePicker1.Value = Convert.ToDateTime(dr["InvoiceDate"]);
+            
 
             inv.StrBillTotal = textBox20.Text = dr["StrBillTotal"].ToString();
             inv.StrDiscount = textBox13.Text = dr["StrDiscount"].ToString();
@@ -1153,7 +1184,12 @@ namespace GST_InvoiceApplication
             inv.IGSTValue = textBox18.Text = dr["IGSTValue"] != null ? dr["IGSTValue"].ToString() : "";
 
             string prodSql = "Select * from InvoiceProductDetails where SaleId = " + inv.SaleId;
-            DataSet prod = Functions.RunSelectSql(prodSql);
+            
+            DataSet prod=null;
+            if (string.IsNullOrEmpty(billYear))
+                prod = Functions.RunSelectSql(prodSql);
+            else
+                prod = Functions.RunSelectSql(prodSql, Functions.GetYearConnectionString(billYear));
 
             inv.Products = new List<InvoiceProducts>();
             dataGridView2.DataSource = prod.Tables[0];
@@ -1169,6 +1205,8 @@ namespace GST_InvoiceApplication
                 currProduct.Mts = currRow["Mts"].ToString();
                 currProduct.Rate = currRow["Rate"].ToString();
                 currProduct.Total = currRow["Total"].ToString();
+
+                inv.Products.Add(currProduct);
             }
             return inv;
         }
@@ -1985,10 +2023,46 @@ namespace GST_InvoiceApplication
 
         private void textBox12_TextChanged(object sender, EventArgs e)
         {
-            if (isFormModified)
+            int billNo;
+
+            DateTime invDate = dateTimePicker1.Value;
+
+            bool isCurrentYearBill = Functions.isCurrentFinancialYear(invDate);
+
+            if (int.TryParse(textBox12.Text.ToString(), out billNo))
             {
- 
+                button1.Visible = true;
+                button5.Visible = true;
+                button2.Visible = true;
+                button7.Visible = true;
+
+                button9.Visible = false;
             }
+            else
+            {
+                button1.Visible = false;
+                button5.Visible = false;
+                button2.Visible = false;
+                button7.Visible = false;
+
+                button9.Visible = true;
+            }
+
+            if (isCurrentYearBill == false)
+            {
+                button1.Visible = false;
+                button5.Visible = false;
+                button2.Visible = false;
+                button7.Visible = false;
+
+                button9.Visible = true;
+            }
+
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            new InvoicePrint(searchInv1, _selectedCompany).Show();
         }
 
 

@@ -143,7 +143,13 @@ namespace GST_InvoiceApplication
 
 
             DataSet ds = Functions.RunSelectSql(sql);
+
+            DataSet ds1 = Functions.RunSelectSql(sql, Functions.GetYearConnectionString("19"));
+
+
             System.Data.DataTable dt = ds.Tables[0];
+
+            dt.Merge(ds1.Tables[0]);
 
             if (!checkBox1.Checked)
             {
@@ -496,9 +502,17 @@ namespace GST_InvoiceApplication
             if (converted)
                 converted = int.TryParse(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[15].Value.ToString(), out CompanyId);
 
-            if (InvoiceId > 0 && CompanyId > 0)
+            DateTime inv = Convert.ToDateTime(dataGridView1.Rows[dataGridView1.CurrentCell.RowIndex].Cells[3].Value.ToString());
+
+            bool isCurrentYearBill = Functions.isCurrentFinancialYear(inv);
+
+            if (InvoiceId > 0 && CompanyId > 0 && isCurrentYearBill)
             {
                 new AddInvoice(InvoiceId, CompanyId).Show();
+            }
+            else if(InvoiceId > 0 && CompanyId > 0 && !isCurrentYearBill)
+            {
+                new AddInvoice(InvoiceId, CompanyId,"19").Show();
             }
         }
 

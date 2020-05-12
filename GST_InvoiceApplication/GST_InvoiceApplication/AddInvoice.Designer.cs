@@ -105,6 +105,7 @@
             this.label27 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.button9 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceProductsBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -800,11 +801,23 @@
             this.comboBox3.TabIndex = 79;
             this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(759, 656);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(94, 23);
+            this.button9.TabIndex = 80;
+            this.button9.Text = "Print Bill Copy";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Visible = false;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // AddInvoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1275, 737);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.textBox22);
@@ -960,5 +973,6 @@
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Button button9;
     }
 }
