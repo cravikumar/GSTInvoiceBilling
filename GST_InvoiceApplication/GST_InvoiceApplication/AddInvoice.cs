@@ -257,7 +257,10 @@ namespace GST_InvoiceApplication
             textBox22.Visible = false;
 
             updateTotalBill();
-            
+
+            if (!string.IsNullOrEmpty(year))
+                searchInv1 = searchInv;
+
         }
 
 
@@ -2063,6 +2066,18 @@ namespace GST_InvoiceApplication
         private void button9_Click(object sender, EventArgs e)
         {
             new InvoicePrint(searchInv1, _selectedCompany).Show();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                textBox12.Text = textBox12.Text + "-19";
+            }
+            else
+            {
+                textBox12.Text = textBox12.Text.Split('-')[0];
+            }
         }
 
 

@@ -106,6 +106,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.button9 = new System.Windows.Forms.Button();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceProductsBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -199,7 +200,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(536, 100);
+            this.label5.Location = new System.Drawing.Point(526, 128);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(85, 13);
             this.label5.TabIndex = 17;
@@ -207,7 +208,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(627, 99);
+            this.textBox3.Location = new System.Drawing.Point(617, 127);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(163, 20);
             this.textBox3.TabIndex = 18;
@@ -216,7 +217,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(544, 71);
+            this.label6.Location = new System.Drawing.Point(534, 99);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(77, 13);
             this.label6.TabIndex = 19;
@@ -224,7 +225,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(627, 68);
+            this.textBox4.Location = new System.Drawing.Point(617, 96);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(163, 20);
             this.textBox4.TabIndex = 20;
@@ -812,11 +813,23 @@
             this.button9.Visible = false;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(776, 48);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(50, 17);
+            this.checkBox2.TabIndex = 81;
+            this.checkBox2.Text = "2019";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
             // AddInvoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1275, 737);
+            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.button8);
@@ -974,5 +987,6 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
