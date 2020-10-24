@@ -1152,7 +1152,8 @@ namespace GST_InvoiceApplication
             inv.InvoiceId = textBox12.Text = dr["InvoiceId"].ToString();
             button5.Enabled = true;//Update
             button7.Enabled = true;//Update
-            
+
+            inv.IGSTValue = textBox18.Text = dr["IGSTValue"] != null ? dr["IGSTValue"].ToString() : "";//FOR iGST BILL IS MODIFIED FOR TEXT CHANGE IN SEARCH
 
             inv.StrBillTotal = textBox20.Text = dr["StrBillTotal"].ToString();
             inv.StrDiscount = textBox13.Text = dr["StrDiscount"].ToString();
@@ -1184,7 +1185,7 @@ namespace GST_InvoiceApplication
             inv.StrLRNo = textBox19.Text = dr["StrLRNo"] != null ? dr["StrLRNo"].ToString() : "";
             inv.CGSTValue = textBox16.Text = dr["CGSTValue"] != null ? dr["CGSTValue"].ToString() : "";
             inv.SGSTValue = textBox17.Text = dr["SGSTValue"] != null ? dr["SGSTValue"].ToString() : "";
-            inv.IGSTValue = textBox18.Text = dr["IGSTValue"] != null ? dr["IGSTValue"].ToString() : "";
+            
 
             string prodSql = "Select * from InvoiceProductDetails where SaleId = " + inv.SaleId;
             
