@@ -192,3 +192,4 @@ ModelManifest.xml
 /GST_InvoiceApplication/packages
 /GST_InvoiceApplication/Invoice.DataAccess/SqlServerTypes
 /GST_InvoiceApplication/GST_InvoiceApplication/SqlServerTypes
+/.vs
