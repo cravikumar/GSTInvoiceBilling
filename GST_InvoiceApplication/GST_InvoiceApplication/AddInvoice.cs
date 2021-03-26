@@ -21,6 +21,7 @@ namespace GST_InvoiceApplication
         InvoiceDetails _savedInvoice;
         public int publicSaleId;
         bool notlastColumn = true; //class level variable--- to check either last column is reached or not
+        public bool _isDiscountEditedManually=false;
 
         AutoCompleteStringCollection _productList;
         public bool isFormModified = false;
@@ -403,16 +404,33 @@ namespace GST_InvoiceApplication
                 if (!_selectedCompany.IsGSTApplicable)
                     sgst = cgst = igst = 0;
 
-                double discount;
-                if (igst > 0)
-                {
-                    discount = tallyRound((totalBillValue * (igst / (100 + igst))), 2);
+                double discount=0;
 
-                    //sgst = igst / 2;
-                    //cgst = igst / 2;
+                if (!_isDiscountEditedManually)
+                {
+                    if (igst > 0)
+                    {
+                        discount = tallyRound((totalBillValue * (igst / (100 + igst))), 2);
+
+                        //sgst = igst / 2;
+                        //cgst = igst / 2;
+                    }
+                    else
+                        discount = tallyRound((totalBillValue * ((sgst + cgst) / (100 + sgst + cgst))), 2);
                 }
                 else
-                    discount = tallyRound((totalBillValue * ((sgst + cgst) / (100 + sgst + cgst))), 2);
+                {
+
+                    if(!double.TryParse(textBox13.Text, out discount));
+                    {
+                        if (discount == 0)
+                        {
+                            MessageBox.Show("Please check Discount price..!!");
+                         
+                        }
+                    }
+                    
+                }
 
                 double Billerror = totalBillValue - Math.Truncate(totalBillValue);
                 double Discerror = discount - Math.Truncate(discount);
@@ -936,6 +954,7 @@ namespace GST_InvoiceApplication
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _isDiscountEditedManually = false;
             if (comboBox1.SelectedIndex < 1)
                 return;
 
@@ -2081,8 +2100,15 @@ namespace GST_InvoiceApplication
             }
         }
 
-        
+        private void textBox13_TextChanged(object sender, EventArgs e)
+        {
 
+        }
 
+        private void textBox13_Leave(object sender, EventArgs e)
+        {
+            _isDiscountEditedManually = true;
+            updateTotalBill();
+        }
     }
 }
