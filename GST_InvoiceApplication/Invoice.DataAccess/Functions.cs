@@ -26,7 +26,15 @@ namespace Invoice.DataAccess
         {
             return RunSelectSql( sql,GetDatabaseConnectionString());
         }
-
+        public static string getPreviousYear()
+        {
+            if (DateTime.Now.Month > 3)
+            {
+                return (Convert.ToInt32(DateTime.Now.ToString("yy")) - 1).ToString();
+            }
+            else
+                return (Convert.ToInt32(DateTime.Now.ToString("yy")) - 2).ToString();
+        }
         public static string GetYearConnectionString(string year)
         {
             string connectionString = GetDatabaseConnectionString();

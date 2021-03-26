@@ -2073,13 +2073,15 @@ namespace GST_InvoiceApplication
         {
             if (checkBox2.Checked)
             {
-                textBox12.Text = textBox12.Text + "-19";
+                textBox12.Text = textBox12.Text + "-"+ Functions.getPreviousYear();
             }
             else
             {
                 textBox12.Text = textBox12.Text.Split('-')[0];
             }
         }
+
+        
 
 
     }

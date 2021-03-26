@@ -144,7 +144,7 @@ namespace GST_InvoiceApplication
 
             DataSet ds = Functions.RunSelectSql(sql);
 
-            DataSet ds1 = Functions.RunSelectSql(sql, Functions.GetYearConnectionString("19"));
+            DataSet ds1 = Functions.RunSelectSql(sql, Functions.GetYearConnectionString(Functions.getPreviousYear()));
 
 
             System.Data.DataTable dt = ds.Tables[0];
