@@ -829,7 +829,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!HSNCode.Value</Value>
+                              <Value>=Fields!PriceVariance.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>

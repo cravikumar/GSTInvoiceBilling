@@ -852,6 +852,7 @@ namespace GST_InvoiceApplication
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
                     currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
+                    
 
                     currProduct.Id = SaveInvoiceTableData(currProduct);
                     try
@@ -1470,6 +1471,7 @@ namespace GST_InvoiceApplication
                     currProduct.PriceVariance = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
                     currProduct.HSNCode = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
 
+
                     inv.Products.Add(currProduct);
 
                 }
@@ -1490,7 +1492,6 @@ namespace GST_InvoiceApplication
 
             return value.ToString();
         }
-
         private void UpdateInvoiceTableData(InvoiceProducts currProduct)
         {
             if (currProduct.Id < 1)

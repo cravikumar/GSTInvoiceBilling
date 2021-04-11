@@ -535,11 +535,10 @@ namespace GST_InvoiceApplication
             // 
             this.textBox13.Location = new System.Drawing.Point(955, 447);
             this.textBox13.Name = "textBox13";
+            this.textBox13.ReadOnly = true;
             this.textBox13.Size = new System.Drawing.Size(164, 20);
             this.textBox13.TabIndex = 51;
             this.textBox13.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox13.TextChanged += new System.EventHandler(this.textBox13_TextChanged);
-            this.textBox13.Leave += new System.EventHandler(this.textBox13_Leave);
             // 
             // label17
             // 
@@ -572,7 +571,6 @@ namespace GST_InvoiceApplication
             // 
             this.textBox15.Location = new System.Drawing.Point(955, 581);
             this.textBox15.Name = "textBox15";
-            this.textBox15.ReadOnly = true;
             this.textBox15.Size = new System.Drawing.Size(164, 20);
             this.textBox15.TabIndex = 55;
             this.textBox15.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -822,11 +820,11 @@ namespace GST_InvoiceApplication
             this.checkBox2.AutoSize = true;
             this.checkBox2.Location = new System.Drawing.Point(776, 48);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(15, 14);
+            this.checkBox2.Size = new System.Drawing.Size(50, 17);
             this.checkBox2.TabIndex = 81;
+            this.checkBox2.Text = "20" + Functions.getPreviousYear();
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
-            this.checkBox2.Text = "20" + Functions.getPreviousYear();
             // 
             // AddInvoice
             // 
