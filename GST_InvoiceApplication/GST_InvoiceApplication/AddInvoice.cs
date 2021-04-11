@@ -1467,6 +1467,8 @@ namespace GST_InvoiceApplication
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
                     currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
+                    currProduct.PriceVariance = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
+                    currProduct.HSNCode = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
 
                     inv.Products.Add(currProduct);
 
@@ -1479,6 +1481,14 @@ namespace GST_InvoiceApplication
 
             new InvoicePrint(inv, _selectedCompany).Show();
             _savedInvoice = inv;
+        }
+
+        private string isVarientHigh(string previousPrice, string currentPrice)
+        {
+            bool value = false;
+            value = string.IsNullOrEmpty(previousPrice) || string.IsNullOrEmpty(currentPrice) ? false : Math.Abs((((Convert.ToDouble(previousPrice) - Convert.ToDouble(currentPrice)) / Math.Abs(Convert.ToDouble(previousPrice))) * 100)) > 15 ? true : false;
+
+            return value.ToString();
         }
 
         private void UpdateInvoiceTableData(InvoiceProducts currProduct)

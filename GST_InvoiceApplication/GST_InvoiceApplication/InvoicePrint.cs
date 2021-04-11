@@ -411,6 +411,7 @@ namespace GST_InvoiceApplication
             table.Columns.Add("MtsDescription", typeof(string));
             table.Columns.Add("Mts", typeof(string));
             table.Columns.Add("Total", typeof(string));
+            table.Columns.Add("PriceVariance", typeof(string));
 
 
 
@@ -424,6 +425,7 @@ namespace GST_InvoiceApplication
                     ,p.MtsDescription
                     ,p.Mts
                     , string.Format("{0:n}", Convert.ToDouble(p.Total)//Convert.ToDouble(p.Total).ToString("C", CultureInfo.CurrentCulture
+                    ,p.PriceVariance
                     ));
             }
 
