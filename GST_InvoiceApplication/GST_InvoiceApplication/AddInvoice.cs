@@ -847,12 +847,14 @@ namespace GST_InvoiceApplication
                     currProduct.SaleId = inv.SaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == null ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
                     currProduct.MtsDescription = dataGridView2.Rows[i].Cells[2].Value == null ? "" : dataGridView2.Rows[i].Cells[2].Value.ToString();
-                    currProduct.HSNCode = dataGridView2.Rows[i].Cells[3].Value == null ? "" : dataGridView2.Rows[i].Cells[3].Value.ToString();
+                    //currProduct.HSNCode = dataGridView2.Rows[i].Cells[3].Value == null ? "" : dataGridView2.Rows[i].Cells[3].Value.ToString();
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
                     currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    
+
+                    currProduct.PriceVariance = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
+                    currProduct.HSNCode = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
 
                     currProduct.Id = SaveInvoiceTableData(currProduct);
                     try
@@ -1468,8 +1470,8 @@ namespace GST_InvoiceApplication
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
                     currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    currProduct.PriceVariance = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
-                    currProduct.HSNCode = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
+                    currProduct.PriceVariance = dataGridView2.Rows[i].Cells[1].Value == null? "" : isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
+                    currProduct.HSNCode = dataGridView2.Rows[i].Cells[1].Value == null ? "" : isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
 
 
                     inv.Products.Add(currProduct);
