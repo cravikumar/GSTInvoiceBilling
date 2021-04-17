@@ -100,7 +100,9 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -128,11 +130,16 @@
     <Compile Include="AddInvoice.Designer.cs">
       <DependentUpon>AddInvoice.cs</DependentUpon>
     </Compile>
-    <Compile Include="AddPayments.cs">
+    <Compile Include="GSTDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GSTDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ProductSetup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddPayments.Designer.cs">
-      <DependentUpon>AddPayments.cs</DependentUpon>
+    <Compile Include="ProductSetup.Designer.cs">
+      <DependentUpon>ProductSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="TallyUtility.cs">
       <SubType>Form</SubType>
@@ -184,8 +191,8 @@
     <EmbeddedResource Include="AddInvoice.resx">
       <DependentUpon>AddInvoice.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AddPayments.resx">
-      <DependentUpon>AddPayments.cs</DependentUpon>
+    <EmbeddedResource Include="ProductSetup.resx">
+      <DependentUpon>ProductSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InvoiceDaySales.rdlc" />
     <EmbeddedResource Include="InvoiceRollerOriginal.rdlc" />
@@ -221,6 +228,17 @@
     <EmbeddedResource Include="SetupCompany.resx">
       <DependentUpon>SetupCompany.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="GSTDataSet.xsc">
+      <DependentUpon>GSTDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="GSTDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>GSTDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GSTDataSet.xss">
+      <DependentUpon>GSTDataSet.xsd</DependentUpon>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

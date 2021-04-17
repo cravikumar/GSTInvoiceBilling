@@ -47,7 +47,7 @@ namespace GST_InvoiceApplication
         private void button4_Click(object sender, EventArgs e)
         {
             this.Hide();
-            var form2 = new AddPayments();
+            var form2 = new ProductSetup();
             form2.Closed += (s, args) => this.Close();
             form2.Show();
         }
@@ -55,7 +55,7 @@ namespace GST_InvoiceApplication
         private void button5_Click(object sender, EventArgs e)
         {
             this.Hide();
-            var form2 = new AddPayments();
+            var form2 = new ProductSetup();
             form2.Closed += (s, args) => this.Close();
             form2.Show();
         }
