@@ -24,6 +24,7 @@ namespace GST_InvoiceApplication
         public bool _isDiscountEditedManually=false;
 
         AutoCompleteStringCollection _productList;
+        AutoCompleteStringCollection _hsnList;
         public bool isFormModified = false;
         public bool isFirstSearchClick = false;
         public InvoiceDetails searchInv1;
@@ -39,6 +40,18 @@ namespace GST_InvoiceApplication
             }
         }
 
+        public AutoCompleteStringCollection hsnList
+        {
+            get
+            {
+                if (_hsnList != null && _hsnList.Count > 0)
+                    return _hsnList;
+                else
+                    _hsnList = LoadhsnList();
+                return _hsnList;
+            }
+        }
+
         private AutoCompleteStringCollection LoadProducts()
         {
             string sql = "Select DISTINCT ProductName from ProductMaster;";
@@ -47,6 +60,20 @@ namespace GST_InvoiceApplication
             AutoCompleteStringCollection str = new AutoCompleteStringCollection();
             foreach (DataRow dr in ds.Tables[0].Rows)
                 str.Add(dr["ProductName"].ToString());
+            return str;
+
+        }
+
+        private AutoCompleteStringCollection LoadhsnList()
+        {
+            string sql = "Select DISTINCT ProductName,HSNCode from ProductMaster where ProductName like '%HSNCODE-%'"; 
+            DataSet ds = Functions.RunSelectSql(sql);
+
+            AutoCompleteStringCollection str = new AutoCompleteStringCollection();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                str.Add(dr["ProductName"].ToString().Split(new string[] { "HSNCODE-" }, StringSplitOptions.None)[1]);
+            }
             return str;
 
         }
@@ -547,9 +574,11 @@ namespace GST_InvoiceApplication
                 
             }
 
-            if (column == 3)
+            if (column == 3 && dataGridView2.CurrentRow.Cells[3] !=null && dataGridView2.CurrentRow.Cells[3].Value != null)
             {
-                return;
+                string hsn = getProductHSN("HSNCODE-" + dataGridView2.CurrentRow.Cells[3].Value.ToString());
+                if (!string.IsNullOrEmpty(hsn))
+                    dataGridView2.CurrentRow.Cells[3].Value = hsn;
             }
 
             if (column == 2 && dataGridView2.CurrentRow.Cells[2].Value != null)
@@ -1102,6 +1131,10 @@ namespace GST_InvoiceApplication
         {
             return productList;
         }
+        public AutoCompleteStringCollection AutoCompleteHsnLoad()
+        {
+            return hsnList;
+        }
         private void button3_Click(object sender, EventArgs e)
         {
             isFormModified = false;
@@ -1262,6 +1295,17 @@ namespace GST_InvoiceApplication
                 {
                     tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     tb.AutoCompleteCustomSource = AutoCompleteLoad();
+                    tb.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                }
+                return;
+            }
+            else if (column == 3)
+            {
+                TextBox tb = e.Control as TextBox;
+                if (tb != null)
+                {
+                    tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    tb.AutoCompleteCustomSource = AutoCompleteHsnLoad();
                     tb.AutoCompleteSource = AutoCompleteSource.CustomSource;
                 }
                 return;

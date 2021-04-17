@@ -49,6 +49,17 @@ namespace GST_InvoiceApplication
             textBox1.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             textBox1.AutoCompleteCustomSource = AutoCompleteLoad();
             textBox1.AutoCompleteSource = AutoCompleteSource.CustomSource;
+
+            LoadHSNGrid();
+        }
+
+        private void LoadHSNGrid()
+        {
+            String sql = "Select Id,ProductName,Price,HSNCode from ProductMaster where ProductName like '%" + "HSNCODE-" + "%'";
+                
+
+            DataSet ds = Functions.RunSelectSql(sql);
+            dataGridView2.DataSource = ds.Tables[0];
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -91,6 +102,43 @@ namespace GST_InvoiceApplication
                 button1_Click(sender, e);
 
             }
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView2.CurrentCell.ColumnIndex == 3)
+            {
+                string sql = "Delete * From ProductMaster where Id = " + dataGridView2.CurrentRow.Cells[0].Value;
+                try { Functions.RunExecuteNonQuery(sql); }
+                catch
+                {
+
+                }
+
+                LoadHSNGrid();
+
+            }
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox3.Text) || string.IsNullOrEmpty(textBox4.Text))
+            {
+                MessageBox.Show("Please enter a valid text");
+                return;
+            }
+            string sql = "insert into ProductMaster " +
+                               "(ProductName,Price,HSNCode) values " +
+                               " ('" + "HSNCODE-" + textBox3.Text+
+                                "','" + "1" +
+                                  "','" + textBox4.Text + "');";
+
+            Functions.RunExecuteNonQuery(sql);
+
+            LoadHSNGrid();
+            textBox3.Text = "";
+            textBox4.Text = "";
         }
     }
 }
