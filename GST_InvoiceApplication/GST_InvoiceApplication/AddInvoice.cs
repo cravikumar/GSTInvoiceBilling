@@ -430,7 +430,7 @@ namespace GST_InvoiceApplication
             double totalBillValue = 0;
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
-
+                if(!(dataGridView2.Rows[i].Cells[7].Value == DBNull.Value))
                 totalBillValue += Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value);
 
             }
