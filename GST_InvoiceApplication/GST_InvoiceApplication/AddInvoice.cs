@@ -63,21 +63,33 @@ namespace GST_InvoiceApplication
             return "";
         }
 
-        private void updatePriceMaster(string ProductName, string Price)
+        private string getProductHSN(string ProductName)
+        {
+            string sql = "Select top 1 HSNCode from ProductMaster where ProductName='" + ProductName + "'";
+            DataSet ds = Functions.RunSelectSql(sql);
+            foreach (DataRow dr in ds.Tables[0].Rows)
+                return dr["HSNCode"].ToString();
+
+            return "";
+        }
+
+
+        private void updatePriceMaster(string ProductName, string Price, string HsnCode)
         {
             try {
                 if (!string.IsNullOrEmpty(getCustomerPrice(ProductName)))
                 {
-                    string query = "Update ProductMaster Set Price = '" + Price + "' where ProductName = '" + ProductName+"';";
+                    string query = "Update ProductMaster Set Price = '" + Price + "',HsnCode = '"+HsnCode+"' where ProductName = '" + ProductName+"';";
                     Functions.RunExecuteNonQuery(query);
 
                 }
                 else
                 {
                     string sql = "insert into ProductMaster " +
-                                "(ProductName,Price) values " +
+                                "(ProductName,Price,HSNCode) values " +
                                 " ('" + ProductName.Replace("'", "") +
-                                 "','" + Price +"');";
+                                 "','" + Price +
+                                   "','" + HsnCode + "');";
 
                     Functions.RunExecuteNonQuery(sql);
  
@@ -530,6 +542,9 @@ namespace GST_InvoiceApplication
                 SendKeys.Send("{Right}");
                 if (dataGridView2.CurrentRow.Cells[0].Value != null && dataGridView2.CurrentRow.Cells[0].Value.ToString().Length > 0 && ConfigurationManager.AppSettings["PricePredictionEnabled"] == "true")
                     dataGridView2.CurrentRow.Cells[1].Value = getCustomerPrice(dataGridView2.CurrentRow.Cells[0].Value.ToString());
+
+                dataGridView2.CurrentRow.Cells[3].Value = getProductHSN(dataGridView2.CurrentRow.Cells[0].Value.ToString());
+                
             }
 
             if (column == 3)
@@ -847,14 +862,12 @@ namespace GST_InvoiceApplication
                     currProduct.SaleId = inv.SaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == null ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
                     currProduct.MtsDescription = dataGridView2.Rows[i].Cells[2].Value == null ? "" : dataGridView2.Rows[i].Cells[2].Value.ToString();
-                    //currProduct.HSNCode = dataGridView2.Rows[i].Cells[3].Value == null ? "" : dataGridView2.Rows[i].Cells[3].Value.ToString();
+                    currProduct.HSNCode = dataGridView2.Rows[i].Cells[3].Value == null ? "" : dataGridView2.Rows[i].Cells[3].Value.ToString();
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
                     currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-
-                    currProduct.PriceVariance = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
-                    currProduct.HSNCode = isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
+                    currProduct.PreviousRate = dataGridView2.Rows[i].Cells[1].Value == null ? "" : dataGridView2.Rows[i].Cells[1].Value.ToString();
 
                     currProduct.Id = SaveInvoiceTableData(currProduct);
                     try
@@ -892,7 +905,8 @@ namespace GST_InvoiceApplication
 
         public int SaveInvoiceTableData(InvoiceProducts pro)
         {
-            updatePriceMaster(pro.ProductName, pro.Rate);
+            updatePriceMaster(pro.ProductName, pro.Rate, pro.HSNCode);
+            
 
             string query = "insert into InvoiceProductDetails " +
                 "(SaleId,ProductName,HSNCode,Rate,Quantity,Total,MtsDescription,Mts,isActive,CreatedOn,ModifiedOn) Values " +
@@ -1470,9 +1484,7 @@ namespace GST_InvoiceApplication
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
                     currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    currProduct.PriceVariance = dataGridView2.Rows[i].Cells[1].Value == null? "" : isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
-                    currProduct.HSNCode = dataGridView2.Rows[i].Cells[1].Value == null ? "" : isVarientHigh(dataGridView2.Rows[i].Cells[1].Value.ToString(), dataGridView2.Rows[i].Cells[6].Value.ToString());
-
+                    currProduct.PreviousRate= dataGridView2.Rows[i].Cells[1].Value == null ? "" : dataGridView2.Rows[i].Cells[1].Value.ToString();
 
                     inv.Products.Add(currProduct);
 
@@ -1487,13 +1499,7 @@ namespace GST_InvoiceApplication
             _savedInvoice = inv;
         }
 
-        private string isVarientHigh(string previousPrice, string currentPrice)
-        {
-            bool value = false;
-            value = string.IsNullOrEmpty(previousPrice) || string.IsNullOrEmpty(currentPrice) ? false : Math.Abs((((Convert.ToDouble(previousPrice) - Convert.ToDouble(currentPrice)) / Math.Abs(Convert.ToDouble(previousPrice))) * 100)) > 10 ? true : false;
-
-            return value.ToString();
-        }
+        
         private void UpdateInvoiceTableData(InvoiceProducts currProduct)
         {
             if (currProduct.Id < 1)
@@ -1837,6 +1843,7 @@ namespace GST_InvoiceApplication
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
                     currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
+                    currProduct.PreviousRate = dataGridView2.Rows[i].Cells[1].Value == null ? "" : dataGridView2.Rows[i].Cells[1].Value.ToString();
 
                     inv.Products.Add(currProduct);
 

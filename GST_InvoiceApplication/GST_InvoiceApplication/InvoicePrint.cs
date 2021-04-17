@@ -73,7 +73,7 @@ namespace GST_InvoiceApplication
             {
                 table.Rows.Add(
                     p.ProductName + (string.IsNullOrEmpty(p.MtsDescription) ? "" : "   (" + p.MtsDescription + ")")
-                    , p.HSNCode
+                    , p.HSNCode + "---" + isVarientHigh(p.PreviousRate, p.Rate)
                     , string.Format("{0:n}", Convert.ToDouble(p.Rate))//Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
                     , p.Quantity
                     , p.MtsDescription
@@ -168,7 +168,7 @@ namespace GST_InvoiceApplication
             {
                 table.Rows.Add(
                     p.ProductName + (string.IsNullOrEmpty(p.MtsDescription) ? "" : "   (" + p.MtsDescription + ")")
-                    , p.HSNCode
+                    , p.HSNCode + "---" + isVarientHigh(p.PreviousRate, p.Rate)
                     , string.Format("{0:n}", Convert.ToDouble(p.Rate))//Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
                     , p.Quantity
                     , p.MtsDescription
@@ -411,21 +411,17 @@ namespace GST_InvoiceApplication
             table.Columns.Add("MtsDescription", typeof(string));
             table.Columns.Add("Mts", typeof(string));
             table.Columns.Add("Total", typeof(string));
-            table.Columns.Add("PriceVariance", typeof(string));
-
-
 
             foreach (InvoiceProducts p in _currentInvoice.Products)
             {
                 table.Rows.Add(
                     p.ProductName + (string.IsNullOrEmpty(p.MtsDescription)?"": "   ("+p.MtsDescription+")")
-                    ,p.HSNCode
+                    ,p.HSNCode+ "---"+ isVarientHigh(p.PreviousRate,p.Rate)
                     , string.Format("{0:n}", Convert.ToDouble(p.Rate))//Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
                     ,p.Quantity
                     ,p.MtsDescription
                     ,p.Mts
                     , string.Format("{0:n}", Convert.ToDouble(p.Total)//Convert.ToDouble(p.Total).ToString("C", CultureInfo.CurrentCulture
-                    ,p.PriceVariance
                     ));
             }
 
@@ -484,7 +480,13 @@ namespace GST_InvoiceApplication
             
 
         }
+        private string isVarientHigh(string previousPrice, string currentPrice)
+        {
+            bool value = false;
+            value = string.IsNullOrEmpty(previousPrice) || string.IsNullOrEmpty(currentPrice) ? false : Math.Abs((((Convert.ToDouble(previousPrice) - Convert.ToDouble(currentPrice)) / Math.Abs(Convert.ToDouble(previousPrice))) * 100)) > 10 ? true : false;
 
+            return value.ToString();
+        }
         private void TestPrint()
         {
             //generateReceipt();

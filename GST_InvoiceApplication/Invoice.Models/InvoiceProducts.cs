@@ -17,7 +17,7 @@ namespace Invoice.Models
         public string Total { get; set; }
         public string MtsDescription { get; set; }
         public string Mts { get; set; }
-        public string PriceVariance { get; set; }
+        public string PreviousRate { get; set; }
     }
 }
 

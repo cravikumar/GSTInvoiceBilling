@@ -829,7 +829,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!PriceVariance.Value</Value>
+                              <Value>=Split(CStr(Fields!HSNCode.Value), "---").GetValue(0)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -938,7 +938,7 @@
                           <Color>LightGrey</Color>
                           <Style>Solid</Style>
                         </Border>
-			<BackgroundColor>=IIF(Fields!HSNCode.Value="True","Silver","Transparent")</BackgroundColor>
+			<BackgroundColor>=IIF(Split(CStr(Fields!HSNCode.Value), "---").GetValue(1)="True","Silver","Transparent")</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>6pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
