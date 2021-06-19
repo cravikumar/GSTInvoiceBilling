@@ -160,6 +160,7 @@ namespace GST_InvoiceApplication
             dataGridView1.Columns[9].DataPropertyName = "CGSTWithOutGST";
 
             dataGridView1.Columns[10].DataPropertyName = "Pieces";
+            dataGridView1.Columns[11].DataPropertyName = "Error";
 
             dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
@@ -170,7 +171,7 @@ namespace GST_InvoiceApplication
             dataGridView1.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dataGridView1.Columns[9].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dataGridView1.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
+            dataGridView1.Columns[11].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             //dataGridView1.DataSource = dt;
             double discount;
             double totalBillValue = 0;
@@ -240,9 +241,17 @@ namespace GST_InvoiceApplication
             //dtCloned.Rows.Add("Total------", 0, totalbillstring, totalwithoutGST);
 
 
+            dtCloned.Columns.Add("Error");
 
-
-
+            foreach (DataRow dr in dtCloned.Rows)
+            {
+                dr["Error"] = String.Format("{0:n}", (Convert.ToDouble(dr[2]) - (
+                    Convert.ToDouble(dr[3])+
+                    Convert.ToDouble(dr[5])+
+                    Convert.ToDouble(dr[7])+
+                    Convert.ToDouble(dr[9])
+                    )));
+            }
 
 
             dataGridView1.DataSource = dtCloned;
@@ -304,12 +313,25 @@ namespace GST_InvoiceApplication
             worksheet = workbook.ActiveSheet;
             // changing the name of active sheet  
             worksheet.Name = "Exported from gridview";
+
+
+            worksheet.Cells[1, 1] = comboBox3.SelectedItem.ToString();
+            worksheet.Cells[1, 1].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+            worksheet.Cells[1, 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Yellow);
+
+            worksheet.Cells[2, 1] = dateTimePicker1.Value.ToShortDateString() + "   To    " + dateTimePicker2.Value.ToShortDateString();
+            worksheet.Cells[2, 1].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+            
+
+
             // storing header part in Excel  
             for (int i = 1; i < dataGridView1.Columns.Count + 1; i++)
             {
-                worksheet.Cells[1, i] = dataGridView1.Columns[i - 1].HeaderText;
-                worksheet.Cells[1, i].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-                worksheet.Cells[1, i].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Silver);
+                
+                    worksheet.Cells[3, i] = dataGridView1.Columns[i - 1].HeaderText;
+                    worksheet.Cells[3, i].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                    worksheet.Cells[3, i].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Silver);
+                
             }
 
             int counter = 1;
@@ -318,31 +340,31 @@ namespace GST_InvoiceApplication
             {
                 for (int j = 0; j < dataGridView1.Columns.Count; j++)
                 {
-
-                    worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
-                    worksheet.Cells[i + 2, j + 1].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                    worksheet.Cells[i + 4, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
+                    worksheet.Cells[i + 4, j + 1].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
+                
                 }
                 this.progressBar1.Increment(1);
                 counter++;
             }
+            
+            worksheet.Columns[1].ColumnWidth = 5.00;
+            worksheet.Columns[2].ColumnWidth = 15.00;
+            worksheet.Columns[3].ColumnWidth = 15.00;
 
-            worksheet.Columns[1].ColumnWidth = 4.43;
-            worksheet.Columns[2].ColumnWidth = 4.43;
-            worksheet.Columns[3].ColumnWidth = 5.00;
-
-            worksheet.Columns[4].ColumnWidth = 6.86;
+            worksheet.Columns[4].ColumnWidth = 15.00;
             //worksheet.Columns[4].NumberFormat = "dd-MMM";
 
-            worksheet.Columns[5].ColumnWidth = 0.01;
-            worksheet.Columns[6].ColumnWidth = 18;
+            worksheet.Columns[5].ColumnWidth = 15.00;
+            worksheet.Columns[6].ColumnWidth = 15.00;
 
-            worksheet.Columns[7].ColumnWidth = 0.01;
-            worksheet.Columns[7].NumberFormat = "##################";
+            worksheet.Columns[7].ColumnWidth = 15.00;
+            //worksheet.Columns[7].NumberFormat = "##################";
 
-            worksheet.Columns[8].ColumnWidth = 10.89;
+            worksheet.Columns[8].ColumnWidth = 15.00;
 
-            worksheet.Columns[9].ColumnWidth = 0.01;
-            worksheet.Columns[10].ColumnWidth = 7.43;
+            worksheet.Columns[9].ColumnWidth = 15.00;
+            worksheet.Columns[10].ColumnWidth = 15.00;
 
 
 
@@ -354,9 +376,11 @@ namespace GST_InvoiceApplication
 
 
 
-
-
-
+            worksheet.Columns["E"].Delete();
+            worksheet.Columns["F"].Delete();
+            worksheet.Columns["G"].Delete();
+            //worksheet.Columns.Delete(6);
+            //worksheet.Columns.Delete(7);
 
             // save the application  
             workbook.SaveAs(filename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);

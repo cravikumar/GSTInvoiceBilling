@@ -53,6 +53,7 @@
             this.CGSTWithGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CGSTWithOutGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Pieces = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Error = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -125,11 +126,12 @@
             this.SGSTWithOutGST,
             this.CGSTWithGST,
             this.CGSTWithOutGST,
-            this.Pieces});
+            this.Pieces,
+            this.Error});
             this.dataGridView1.Location = new System.Drawing.Point(12, 89);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1146, 537);
+            this.dataGridView1.Size = new System.Drawing.Size(1239, 537);
             this.dataGridView1.TabIndex = 14;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
@@ -268,6 +270,12 @@
             this.Pieces.Name = "Pieces";
             this.Pieces.ReadOnly = true;
             // 
+            // Error
+            // 
+            this.Error.HeaderText = "Error";
+            this.Error.Name = "Error";
+            this.Error.ReadOnly = true;
+            // 
             // HSNSalesReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,5 +329,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CGSTWithGST;
         private System.Windows.Forms.DataGridViewTextBoxColumn CGSTWithOutGST;
         private System.Windows.Forms.DataGridViewTextBoxColumn Pieces;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Error;
     }
 }
