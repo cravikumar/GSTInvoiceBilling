@@ -521,9 +521,77 @@ namespace GST_InvoiceApplication
             LoadCompanyData();
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            DateTime FromDate = dateTimePicker1.Value;
+            DateTime ToDate = dateTimePicker2.Value;
+            ToDate = ToDate.AddDays(1);
 
-        
+            //string sql = "select "+
+            //    "C.CompanyName,C.GSTIN as CompanyGST,S.InvoiceId,S.InvoiceDate,S.CustomerName,S.CustomerGST,S.CustomerPanAadhaar,S.StrBillTotal,S.StrSGST,S.StrCGST,S.StrIGST,S.StrTotalAfterTax,S.StrRounded,S.StrTotalPayable,S.SGSTValue,S.CGSTValue,S.IGSTValue" +
+            //    //"s.*,c.* "+
+            //" from SalesInvoiceDetail s inner join CompanyData c on c.ID = s.CompanyId where s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
+            //    "# and s.InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# Order by CompanyId,InvoiceDate";
+            string sql = "";
+
+            string whereCondition = "";
+            if (!checkBox2.Checked)
+            {
+                whereCondition = " C.IsGSTApplicable = 'True' and";
+            }
+
+            if (!string.IsNullOrEmpty(textBox2.Text))
+            {
+                whereCondition = whereCondition + " S.InvoiceId like '%" + textBox2.Text + "%' and";
+
+            }
+
+            if (comboBox3.SelectedItem != null && comboBox3.SelectedValue.ToString() != "0")
+            {
+                whereCondition = whereCondition + " s.CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and";
+            }
 
 
+
+            if (!checkBox1.Checked)
+                sql = "select " +
+                   "C.CompanyName,C.GSTIN as CompanyGST,S.InvoiceId,S.InvoiceDate,S.CustomerName,S.CustomerGST,S.CustomerPanAadhaar as PANAadhar,S.StrTotalAfterDiscountOrBeforeTax as TotalAmount,S.StrSGST as SGST,S.StrCGST as CGST,S.StrIGST as IGST,S.StrTotalAfterTax as TotalAfterTax,S.StrRounded as RoundOff,S.StrTotalPayable as GrandTotal,S.IsPaid as IsPaid,C.ID as CompanyId " +
+               //"s.*,c.* "+
+               " from SalesInvoiceDetail s inner join CompanyData c on c.ID = s.CompanyId where s.saleid in (select saleid from invoiceproductdetails where hsncode ='') and s.InvoiceId not like '%Backup%' and s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
+                   "# and " + whereCondition + " s.InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# Order by CompanyId,InvoiceId,CreatedOn";
+            else
+                sql = "select " +
+               "C.CompanyName,C.GSTIN as CompanyGST,S.InvoiceId,S.InvoiceDate,S.CustomerName,S.CustomerGST,S.CustomerPanAadhaar as PANAadhar,S.StrTotalAfterDiscountOrBeforeTax as TotalAmount,S.StrSGST as SGST,S.StrCGST as CGST,S.StrIGST as IGST,S.StrTotalAfterTax as TotalAfterTax,S.StrRounded as RoundOff,S.StrTotalPayable as GrandTotal,S.IsPaid as IsPaid,C.ID as CompanyId " +
+           //"s.*,c.* "+
+           " from SalesInvoiceDetail s inner join CompanyData c on c.ID = s.CompanyId where s.saleid in (select saleid from invoiceproductdetails where hsncode ='') and s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
+               "# and " + whereCondition + " s.InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# Order by CompanyId,InvoiceId,CreatedOn";
+
+
+            DataSet ds = Functions.RunSelectSql(sql);
+
+            
+
+
+            System.Data.DataTable dt = ds.Tables[0];
+
+            
+
+            if (!checkBox1.Checked)
+            {
+                System.Data.DataTable dtCloned = dt.Clone();
+                dtCloned.Columns[2].DataType = typeof(Int32);
+                foreach (DataRow row in dt.Rows)
+                {
+                    dtCloned.ImportRow(row);
+                }
+                dataGridView1.DataSource = dtCloned;
+
+
+                //dataGridView1.DataSource = dt;
+                dataGridView1.Sort(dataGridView1.Columns[2], ListSortDirection.Ascending);
+            }
+            else
+                dataGridView1.DataSource = dt;
+        }
     }
 }

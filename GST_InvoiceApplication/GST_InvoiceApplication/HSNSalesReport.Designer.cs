@@ -39,11 +39,20 @@
             this.button2 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.HSNCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NoOfBills = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalWithGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TotalWithOutGSTApprox = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IGSTWithGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IGSTWithOutGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SGSTWithGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SGSTWithOutGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CGSTWithGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CGSTWithOutGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Pieces = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -105,12 +114,26 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.HSNCode,
+            this.NoOfBills,
+            this.TotalWithGST,
+            this.TotalWithOutGSTApprox,
+            this.IGSTWithGST,
+            this.IGSTWithOutGST,
+            this.SGSTWithGST,
+            this.SGSTWithOutGST,
+            this.CGSTWithGST,
+            this.CGSTWithOutGST,
+            this.Pieces});
             this.dataGridView1.Location = new System.Drawing.Point(12, 89);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1236, 537);
+            this.dataGridView1.Size = new System.Drawing.Size(1146, 537);
             this.dataGridView1.TabIndex = 14;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
+            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
+            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsAdded);
             // 
             // textBox1
             // 
@@ -137,25 +160,6 @@
             this.progressBar1.Size = new System.Drawing.Size(467, 23);
             this.progressBar1.TabIndex = 17;
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(564, 632);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(131, 23);
-            this.button3.TabIndex = 19;
-            this.button3.Text = "Get Report PDF";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(75, 59);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 21;
-            this.label3.Text = "BillNo";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -164,13 +168,6 @@
             this.label4.Size = new System.Drawing.Size(51, 13);
             this.label4.TabIndex = 22;
             this.label4.Text = "Company";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(115, 56);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(182, 20);
-            this.textBox2.TabIndex = 23;
             // 
             // comboBox3
             // 
@@ -183,16 +180,102 @@
             this.comboBox3.Size = new System.Drawing.Size(179, 21);
             this.comboBox3.TabIndex = 80;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(52, 63);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 81;
+            this.label3.Text = "label3";
+            // 
+            // HSNCode
+            // 
+            this.HSNCode.HeaderText = "HSNCode";
+            this.HSNCode.Name = "HSNCode";
+            this.HSNCode.ReadOnly = true;
+            // 
+            // NoOfBills
+            // 
+            this.NoOfBills.HeaderText = "NoOfBills";
+            this.NoOfBills.Name = "NoOfBills";
+            this.NoOfBills.ReadOnly = true;
+            // 
+            // TotalWithGST
+            // 
+            this.TotalWithGST.HeaderText = "TotalWithGST";
+            this.TotalWithGST.MinimumWidth = 30;
+            this.TotalWithGST.Name = "TotalWithGST";
+            this.TotalWithGST.ReadOnly = true;
+            this.TotalWithGST.Width = 170;
+            // 
+            // TotalWithOutGSTApprox
+            // 
+            this.TotalWithOutGSTApprox.HeaderText = "TotalWithOutGST(Approx)";
+            this.TotalWithOutGSTApprox.MinimumWidth = 30;
+            this.TotalWithOutGSTApprox.Name = "TotalWithOutGSTApprox";
+            this.TotalWithOutGSTApprox.ReadOnly = true;
+            this.TotalWithOutGSTApprox.Width = 170;
+            // 
+            // IGSTWithGST
+            // 
+            this.IGSTWithGST.HeaderText = "IGSTWithGST";
+            this.IGSTWithGST.Name = "IGSTWithGST";
+            this.IGSTWithGST.ReadOnly = true;
+            this.IGSTWithGST.Visible = false;
+            this.IGSTWithGST.Width = 170;
+            // 
+            // IGSTWithOutGST
+            // 
+            this.IGSTWithOutGST.HeaderText = "IGSTWithOutGST";
+            this.IGSTWithOutGST.Name = "IGSTWithOutGST";
+            this.IGSTWithOutGST.ReadOnly = true;
+            this.IGSTWithOutGST.Width = 150;
+            // 
+            // SGSTWithGST
+            // 
+            this.SGSTWithGST.HeaderText = "SGSTWithGST";
+            this.SGSTWithGST.Name = "SGSTWithGST";
+            this.SGSTWithGST.ReadOnly = true;
+            this.SGSTWithGST.Visible = false;
+            this.SGSTWithGST.Width = 170;
+            // 
+            // SGSTWithOutGST
+            // 
+            this.SGSTWithOutGST.HeaderText = "SGSTWithOutGST";
+            this.SGSTWithOutGST.Name = "SGSTWithOutGST";
+            this.SGSTWithOutGST.ReadOnly = true;
+            this.SGSTWithOutGST.Width = 150;
+            // 
+            // CGSTWithGST
+            // 
+            this.CGSTWithGST.HeaderText = "CGSTWithGST";
+            this.CGSTWithGST.Name = "CGSTWithGST";
+            this.CGSTWithGST.ReadOnly = true;
+            this.CGSTWithGST.Visible = false;
+            this.CGSTWithGST.Width = 170;
+            // 
+            // CGSTWithOutGST
+            // 
+            this.CGSTWithOutGST.HeaderText = "CGSTWithOutGST";
+            this.CGSTWithOutGST.Name = "CGSTWithOutGST";
+            this.CGSTWithOutGST.ReadOnly = true;
+            this.CGSTWithOutGST.Width = 150;
+            // 
+            // Pieces
+            // 
+            this.Pieces.HeaderText = "Pieces";
+            this.Pieces.Name = "Pieces";
+            this.Pieces.ReadOnly = true;
+            // 
             // HSNSalesReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1275, 713);
-            this.Controls.Add(this.comboBox3);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.comboBox3);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
@@ -224,10 +307,19 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HSNCode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NoOfBills;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalWithGST;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TotalWithOutGSTApprox;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IGSTWithGST;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IGSTWithOutGST;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SGSTWithGST;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SGSTWithOutGST;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CGSTWithGST;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CGSTWithOutGST;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Pieces;
     }
 }

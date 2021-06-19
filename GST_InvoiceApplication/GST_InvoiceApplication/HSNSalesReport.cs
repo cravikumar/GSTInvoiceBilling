@@ -45,8 +45,8 @@ namespace GST_InvoiceApplication
         {
 
             string sql = "select * from CompanyData";
-            
-                sql = sql + " where IsGSTApplicable = 'True'";
+
+            sql = sql + " where IsGSTApplicable = 'True'";
             var ds = Functions.RunSelectSql(sql);
             List<CompanyDetails> companyList = new List<CompanyDetails>();
 
@@ -90,7 +90,7 @@ namespace GST_InvoiceApplication
                 userCache.Add(curr.CompanyID, curr.CompanyName);
 
             }
-            
+
             comboBox3.DataSource = new BindingSource(userCache, null);
             comboBox3.DisplayMember = "Value";
             comboBox3.ValueMember = "Key";
@@ -110,49 +110,169 @@ namespace GST_InvoiceApplication
             string sql = "";
 
             string whereCondition = "";
-            
-                whereCondition = " C.IsGSTApplicable = 'True' and";
-            
 
-            if (!string.IsNullOrEmpty(textBox2.Text))
-            {
-                whereCondition = whereCondition+ " S.InvoiceId like '%" + textBox2.Text + "%' and";
- 
-            }
+            whereCondition = " C.IsGSTApplicable = 'True' and";
 
-            if (comboBox3.SelectedItem != null && comboBox3.SelectedValue.ToString() != "0")       
+
+
+
+            if (comboBox3.SelectedItem != null && comboBox3.SelectedValue.ToString() != "0")
             {
-                whereCondition = whereCondition+ " s.CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and";
+                whereCondition = whereCondition + " s.CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and";
             }
 
 
 
-            
-             sql = "select F.HSNCode,count(F.HSNCode) as CountOfBills,Sum(F.Total) as TotalSaleAmount_WithGST from (SELECT F.InvoiceId, * FROM (select s.InvoiceId,p.SaleId,s.InvoiceDate,p.HSNcode,sum(p.Total) as Total from ((SalesInvoiceDetail s inner join InvoiceProductDetails p on p.SaleId = s.SaleId) inner join CompanyData c on c.ID = s.CompanyId)  where s.InvoiceId not like '%Backup%' and s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
-                "# and " + whereCondition + " s.InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# group by p.HSNCode,s.InvoiceDate,s.InvoiceId,P.SaleId)  AS F WHERE (((F.InvoiceId) Not Like '%Backup%')))X group by X.HSNCode";
-            
+
+            sql = "select F.HSNCode,count(F.HSNCode) as NoOfBills,Sum(F.Total) as TotalWithGST from (SELECT F.InvoiceId, * FROM (select s.InvoiceId,p.SaleId,s.InvoiceDate,p.HSNcode,sum(p.Total) as Total from ((SalesInvoiceDetail s inner join InvoiceProductDetails p on p.SaleId = s.SaleId) inner join CompanyData c on c.ID = s.CompanyId)  where s.InvoiceId not like '%Backup%' and s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
+               "# and " + whereCondition + " s.InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# group by p.HSNCode,s.InvoiceDate,s.InvoiceId,P.SaleId)  AS F WHERE (((F.InvoiceId) Not Like '%Backup%')))X group by X.HSNCode";
+
 
             DataSet ds = Functions.RunSelectSql(sql);
 
-           
+
 
 
             System.Data.DataTable dt = ds.Tables[0];
+            dt.Columns.Add("TotalWithOutGST");
+            dt.Columns.Add("IGSTWithGST");
+            dt.Columns.Add("IGSTWithOutGST");
+            dt.Columns.Add("SGSTWithGST");
+            dt.Columns.Add("SGSTWithOutGST");
+            dt.Columns.Add("CGSTWithGST");
+            dt.Columns.Add("CGSTWithOutGST");
+            dt.Columns.Add("Pieces");
 
+            dataGridView1.AutoGenerateColumns = false;
+
+            dataGridView1.Columns[0].DataPropertyName = "HSNCode";
+            dataGridView1.Columns[1].DataPropertyName = "NoOfBills";
+            dataGridView1.Columns[2].DataPropertyName = "TotalWithGST";
+            dataGridView1.Columns[3].DataPropertyName = "TotalWithOutGST";
+
+            dataGridView1.Columns[4].DataPropertyName = "IGSTWithGST";
+            dataGridView1.Columns[5].DataPropertyName = "IGSTWithOutGST";
+
+            dataGridView1.Columns[6].DataPropertyName = "SGSTWithGST";
+            dataGridView1.Columns[7].DataPropertyName = "SGSTWithOutGST";
+
+            dataGridView1.Columns[8].DataPropertyName = "CGSTWithGST";
+            dataGridView1.Columns[9].DataPropertyName = "CGSTWithOutGST";
+
+            dataGridView1.Columns[10].DataPropertyName = "Pieces";
+
+            dataGridView1.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[7].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[9].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            //dataGridView1.DataSource = dt;
+            double discount;
+            double totalBillValue = 0;
+            double totalBillValueWithoutGST = 0;
+            double tax = 5;
+            foreach (DataRow dr in dt.Rows)
+            {
+                double currentTotal = 0;
+                bool converted = double.TryParse(dr[2].ToString(), out currentTotal);
+                if (converted)
+                {
+                    discount = tallyRound((currentTotal * (tax / (100 + tax))), 2);
+                    dr[3] = currentTotal - discount;
+                }
+
+                if (!(dr[2] == DBNull.Value))
+                {
+                    totalBillValue += Convert.ToDouble(dr[2]);
+                    totalBillValueWithoutGST += Convert.ToDouble(dr[3]);
+                }
+
+                dr[2] = String.Format("{0:n}", (dr[2]));
+                dr[3] = String.Format("{0:n}", (dr[3]));
+            }
             
-                dataGridView1.DataSource = dt;
+            System.Data.DataTable dtCloned = dt.Clone();
+            dtCloned.Columns[2].DataType = typeof(string);
+            dtCloned.Columns[3].DataType = typeof(string);
+
+            foreach (DataRow row in dt.Rows)
+            {
+                tax = 5;
+                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and IGSTValue = '5') and HSNCode='" + row[0].ToString() + "'";
+                ds = Functions.RunSelectSql(sql);
+                double igstTotal = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
+                discount = tallyRound((igstTotal * (tax / (100 + tax))), 2);
+                double igstTotalWithoutGST = igstTotal - discount;
+
+                igstTotalWithoutGST = igstTotalWithoutGST * 0.05;
+
+                tax = 5;
+                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and SGSTValue = '2.5') and HSNCode='" + row[0].ToString() + "'";
+                ds = Functions.RunSelectSql(sql);
+                double sgstTotal = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
+                discount = (tallyRound((sgstTotal * (tax / (100 + tax))), 2)) / 2;
+                double sgstTotalWithoutGST = sgstTotal - discount - discount;
+
+                sgstTotalWithoutGST = sgstTotalWithoutGST * 0.025;
+
+                sql = "select sum(Quantity) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%') and HSNCode='" + row[0].ToString() + "'";
+                ds = Functions.RunSelectSql(sql);
+                double quantity = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
+
+
+                dtCloned.Rows.Add(row[0], row[1],
+                    String.Format("{0:n}", (row[2])),
+                    String.Format("{0:n}", (row[3])),
+                    String.Format("{0:n}", (igstTotal)),
+                    String.Format("{0:n}", (igstTotalWithoutGST)),
+                    String.Format("{0:n}", (sgstTotal)),
+                    String.Format("{0:n}", (sgstTotalWithoutGST)),
+                    String.Format("{0:n}", (sgstTotal)),
+                    String.Format("{0:n}", (sgstTotalWithoutGST)),
+                    quantity
+                    );
+            }
+            //dtCloned.Rows.Add("Total------", 0, totalbillstring, totalwithoutGST);
+
+
+
+
+
+
+
+            dataGridView1.DataSource = dtCloned;
+
+            UpdateFont();
+
+            //dataGridView1.DataSource = dt;
         }
+
+        private void UpdateFont()
+        {
+            //Change cell font
+            foreach (DataGridViewColumn c in dataGridView1.Columns)
+            {
+                c.DefaultCellStyle.Font = new System.Drawing.Font("Arial", 22F, GraphicsUnit.Pixel);
+            }
+        }
+
 
 
         private void button2_Click(object sender, EventArgs e)
         {
             //progressBar1 = new ProgressBar();
             this.progressBar1.Minimum = 0;
-            this.progressBar1.Maximum = dataGridView1.Rows.Count+20;
+            this.progressBar1.Maximum = dataGridView1.Rows.Count + 20;
 
-           
 
-            if (string.IsNullOrEmpty(textBox1.Text)) {
+
+            if (string.IsNullOrEmpty(textBox1.Text))
+            {
                 using (var fbd = new FolderBrowserDialog())
                 {
                     DialogResult result = fbd.ShowDialog();
@@ -198,12 +318,8 @@ namespace GST_InvoiceApplication
             {
                 for (int j = 0; j < dataGridView1.Columns.Count; j++)
                 {
-                    if (j == 3)
-                    {
-                        worksheet.Cells[i + 2, j + 1] = Convert.ToDateTime(dataGridView1.Rows[i].Cells[j].Value.ToString()).ToString("dd-MMM");
-                    }
-                    else
-                        worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
+
+                    worksheet.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
                     worksheet.Cells[i + 2, j + 1].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
                 }
                 this.progressBar1.Increment(1);
@@ -211,28 +327,23 @@ namespace GST_InvoiceApplication
             }
 
             worksheet.Columns[1].ColumnWidth = 4.43;
-            worksheet.Columns[2].ColumnWidth = 0.1;
+            worksheet.Columns[2].ColumnWidth = 4.43;
             worksheet.Columns[3].ColumnWidth = 5.00;
 
             worksheet.Columns[4].ColumnWidth = 6.86;
-            worksheet.Columns[4].NumberFormat = "dd-MMM";
+            //worksheet.Columns[4].NumberFormat = "dd-MMM";
 
-            worksheet.Columns[5].ColumnWidth = 16.51;
+            worksheet.Columns[5].ColumnWidth = 0.01;
             worksheet.Columns[6].ColumnWidth = 18;
 
-            worksheet.Columns[7].ColumnWidth = 12.86;
+            worksheet.Columns[7].ColumnWidth = 0.01;
             worksheet.Columns[7].NumberFormat = "##################";
 
             worksheet.Columns[8].ColumnWidth = 10.89;
-            
-            worksheet.Columns[9].ColumnWidth = 7.43;
+
+            worksheet.Columns[9].ColumnWidth = 0.01;
             worksheet.Columns[10].ColumnWidth = 7.43;
-            worksheet.Columns[11].ColumnWidth = 7.43;
-           
-            
-            worksheet.Columns[12].ColumnWidth = 10.29;
-            worksheet.Columns[13].ColumnWidth = 7.43;
-            worksheet.Columns[14].ColumnWidth = 10.29;
+
 
 
             worksheet.PageSetup.Orientation = XlPageOrientation.xlLandscape;
@@ -252,7 +363,7 @@ namespace GST_InvoiceApplication
             // Exit from the application  
             app.Quit();
 
-            
+
 
             MessageBox.Show("Created Successfully");
             this.progressBar1.Value = 0;
@@ -261,10 +372,10 @@ namespace GST_InvoiceApplication
 
         static void ShowMessageBox()
         {
-            MessageBox.Show("Creating ExcelSheet, Please Wait....", "Information",MessageBoxButtons.OK);
+            MessageBox.Show("Creating ExcelSheet, Please Wait....", "Information", MessageBoxButtons.OK);
         }
 
-        
+
 
         private void textBox1_Enter(object sender, EventArgs e)
         {
@@ -274,7 +385,7 @@ namespace GST_InvoiceApplication
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    
+
                     textBox1.Text = fbd.SelectedPath;
                 }
             }
@@ -310,8 +421,8 @@ namespace GST_InvoiceApplication
             {
                 string companyName = Convert.ToString(dataGridView1.Rows[i].Cells[0].Value);
 
-                table.Rows.Add(companyName.Length>4? companyName.Substring(0, 4):companyName
-                    ,dataGridView1.Rows[i].Cells[2].Value
+                table.Rows.Add(companyName.Length > 4 ? companyName.Substring(0, 4) : companyName
+                    , dataGridView1.Rows[i].Cells[2].Value
                     , Convert.ToDateTime(dataGridView1.Rows[i].Cells[3].Value).ToString("dd/MMM")
                     , dataGridView1.Rows[i].Cells[4].Value
                     , dataGridView1.Rows[i].Cells[5].Value
@@ -322,12 +433,12 @@ namespace GST_InvoiceApplication
                     , dataGridView1.Rows[i].Cells[10].Value
                     , dataGridView1.Rows[i].Cells[12].Value//round
                     , dataGridView1.Rows[i].Cells[13].Value
-                    , Convert.ToBoolean(dataGridView1.Rows[i].Cells[14].Value)?"CASH":"CREDIT"
+                    , Convert.ToBoolean(dataGridView1.Rows[i].Cells[14].Value) ? "CASH" : "CREDIT"
                     );
             }
 
             table = table.DefaultView.ToTable();
-  
+
             productCount = dataGridView1.Rows.Count;
             ReportDataSource rdsprod = new ReportDataSource("DaySales", table);
 
@@ -336,7 +447,7 @@ namespace GST_InvoiceApplication
             report.ReportPath = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString() + "\\InvoiceDaySales.rdlc";
 
             report.DataSources.Add(rdsprod);
-            
+
             PrintToPrinter(report);
         }
 
@@ -469,7 +580,7 @@ namespace GST_InvoiceApplication
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            
+
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
@@ -477,9 +588,20 @@ namespace GST_InvoiceApplication
             LoadCompanyData();
         }
 
+        private void dataGridView1_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
 
-        
+        }
 
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+
+
+        }
+        private double tallyRound(double value, int decimals)
+        {
+            return Math.Round(value, decimals, MidpointRounding.AwayFromZero);
+        }
 
     }
 }
