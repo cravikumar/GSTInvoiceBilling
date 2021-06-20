@@ -242,9 +242,22 @@ namespace GST_InvoiceApplication
 
 
             dtCloned.Columns.Add("Error");
+            double totalSales = 0;
+            double totalSalesbfTax = 0;
+            double totalIGST = 0;
+            double totalSGST = 0;
+            double totalCGST = 0;
+            int totalBills = 0;
 
             foreach (DataRow dr in dtCloned.Rows)
             {
+                totalSales = totalSales + Convert.ToDouble(dr[2]);
+                totalSalesbfTax = totalSalesbfTax + Convert.ToDouble(dr[3]);
+                totalIGST = totalIGST + Convert.ToDouble(dr[5]);
+                totalSGST = totalSGST + Convert.ToDouble(dr[7]);
+                totalCGST = totalCGST + Convert.ToDouble(dr[9]);
+                totalBills = totalBills + Convert.ToInt32(dr[1]);
+
                 dr["Error"] = String.Format("{0:n}", (Convert.ToDouble(dr[2]) - (
                     Convert.ToDouble(dr[3])+
                     Convert.ToDouble(dr[5])+
@@ -253,10 +266,27 @@ namespace GST_InvoiceApplication
                     )));
             }
 
+            dtCloned.Rows.Add("Totals"
+                , totalBills
+                , String.Format("{0:n}", (totalSales))
+                , String.Format("{0:n}", (totalSalesbfTax))
+                , String.Format("{0:n}", (0))
+                , String.Format("{0:n}", (totalIGST))
+                , String.Format("{0:n}", (0))
+                , String.Format("{0:n}", (totalSGST))
+                , String.Format("{0:n}", (0  ))
+                , String.Format("{0:n}", (totalCGST))
+                ,""
+                );
 
             dataGridView1.DataSource = dtCloned;
 
             UpdateFont();
+
+            
+            dataGridView1.Rows[dtCloned.Rows.Count - 1].DefaultCellStyle.BackColor = Color.Yellow;
+
+            dataGridView1.Columns[11].DefaultCellStyle.BackColor = Color.Yellow;
 
             //dataGridView1.DataSource = dt;
         }
@@ -336,13 +366,18 @@ namespace GST_InvoiceApplication
 
             int counter = 1;
             // storing Each row and column value to excel sheet  
-            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
                 for (int j = 0; j < dataGridView1.Columns.Count; j++)
                 {
                     worksheet.Cells[i + 4, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
                     worksheet.Cells[i + 4, j + 1].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-                
+
+                    if (j == dataGridView1.Columns.Count - 1)
+                        worksheet.Cells[i + 4, j + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Yellow);
+                    if (i == dataGridView1.Rows.Count - 1)
+                        worksheet.Cells[i + 4, j + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Yellow);
+
                 }
                 this.progressBar1.Increment(1);
                 counter++;
