@@ -84,7 +84,7 @@ namespace GST_InvoiceApplication
             List<CompanyDetails> companies = GetCompanyData();
 
             SortedDictionary<int, string> userCache = new SortedDictionary<int, string>();
-            userCache.Add(0, "--Select--");
+            
             foreach (CompanyDetails curr in companies)
             {
                 userCache.Add(curr.CompanyID, curr.CompanyName);
@@ -121,7 +121,12 @@ namespace GST_InvoiceApplication
                 whereCondition = whereCondition + " s.CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and";
             }
 
-
+            if(radioButton1.Checked)
+            {
+                whereCondition = whereCondition + " s.CustomerGST <> '' and";
+            }
+            else
+                whereCondition = whereCondition + " s.CustomerGST = '' and";
 
 
             sql = "select F.HSNCode,count(F.HSNCode) as NoOfBills,Sum(F.Total) as TotalWithGST from (SELECT F.InvoiceId, * FROM (select s.InvoiceId,p.SaleId,s.InvoiceDate,p.HSNcode,sum(p.Total) as Total from ((SalesInvoiceDetail s inner join InvoiceProductDetails p on p.SaleId = s.SaleId) inner join CompanyData c on c.ID = s.CompanyId)  where s.InvoiceId not like '%Backup%' and s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
@@ -201,10 +206,18 @@ namespace GST_InvoiceApplication
             dtCloned.Columns[2].DataType = typeof(string);
             dtCloned.Columns[3].DataType = typeof(string);
 
+            if (radioButton1.Checked)
+            {
+                whereCondition =  " CustomerGST <> '' and";
+            }
+            else
+                whereCondition =  " CustomerGST = '' and";
+
+
             foreach (DataRow row in dt.Rows)
             {
                 tax = 5;
-                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and IGSTValue = '5') and HSNCode='" + row[0].ToString() + "'";
+                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where "+ whereCondition+" InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and IGSTValue = '5') and HSNCode='" + row[0].ToString() + "'";
                 ds = Functions.RunSelectSql(sql);
                 double igstTotal = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
                 discount = tallyRound((igstTotal * (tax / (100 + tax))), 2);
@@ -213,7 +226,7 @@ namespace GST_InvoiceApplication
                 igstTotalWithoutGST = igstTotalWithoutGST * 0.05;
 
                 tax = 5;
-                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and SGSTValue = '2.5') and HSNCode='" + row[0].ToString() + "'";
+                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where " + whereCondition + " InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and SGSTValue = '2.5') and HSNCode='" + row[0].ToString() + "'";
                 ds = Functions.RunSelectSql(sql);
                 double sgstTotal = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
                 discount = (tallyRound((sgstTotal * (tax / (100 + tax))), 2)) / 2;
@@ -221,7 +234,7 @@ namespace GST_InvoiceApplication
 
                 sgstTotalWithoutGST = sgstTotalWithoutGST * 0.025;
 
-                sql = "select sum(Quantity) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%') and HSNCode='" + row[0].ToString() + "'";
+                sql = "select sum(Quantity) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where " + whereCondition + " InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%') and HSNCode='" + row[0].ToString() + "'";
                 ds = Functions.RunSelectSql(sql);
                 double quantity = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
 
@@ -344,8 +357,16 @@ namespace GST_InvoiceApplication
             // changing the name of active sheet  
             worksheet.Name = "Exported from gridview";
 
+            string heading;
+            if (radioButton1.Checked)
+            {
+                heading = comboBox3.SelectedItem.ToString() + " (B2B report)";
+            }
+            else
+                heading = comboBox3.SelectedItem.ToString() + " (B2C report)";
 
-            worksheet.Cells[1, 1] = comboBox3.SelectedItem.ToString();
+
+            worksheet.Cells[1, 1] = heading;
             worksheet.Cells[1, 1].Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
             worksheet.Cells[1, 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Yellow);
 
@@ -365,9 +386,11 @@ namespace GST_InvoiceApplication
             }
 
             int counter = 1;
+            worksheet.Rows[3].RowHeight = 50.00;
             // storing Each row and column value to excel sheet  
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
+                worksheet.Rows[i+4].RowHeight = 50.00;
                 for (int j = 0; j < dataGridView1.Columns.Count; j++)
                 {
                     worksheet.Cells[i + 4, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
@@ -378,11 +401,18 @@ namespace GST_InvoiceApplication
                     if (i == dataGridView1.Rows.Count - 1)
                         worksheet.Cells[i + 4, j + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Yellow);
 
+                    // worksheet.Range["B3"].Style.VerticalAlignment = VerticalAlignType.Top;
+                    worksheet.Cells[i + 4, j + 1].VerticalAlignment = Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignTop;
+
                 }
                 this.progressBar1.Increment(1);
                 counter++;
             }
+
+
             
+
+
             worksheet.Columns[1].ColumnWidth = 5.00;
             worksheet.Columns[2].ColumnWidth = 15.00;
             worksheet.Columns[3].ColumnWidth = 15.00;
@@ -662,5 +692,9 @@ namespace GST_InvoiceApplication
             return Math.Round(value, decimals, MidpointRounding.AwayFromZero);
         }
 
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
