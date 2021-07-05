@@ -98,6 +98,7 @@ namespace GST_InvoiceApplication
 
         private void button1_Click(object sender, EventArgs e)
         {
+            textBox1.Text = "";
             DateTime FromDate = dateTimePicker1.Value;
             DateTime ToDate = dateTimePicker2.Value;
             ToDate = ToDate.AddDays(1);
@@ -125,9 +126,10 @@ namespace GST_InvoiceApplication
             {
                 whereCondition = whereCondition + " s.CustomerGST <> '' and";
             }
-            else
+            else if(radioButton2.Checked)
                 whereCondition = whereCondition + " s.CustomerGST = '' and";
-
+            else if (radioButton2.Checked)
+                whereCondition = whereCondition + " 1=1 and";
 
             sql = "select F.HSNCode,count(F.HSNCode) as NoOfBills,Sum(F.Total) as TotalWithGST from (SELECT F.InvoiceId, * FROM (select s.InvoiceId,p.SaleId,s.InvoiceDate,p.HSNcode,sum(p.Total) as Total from ((SalesInvoiceDetail s inner join InvoiceProductDetails p on p.SaleId = s.SaleId) inner join CompanyData c on c.ID = s.CompanyId)  where s.InvoiceId not like '%Backup%' and s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
                "# and " + whereCondition + " s.InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# group by p.HSNCode,s.InvoiceDate,s.InvoiceId,P.SaleId)  AS F WHERE (((F.InvoiceId) Not Like '%Backup%')))X group by X.HSNCode";
@@ -206,12 +208,16 @@ namespace GST_InvoiceApplication
             dtCloned.Columns[2].DataType = typeof(string);
             dtCloned.Columns[3].DataType = typeof(string);
 
+            whereCondition = "";
+
             if (radioButton1.Checked)
             {
                 whereCondition =  " CustomerGST <> '' and";
             }
-            else
-                whereCondition =  " CustomerGST = '' and";
+            else if(radioButton2.Checked)
+                whereCondition = whereCondition + " CustomerGST = '' and";
+            else if (radioButton3.Checked)
+                whereCondition = whereCondition + " 1=1 and";
 
 
             foreach (DataRow row in dt.Rows)
@@ -386,11 +392,11 @@ namespace GST_InvoiceApplication
             }
 
             int counter = 1;
-            worksheet.Rows[3].RowHeight = 50.00;
+            //worksheet.Rows[3].RowHeight = 50.00;
             // storing Each row and column value to excel sheet  
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                worksheet.Rows[i+4].RowHeight = 50.00;
+                worksheet.Rows[i+4].RowHeight = 38.00;
                 for (int j = 0; j < dataGridView1.Columns.Count; j++)
                 {
                     worksheet.Cells[i + 4, j + 1] = dataGridView1.Rows[i].Cells[j].Value.ToString();
@@ -414,26 +420,26 @@ namespace GST_InvoiceApplication
 
 
             worksheet.Columns[1].ColumnWidth = 5.00;
-            worksheet.Columns[2].ColumnWidth = 15.00;
-            worksheet.Columns[3].ColumnWidth = 15.00;
+            worksheet.Columns[2].ColumnWidth = 5.00;
+            worksheet.Columns[3].ColumnWidth = 12.00;
 
-            worksheet.Columns[4].ColumnWidth = 15.00;
+            worksheet.Columns[4].ColumnWidth = 12.00;
             //worksheet.Columns[4].NumberFormat = "dd-MMM";
 
-            worksheet.Columns[5].ColumnWidth = 15.00;
-            worksheet.Columns[6].ColumnWidth = 15.00;
+            worksheet.Columns[5].ColumnWidth = 12.00;
+            worksheet.Columns[6].ColumnWidth = 12.00;
 
-            worksheet.Columns[7].ColumnWidth = 15.00;
+            worksheet.Columns[7].ColumnWidth = 12.00;
             //worksheet.Columns[7].NumberFormat = "##################";
 
-            worksheet.Columns[8].ColumnWidth = 15.00;
+            worksheet.Columns[8].ColumnWidth = 12.00;
 
-            worksheet.Columns[9].ColumnWidth = 15.00;
-            worksheet.Columns[10].ColumnWidth = 15.00;
+            worksheet.Columns[9].ColumnWidth = 12.00;
+            worksheet.Columns[10].ColumnWidth = 12.00;
 
 
 
-            worksheet.PageSetup.Orientation = XlPageOrientation.xlLandscape;
+            worksheet.PageSetup.Orientation = XlPageOrientation.xlPortrait;
             worksheet.PageSetup.LeftMargin = 9.7;
             worksheet.PageSetup.RightMargin = 9.7;
             worksheet.PageSetup.TopMargin = 15.0;
