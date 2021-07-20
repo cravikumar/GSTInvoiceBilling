@@ -475,7 +475,7 @@ namespace GST_InvoiceApplication
                 double Discerror = discount - Math.Truncate(discount);
                 double error = discount > 0 ? Billerror - Discerror : 0;
 
-                discount = discount + tallyRound(error, 2);
+                //discount = discount + tallyRound(error, 2);
                 double totalbeforeTax = totalBillValue - discount;
 
                 double totalsgst = 0;
