@@ -206,6 +206,7 @@
     <EmbeddedResource Include="AddInvoiceOld.resx">
       <DependentUpon>AddInvoiceOld.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="InvoiceOriginalV2.rdlc" />
     <EmbeddedResource Include="ProductSetup.resx">
       <DependentUpon>ProductSetup.cs</DependentUpon>
     </EmbeddedResource>
