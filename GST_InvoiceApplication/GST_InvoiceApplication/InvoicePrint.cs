@@ -29,9 +29,6 @@ namespace GST_InvoiceApplication
         CompanyDetails _currentCompany;
         public InvoicePrint(InvoiceDetails inv,CompanyDetails currentCompany,bool withOutLoading = false)
         {
-            
-                
-                
             this.WindowState = FormWindowState.Maximized;
 
             this._currentInvoice = inv;
@@ -50,11 +47,11 @@ namespace GST_InvoiceApplication
             var asem = Assembly.GetExecutingAssembly().Location;
             var path = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString();
             
-            if (!File.Exists(path + "\\InvoiceOriginal.rdlc"))
-                MessageBox.Show("File Not present at " + path + "\\InvoiceOriginal.rdlc");
+            if (!File.Exists(path + "\\InvoiceOriginalV2.rdlc"))
+                MessageBox.Show("File Not present at " + path + "\\InvoiceOriginalV2.rdlc");
 
             if (_currentCompany.IsGSTApplicable)
-                report.ReportPath = path + "\\InvoiceOriginal.rdlc";
+                report.ReportPath = path + "\\InvoiceOriginalV2.rdlc";
             else
                 report.ReportPath = path + "\\InvoiceOriginalNoGST.rdlc";
             report.EnableExternalImages = true;
@@ -74,7 +71,8 @@ namespace GST_InvoiceApplication
                 table.Rows.Add(
                     p.ProductName + (string.IsNullOrEmpty(p.MtsDescription) ? "" : "   (" + p.MtsDescription + ")")
                     , p.HSNCode + "---" + isVarientHigh(p.PreviousRate, p.Rate)
-                    , string.Format("{0:n}", Convert.ToDouble(p.Rate))//Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
+                    , string.Format("{0:n}", Convert.ToDouble(p.Rate)) + "---" + string.Format("{0:n}", Convert.ToDouble(p.RateWithoutTax))
+                    //, string.Format("{0:n}", Convert.ToDouble(p.Rate))//Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
                     , p.Quantity
                     , p.MtsDescription
                     , p.Mts
@@ -169,7 +167,7 @@ namespace GST_InvoiceApplication
                 table.Rows.Add(
                     p.ProductName + (string.IsNullOrEmpty(p.MtsDescription) ? "" : "   (" + p.MtsDescription + ")")
                     , p.HSNCode + "---" + isVarientHigh(p.PreviousRate, p.Rate)
-                    , string.Format("{0:n}", Convert.ToDouble(p.Rate))//Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
+                    , string.Format("{0:n}", Convert.ToDouble(p.Rate)) + "---" + string.Format("{0:n}", Convert.ToDouble(p.RateWithoutTax))
                     , p.Quantity
                     , p.MtsDescription
                     , p.Mts
@@ -393,11 +391,11 @@ namespace GST_InvoiceApplication
                 //System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString();
 //@"C:\Users\SAIRAM\Documents\Visual Studio 2013\Projects\GST_InvoiceApplication\GST_InvoiceApplication";//Path.GetDirectoryName(asem);
 
-            if (!File.Exists(path + "\\InvoiceOriginal.rdlc"))
-                MessageBox.Show("File Not present at " + path + "\\InvoiceOriginal.rdlc");
+            if (!File.Exists(path + "\\InvoiceOriginalV2.rdlc"))
+                MessageBox.Show("File Not present at " + path + "\\InvoiceOriginalV2.rdlc");
 
             if(_currentCompany.IsGSTApplicable)
-            this.reportViewer1.LocalReport.ReportPath = path + "\\InvoiceOriginal.rdlc";
+            this.reportViewer1.LocalReport.ReportPath = path + "\\InvoiceOriginalV2.rdlc";
             else
                 this.reportViewer1.LocalReport.ReportPath = path + "\\InvoiceOriginalNoGST.rdlc";
 
@@ -417,8 +415,9 @@ namespace GST_InvoiceApplication
                 table.Rows.Add(
                     p.ProductName + (string.IsNullOrEmpty(p.MtsDescription)?"": "   ("+p.MtsDescription+")")
                     ,p.HSNCode+ "---"+ isVarientHigh(p.PreviousRate,p.Rate)
-                    , string.Format("{0:n}", Convert.ToDouble(p.Rate))//Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
-                    ,p.Quantity
+                    , string.Format("{0:n}", Convert.ToDouble(p.Rate)) + "---" + string.Format("{0:n}", Convert.ToDouble(p.RateWithoutTax))
+                    //Convert.ToDouble(p.Rate).ToString("C", CultureInfo.CurrentCulture)
+                    , p.Quantity
                     ,p.MtsDescription
                     ,p.Mts
                     , string.Format("{0:n}", Convert.ToDouble(p.Total)//Convert.ToDouble(p.Total).ToString("C", CultureInfo.CurrentCulture

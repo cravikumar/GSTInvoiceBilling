@@ -130,6 +130,12 @@
     <Compile Include="AddInvoice.Designer.cs">
       <DependentUpon>AddInvoice.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddInvoiceOld.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddInvoiceOld.Designer.cs">
+      <DependentUpon>AddInvoiceOld.cs</DependentUpon>
+    </Compile>
     <Compile Include="GSTDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -196,6 +202,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddInvoice.resx">
       <DependentUpon>AddInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddInvoiceOld.resx">
+      <DependentUpon>AddInvoiceOld.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductSetup.resx">
       <DependentUpon>ProductSetup.cs</DependentUpon>

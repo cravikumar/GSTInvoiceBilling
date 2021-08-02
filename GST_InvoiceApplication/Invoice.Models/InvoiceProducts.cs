@@ -18,6 +18,7 @@ namespace Invoice.Models
         public string MtsDescription { get; set; }
         public string Mts { get; set; }
         public string PreviousRate { get; set; }
+        public string RateWithoutTax { get; set; }
     }
 }
 
