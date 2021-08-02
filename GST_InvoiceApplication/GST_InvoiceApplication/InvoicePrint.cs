@@ -46,12 +46,21 @@ namespace GST_InvoiceApplication
             LocalReport report = new LocalReport();
             var asem = Assembly.GetExecutingAssembly().Location;
             var path = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString();
-            
-            if (!File.Exists(path + "\\InvoiceOriginalV2.rdlc"))
-                MessageBox.Show("File Not present at " + path + "\\InvoiceOriginalV2.rdlc");
+
+            string originalInvoicePath = "InvoiceOriginal";
+            if(_currentInvoice.InvoiceDate < new DateTime(2021, 08, 01))
+            {
+                originalInvoicePath = "\\InvoiceOriginal.rdlc";
+            }
+            else
+                originalInvoicePath = "\\InvoiceOriginalV2.rdlc";
+
+
+            if (!File.Exists(path + originalInvoicePath))
+                MessageBox.Show("File Not present at " + path + originalInvoicePath);
 
             if (_currentCompany.IsGSTApplicable)
-                report.ReportPath = path + "\\InvoiceOriginalV2.rdlc";
+                report.ReportPath = path + originalInvoicePath;
             else
                 report.ReportPath = path + "\\InvoiceOriginalNoGST.rdlc";
             report.EnableExternalImages = true;
@@ -388,14 +397,25 @@ namespace GST_InvoiceApplication
             reportViewer1.ProcessingMode = ProcessingMode.Local;
             var asem = Assembly.GetExecutingAssembly().Location;
             var path = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString();
-                //System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString();
-//@"C:\Users\SAIRAM\Documents\Visual Studio 2013\Projects\GST_InvoiceApplication\GST_InvoiceApplication";//Path.GetDirectoryName(asem);
+            //System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString();
+            //@"C:\Users\SAIRAM\Documents\Visual Studio 2013\Projects\GST_InvoiceApplication\GST_InvoiceApplication";//Path.GetDirectoryName(asem);
 
-            if (!File.Exists(path + "\\InvoiceOriginalV2.rdlc"))
-                MessageBox.Show("File Not present at " + path + "\\InvoiceOriginalV2.rdlc");
+            string originalInvoicePath = "InvoiceOriginal";
+            if (_currentInvoice.InvoiceDate < new DateTime(2021, 08, 01))
+            {
+                originalInvoicePath = "\\InvoiceOriginal.rdlc";
+            }
+            else
+                originalInvoicePath = "\\InvoiceOriginalV2.rdlc";
+
+
+            if (!File.Exists(path + originalInvoicePath))
+                MessageBox.Show("File Not present at " + path + originalInvoicePath);
+
+
 
             if(_currentCompany.IsGSTApplicable)
-            this.reportViewer1.LocalReport.ReportPath = path + "\\InvoiceOriginalV2.rdlc";
+            this.reportViewer1.LocalReport.ReportPath = path + originalInvoicePath;
             else
                 this.reportViewer1.LocalReport.ReportPath = path + "\\InvoiceOriginalNoGST.rdlc";
 

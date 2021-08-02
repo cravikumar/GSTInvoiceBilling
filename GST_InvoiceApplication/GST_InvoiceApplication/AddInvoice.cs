@@ -252,26 +252,26 @@ namespace GST_InvoiceApplication
             }
             else
             {
-                textBox13.Visible = true;
-                textBox7.Visible = true;
+                textBox13.Visible = false;
+                textBox7.Visible = false;
                 textBox8.Visible = true;
                 textBox9.Visible = true;
                 textBox16.Visible = true;
                 textBox17.Visible = true;
-                textBox14.Visible = true;
+                textBox14.Visible = false;
                 textBox11.Visible = true;
                 textBox18.Visible = true;
                 //inv.StrIGST;
-                textBox14.Visible = true;
-                label17.Visible = true;
-                label11.Visible = true;
+                textBox14.Visible = false;
+                label17.Visible = false;
+                label11.Visible = false;
                 label12.Visible = true;
                 label20.Visible = true;
                 label13.Visible = true;
                 label15.Visible = true;
                 label21.Visible = true;
                 label22.Visible = true;
-                label18.Visible = true;
+                label18.Visible = false;
 
                 textBox6.Visible = true;
                 label10.Visible = true;
@@ -1110,26 +1110,26 @@ namespace GST_InvoiceApplication
             }
             else
             {
-                textBox13.Visible = true;
-                textBox7.Visible = true;
+                textBox13.Visible = false;
+                textBox7.Visible = false;
                 textBox8.Visible = true;
                 textBox9.Visible = true;
                 textBox16.Visible = true;
                 textBox17.Visible = true;
-                textBox14.Visible = true;
+                textBox14.Visible = false;
                 textBox11.Visible = true;
                 textBox18.Visible = true;
                 //inv.StrIGST;
-                textBox14.Visible = true;
-                label17.Visible = true;
-                label11.Visible = true;
+                textBox14.Visible = false;
+                label17.Visible = false;
+                label11.Visible = false;
                 label12.Visible = true;
                 label20.Visible = true;
                 label13.Visible = true;
                 label15.Visible = true;
                 label21.Visible = true;
                 label22.Visible = true;
-                label18.Visible = true;
+                label18.Visible = false;
 
                 textBox6.Visible = true;
                 label10.Visible = true;
@@ -1268,6 +1268,15 @@ namespace GST_InvoiceApplication
             
             }
 
+            if (Convert.ToDateTime(dr["InvoiceDate"]) < new DateTime(2021, 08, 01))
+            {
+                if (Convert.ToInt32(dr["InvoiceId"].ToString()) > 0 && inv.CompanyId > 0 )
+                {
+                    new AddInvoiceOld(Convert.ToInt32(dr["InvoiceId"].ToString()), inv.CompanyId).Show();
+                }
+
+                return inv;
+            }
             inv.InvoiceDate = dateTimePicker1.Value = Convert.ToDateTime(dr["InvoiceDate"]);
             inv.InvoiceId = textBox12.Text = dr["InvoiceId"].ToString();
             button5.Enabled = true;//Update
@@ -1751,7 +1760,7 @@ namespace GST_InvoiceApplication
             bool converted = double.TryParse(textBox15.Text, out result);
             if (!converted)
                 return;
-            double grandTotal = Convert.ToDouble(textBox14.Text) + Convert.ToDouble(textBox15.Text);
+            double grandTotal = Convert.ToDouble(textBox15.Text);
 
             textBox10.Text = String.Format("{0:n}", grandTotal);
         }

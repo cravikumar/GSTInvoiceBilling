@@ -21,7 +21,7 @@ namespace GST_InvoiceApplication
         InvoiceDetails _savedInvoice;
         public int publicSaleId;
         bool notlastColumn = true; //class level variable--- to check either last column is reached or not
-        public bool _isDiscountEditedManually=false;
+        public bool _isDiscountEditedManually = false;
 
         AutoCompleteStringCollection _productList;
         AutoCompleteStringCollection _hsnList;
@@ -32,7 +32,7 @@ namespace GST_InvoiceApplication
         {
             get
             {
-                if (_productList != null && _productList.Count>0)
+                if (_productList != null && _productList.Count > 0)
                     return _productList;
                 else
                     _productList = LoadProducts();
@@ -66,7 +66,7 @@ namespace GST_InvoiceApplication
 
         private AutoCompleteStringCollection LoadhsnList()
         {
-            string sql = "Select DISTINCT ProductName,HSNCode from ProductMaster where ProductName like '%HSNCODE-%'"; 
+            string sql = "Select DISTINCT ProductName,HSNCode from ProductMaster where ProductName like '%HSNCODE-%'";
             DataSet ds = Functions.RunSelectSql(sql);
 
             AutoCompleteStringCollection str = new AutoCompleteStringCollection();
@@ -103,10 +103,11 @@ namespace GST_InvoiceApplication
 
         private void updatePriceMaster(string ProductName, string Price, string HsnCode)
         {
-            try {
+            try
+            {
                 if (!string.IsNullOrEmpty(getCustomerPrice(ProductName)))
                 {
-                    string query = "Update ProductMaster Set Price = '" + Price + "',HsnCode = '"+HsnCode+"' where ProductName = '" + ProductName+"';";
+                    string query = "Update ProductMaster Set Price = '" + Price + "',HsnCode = '" + HsnCode + "' where ProductName = '" + ProductName + "';";
                     Functions.RunExecuteNonQuery(query);
 
                 }
@@ -119,12 +120,12 @@ namespace GST_InvoiceApplication
                                    "','" + HsnCode + "');";
 
                     Functions.RunExecuteNonQuery(sql);
- 
+
                 }
             }
             catch
-            {}
- 
+            { }
+
         }
 
         // AutoComplete
@@ -187,7 +188,7 @@ namespace GST_InvoiceApplication
             searchInv1 = null;
         }
 
-        public AddInvoiceOld(int InvoiceId, int companyId, string year="")
+        public AddInvoiceOld(int InvoiceId, int companyId, string year = "")
         {
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
@@ -276,11 +277,11 @@ namespace GST_InvoiceApplication
                 textBox6.Visible = true;
                 label10.Visible = true;
             }
-            InvoiceDetails searchInv = getInvoiceDetails(_selectedCompany.CompanyID, InvoiceId.ToString(),false,year);
-            
+            InvoiceDetails searchInv = getInvoiceDetails(_selectedCompany.CompanyID, InvoiceId.ToString(), false, year);
+
             SortedDictionary<int, string> userCache = new SortedDictionary<int, string>();
             userCache.Add(0, _selectedCompany.CompanyName);
-            
+
             comboBox1.DataSource = new BindingSource(userCache, null);
             comboBox1.DisplayMember = "Value";
             comboBox1.ValueMember = "Key";
@@ -409,16 +410,16 @@ namespace GST_InvoiceApplication
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             int Id = 0;
-            bool converted = int.TryParse(dataGridView2.Rows[dataGridView2.CurrentCell.RowIndex].Cells[11].Value.ToString(), out Id);
+            bool converted = int.TryParse(dataGridView2.Rows[dataGridView2.CurrentCell.RowIndex].Cells[9].Value.ToString(), out Id);
             int column = dataGridView2.CurrentCell.ColumnIndex;
-            if (column == 9)
+            if (column == 8)
             {
                 //Code to delete row
                 dataGridView2.Rows.RemoveAt(e.RowIndex);
                 updateTotalBill();
             }
 
-            if (converted && Id > 0 && column == 9)
+            if (converted && Id > 0 && column == 8)
             {
                 //Functions.RunExecuteNonQuery("Delete * From InvoiceProductDetails where Id = " + Id);
             }
@@ -430,8 +431,8 @@ namespace GST_InvoiceApplication
             double totalBillValue = 0;
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
-                if(!(dataGridView2.Rows[i].Cells[8].Value == DBNull.Value))
-                totalBillValue += Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value);
+                if (!(dataGridView2.Rows[i].Cells[7].Value == DBNull.Value))
+                    totalBillValue += Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value);
 
             }
 
@@ -443,7 +444,7 @@ namespace GST_InvoiceApplication
                 if (!_selectedCompany.IsGSTApplicable)
                     sgst = cgst = igst = 0;
 
-                double discount=0;
+                double discount = 0;
 
                 if (!_isDiscountEditedManually)
                 {
@@ -460,25 +461,23 @@ namespace GST_InvoiceApplication
                 else
                 {
 
-                    if(!double.TryParse(textBox13.Text, out discount));
+                    if (!double.TryParse(textBox13.Text, out discount)) ;
                     {
                         if (discount == 0)
                         {
                             MessageBox.Show("Please check Discount price..!!");
-                         
+
                         }
                     }
-                    
-                }
 
-                discount = 0;//removed discount
+                }
 
                 double Billerror = totalBillValue - Math.Truncate(totalBillValue);
                 double Discerror = discount - Math.Truncate(discount);
                 double error = discount > 0 ? Billerror - Discerror : 0;
 
                 discount = discount + tallyRound(error, 2);
-                double totalbeforeTax = totalBillValue;//removed discount - discount;
+                double totalbeforeTax = totalBillValue - discount;
 
                 double totalsgst = 0;
                 double totalcgst = 0;
@@ -565,18 +564,18 @@ namespace GST_InvoiceApplication
                 dataGridView2.CurrentCell.Style.BackColor = Color.White;
 
             int column = dataGridView2.CurrentCell.ColumnIndex;
-            if (column == 0 )
+            if (column == 0)
             {
                 SendKeys.Send("{Up}");
                 SendKeys.Send("{Right}");
                 if (dataGridView2.CurrentRow.Cells[0].Value != null && dataGridView2.CurrentRow.Cells[0].Value.ToString().Length > 0 && ConfigurationManager.AppSettings["PricePredictionEnabled"] == "true")
                     dataGridView2.CurrentRow.Cells[1].Value = getCustomerPrice(dataGridView2.CurrentRow.Cells[0].Value.ToString());
 
-                dataGridView2.CurrentRow.Cells[3].Value = dataGridView2.CurrentRow.Cells[0].Value!=null?   getProductHSN(dataGridView2.CurrentRow.Cells[0].Value.ToString()):"";
-                
+                dataGridView2.CurrentRow.Cells[3].Value = getProductHSN(dataGridView2.CurrentRow.Cells[0].Value.ToString());
+
             }
 
-            if (column == 3 && dataGridView2.CurrentRow.Cells[3] !=null && dataGridView2.CurrentRow.Cells[3].Value != null)
+            if (column == 3 && dataGridView2.CurrentRow.Cells[3] != null && dataGridView2.CurrentRow.Cells[3].Value != null)
             {
                 string hsn = getProductHSN("HSNCODE-" + dataGridView2.CurrentRow.Cells[3].Value.ToString());
                 if (!string.IsNullOrEmpty(hsn))
@@ -611,37 +610,15 @@ namespace GST_InvoiceApplication
                 double qnt = dataGridView2.CurrentRow.Cells[4].Value != null && !string.IsNullOrEmpty(dataGridView2.CurrentRow.Cells[4].Value.ToString()) ? Convert.ToDouble(dataGridView2.CurrentRow.Cells[4].Value.ToString()) : 0;
                 // var gst = dataGridView2.CurrentRow.Cells[6].Value;
 
-                double priceWithoutGST = 0;
-
-                double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
-                double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
-                double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
-                if (!_selectedCompany.IsGSTApplicable)
-                    sgst = cgst = igst = 0;
-
-
-                if (igst > 0)
-                {
-                    priceWithoutGST = priceRound( price - (price * (igst / (100 + igst))),2);
-
-                    //sgst = igst / 2;
-                    //cgst = igst / 2;
-                }
-                else
-                    priceWithoutGST = priceRound(price - (price * ((sgst + cgst) / (100 + sgst + cgst))),2);
-
-                dataGridView2.CurrentRow.Cells[7].Value = priceWithoutGST;
-
-
-                if (price > 0 && qnt > 0 && priceWithoutGST>0)
+                if (price > 0 && qnt > 0)
                 {
                     if (dataGridView2.CurrentRow.Cells[5].Value != null && !String.IsNullOrEmpty(dataGridView2.CurrentRow.Cells[5].Value.ToString()) && Convert.ToDouble(dataGridView2.CurrentRow.Cells[5].Value.ToString()) > 0)
                         qnt = Convert.ToDouble(dataGridView2.CurrentRow.Cells[5].Value.ToString());
-                    double rowTotal = Math.Round((priceWithoutGST * qnt), 2);
+                    double rowTotal = Math.Round((price * qnt), 2);
 
-                    dataGridView2.CurrentRow.Cells[8].Value = rowTotal;
+                    dataGridView2.CurrentRow.Cells[7].Value = rowTotal;
 
-                    dataGridView2.CurrentRow.Cells[8].Style.BackColor = Color.White;
+                    dataGridView2.CurrentRow.Cells[7].Style.BackColor = Color.White;
 
                     updateTotalBill();
 
@@ -649,7 +626,7 @@ namespace GST_InvoiceApplication
 
             }
 
-           
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -739,7 +716,7 @@ namespace GST_InvoiceApplication
                 isValid = false;
                 dataGridView2.Rows[0].Cells[6].Style.BackColor = Color.Red;
                 dataGridView2.Rows[0].Cells[4].Style.BackColor = Color.Red;
-                dataGridView2.Rows[0].Cells[8].Style.BackColor = Color.Red;
+                dataGridView2.Rows[0].Cells[7].Style.BackColor = Color.Red;
                 dataGridView2.ClearSelection();
                 return isValid;
             }
@@ -765,13 +742,13 @@ namespace GST_InvoiceApplication
                 else
                     dataGridView2.Rows[i].Cells[4].Style.BackColor = Color.White;
 
-                if (dataGridView2.Rows[i].Cells[8].Value == null || String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[8].Value.ToString()))
+                if (dataGridView2.Rows[i].Cells[7].Value == null || String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[7].Value.ToString()))
                 {
-                    dataGridView2.Rows[i].Cells[8].Style.BackColor = Color.Red;
+                    dataGridView2.Rows[i].Cells[7].Style.BackColor = Color.Red;
                     isValid = false;
                 }
                 else
-                    dataGridView2.Rows[i].Cells[8].Style.BackColor = Color.White;
+                    dataGridView2.Rows[i].Cells[7].Style.BackColor = Color.White;
 
             }
             dataGridView2.ClearSelection();
@@ -787,9 +764,9 @@ namespace GST_InvoiceApplication
                     if (String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) || String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()))
                     { dataGridView2.Rows.RemoveAt(i); break; }
 
-                    if (Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value) == Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
+                    if (Convert.ToDouble(dataGridView2.Rows[i].Cells[6].Value) * Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value) == Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value))
                     { }
-                    else if (Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value) == Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
+                    else if (Convert.ToDouble(dataGridView2.Rows[i].Cells[6].Value) * Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value) == Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value))
                     { }
                     else
                     {
@@ -798,30 +775,13 @@ namespace GST_InvoiceApplication
                         double qnt = dataGridView2.Rows[i].Cells[4].Value != null && !string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()) ? Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value.ToString()) : 0;
                         // var gst = dataGridView2.CurrentRow.Cells[6].Value;
 
-                        double priceWithoutGST = 0;
-
-                        double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
-                        double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
-                        double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
-                        if (!_selectedCompany.IsGSTApplicable)
-                            sgst = cgst = igst = 0;
-
-
-                        if (igst > 0)
-                        {
-                            priceWithoutGST = priceRound(price - (price * (igst / (100 + igst))), 2);
-                        }
-                        else
-                            priceWithoutGST = priceRound(price - (price * ((sgst + cgst) / (100 + sgst + cgst))), 2);
-                        dataGridView2.Rows[i].Cells[7].Value = priceWithoutGST;
-
-                        if (price > 0 && qnt > 0 && priceWithoutGST>0)
+                        if (price > 0 && qnt > 0)
                         {
                             if (dataGridView2.Rows[i].Cells[5].Value != null && !String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString()) && Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value.ToString()) > 0)
                                 qnt = Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value.ToString());
-                            double rowTotal = Math.Round((priceWithoutGST * qnt), 2);
+                            double rowTotal = Math.Round((price * qnt), 2);
 
-                            dataGridView2.Rows[i].Cells[8].Value = rowTotal;
+                            dataGridView2.Rows[i].Cells[7].Value = rowTotal;
                         }
                     }
                 }
@@ -927,7 +887,7 @@ namespace GST_InvoiceApplication
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
                 InvoiceProducts currProduct = new InvoiceProducts();
-                if (dataGridView2.Rows[i].Cells[8].Value != null)
+                if (dataGridView2.Rows[i].Cells[7].Value != null)
                 {
                     currProduct.SaleId = inv.SaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == null ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
@@ -936,8 +896,7 @@ namespace GST_InvoiceApplication
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                    currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                    currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
                     currProduct.PreviousRate = dataGridView2.Rows[i].Cells[1].Value == null ? "" : dataGridView2.Rows[i].Cells[1].Value.ToString();
 
                     currProduct.Id = SaveInvoiceTableData(currProduct);
@@ -977,10 +936,10 @@ namespace GST_InvoiceApplication
         public int SaveInvoiceTableData(InvoiceProducts pro)
         {
             updatePriceMaster(pro.ProductName, pro.Rate, pro.HSNCode);
-            
+
 
             string query = "insert into InvoiceProductDetails " +
-                "(SaleId,ProductName,HSNCode,Rate,Quantity,Total,MtsDescription,Mts,isActive,CreatedOn,ModifiedOn,RateWithoutTax) Values " +
+                "(SaleId,ProductName,HSNCode,Rate,Quantity,Total,MtsDescription,Mts,isActive,CreatedOn,ModifiedOn) Values " +
                  " (" + pro.SaleId +
                  ",'" + pro.ProductName.Replace("'", "") +
                  "','" + pro.HSNCode.Replace("'", "") +
@@ -992,7 +951,6 @@ namespace GST_InvoiceApplication
                  "','" + "1" +
                  "','" + DateTime.Now.ToString() +
                  "','" + DateTime.Now.ToString() +
-                 "','" + pro.RateWithoutTax +
                  "')";
 
 
@@ -1129,11 +1087,11 @@ namespace GST_InvoiceApplication
 
             int currentInvoice = _selectedCompany.BillNo + 1;
 
-            while(!checkInvoiceId(currentInvoice.ToString()))
+            while (!checkInvoiceId(currentInvoice.ToString()))
             {
                 currentInvoice = currentInvoice + 1;
             }
-            
+
 
             textBox12.Text = currentInvoice.ToString();
 
@@ -1153,7 +1111,7 @@ namespace GST_InvoiceApplication
 
             CompanyDetails currentCompany = new CompanyDetails();
             currentCompany.CompanyID = Convert.ToInt32(dr["ID"]);
-            
+
             currentCompany.BillNo = Convert.ToInt32(dr["BillNo"]);
 
             int currentInvoice = currentCompany.BillNo + 1;
@@ -1187,14 +1145,14 @@ namespace GST_InvoiceApplication
             int billYear = 0;
 
             if (!int.TryParse(textBox12.Text, out billNo))
-            { 
-                if(textBox12.Text.Contains("-"))
+            {
+                if (textBox12.Text.Contains("-"))
                 {
                     if (int.TryParse(textBox12.Text.Split('-')[0], out billNo))
                     {
                         if (int.TryParse(textBox12.Text.Split('-')[1], out billYear))
                         {
-                             searchInv1 = getInvoiceDetails(_selectedCompany.CompanyID, billNo.ToString(),false, billYear.ToString());
+                            searchInv1 = getInvoiceDetails(_selectedCompany.CompanyID, billNo.ToString(), false, billYear.ToString());
                         }
                         return;
                     }
@@ -1225,10 +1183,10 @@ namespace GST_InvoiceApplication
 
         }
 
-        private InvoiceDetails getInvoiceDetails(int companyId, string billNo,bool lazyLoad = false,string billYear = "")
+        private InvoiceDetails getInvoiceDetails(int companyId, string billNo, bool lazyLoad = false, string billYear = "")
         {
             string invoiceQuery = "Select * from SalesInvoiceDetail where CompanyId = " + companyId + " and InvoiceId= '" + billNo + "'";
-            
+
             DataSet ds = null;
             if (string.IsNullOrEmpty(billYear))
                 ds = Functions.RunSelectSql(invoiceQuery);
@@ -1241,7 +1199,7 @@ namespace GST_InvoiceApplication
             }
             else if (ds.Tables.Count < 1 || ds.Tables[0].Rows.Count < 1)
             {
-                MessageBox.Show("Invoice Not Found");
+                MessageBox.Show("Inoice Not Found");
                 button5.Enabled = false;//Update
                 button7.Enabled = false;//Update
                 return null;
@@ -1251,13 +1209,13 @@ namespace GST_InvoiceApplication
             InvoiceDetails inv = new InvoiceDetails();
             inv.CompanyId = Convert.ToInt32(dr["CompanyId"]);
             inv.SaleId = publicSaleId = Convert.ToInt32(dr["SaleId"]);
-            
-            
+
+
             if (lazyLoad)
             {
                 inv.InvoiceId = dr["InvoiceId"].ToString();
                 return inv;
-            
+
             }
 
             inv.InvoiceDate = dateTimePicker1.Value = Convert.ToDateTime(dr["InvoiceDate"]);
@@ -1297,11 +1255,11 @@ namespace GST_InvoiceApplication
             inv.StrLRNo = textBox19.Text = dr["StrLRNo"] != null ? dr["StrLRNo"].ToString() : "";
             inv.CGSTValue = textBox16.Text = dr["CGSTValue"] != null ? dr["CGSTValue"].ToString() : "";
             inv.SGSTValue = textBox17.Text = dr["SGSTValue"] != null ? dr["SGSTValue"].ToString() : "";
-            
+
 
             string prodSql = "Select * from InvoiceProductDetails where SaleId = " + inv.SaleId;
-            
-            DataSet prod=null;
+
+            DataSet prod = null;
             if (string.IsNullOrEmpty(billYear))
                 prod = Functions.RunSelectSql(prodSql);
             else
@@ -1320,7 +1278,6 @@ namespace GST_InvoiceApplication
                 currProduct.Quantity = currRow["Quantity"].ToString();
                 currProduct.Mts = currRow["Mts"].ToString();
                 currProduct.Rate = currRow["Rate"].ToString();
-                currProduct.RateWithoutTax = currRow["RateWithoutTax"].ToString();
                 currProduct.Total = currRow["Total"].ToString();
 
                 inv.Products.Add(currProduct);
@@ -1535,10 +1492,10 @@ namespace GST_InvoiceApplication
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
                 InvoiceProducts currProduct = new InvoiceProducts();
-                if (dataGridView2.Rows[i].Cells[8].Value != null)
+                if (dataGridView2.Rows[i].Cells[7].Value != null)
                 {
                     //currProduct.SaleId = inv.SaleId;
-                    currProduct.Id = dataGridView2.Rows[i].Cells[10].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[10].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[10].Value.ToString()) ? 0 : Convert.ToInt32(dataGridView2.Rows[i].Cells[10].Value);
+                    currProduct.Id = dataGridView2.Rows[i].Cells[9].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[9].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[9].Value.ToString()) ? 0 : Convert.ToInt32(dataGridView2.Rows[i].Cells[9].Value);
                     currProduct.SaleId = newSaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[0].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[0].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
                     currProduct.MtsDescription = dataGridView2.Rows[i].Cells[2].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[2].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[2].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[2].Value.ToString();
@@ -1546,8 +1503,7 @@ namespace GST_InvoiceApplication
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[4].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[5].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[6].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                    currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[7].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[7].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[8].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[8].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                    currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[7].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[7].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
 
                     if (publicSaleId < 1)
                     {
@@ -1563,7 +1519,7 @@ namespace GST_InvoiceApplication
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
                 InvoiceProducts currProduct = new InvoiceProducts();
-                if (dataGridView2.Rows[i].Cells[8].Value != null)
+                if (dataGridView2.Rows[i].Cells[7].Value != null)
                 {
                     currProduct.SaleId = inv.SaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == null ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
@@ -1572,9 +1528,8 @@ namespace GST_InvoiceApplication
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                    currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
-                    currProduct.PreviousRate= dataGridView2.Rows[i].Cells[1].Value == null ? "" : dataGridView2.Rows[i].Cells[1].Value.ToString();
+                    currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
+                    currProduct.PreviousRate = dataGridView2.Rows[i].Cells[1].Value == null ? "" : dataGridView2.Rows[i].Cells[1].Value.ToString();
 
                     inv.Products.Add(currProduct);
 
@@ -1589,7 +1544,7 @@ namespace GST_InvoiceApplication
             _savedInvoice = inv;
         }
 
-        
+
         private void UpdateInvoiceTableData(InvoiceProducts currProduct)
         {
             if (currProduct.Id < 1)
@@ -1599,10 +1554,9 @@ namespace GST_InvoiceApplication
             }
 
             string query = "update InvoiceProductDetails set " +
-                "ProductName = '" + currProduct.ProductName.Replace("'","") + "'" +
+                "ProductName = '" + currProduct.ProductName.Replace("'", "") + "'" +
                 ", HSNCode = '" + currProduct.HSNCode.Replace("'", "") + "'" +
                  ", Rate = '" + currProduct.Rate + "'" +
-                 ", RateWithoutTax = '" + currProduct.RateWithoutTax + "'" +
                  ", Quantity = '" + currProduct.Quantity + "'" +
                  ", Total = '" + currProduct.Total + "'" +
                  ", MtsDescription = '" + currProduct.MtsDescription + "'" +
@@ -1670,65 +1624,6 @@ namespace GST_InvoiceApplication
             return Math.Round(value, decimals, MidpointRounding.AwayFromZero);
         }
 
-        private double priceRound(double value,int decimals)
-        {
-            if (value == 0)
-                return 0;
-
-            //return Math.Round(value, decimals, MidpointRounding.AwayFromZero);
-            double trucateVal= Math.Truncate(100 * value) / 100;//Math.Round(value * 20) / 20;
-
-            string trucateValStr = trucateVal.ToString();
-
-            string lastDigit=trucateVal.ToString().Substring(trucateVal.ToString().Length - 1);
-            string lastButOneDigit = trucateVal.ToString().Substring(trucateVal.ToString().Length - 2);
-            
-            switch (lastDigit)
-            {
-                
-                case "1":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "0");
-                    break;
-                case "2":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "0");
-                    break;
-
-                case "3":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "5");
-                    break;
-
-                case "4":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "5");
-                    break;
-
-                case "5":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "5");
-                    break;
-                case "6":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "5");
-                    break;
-
-                case "7":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "5");
-                    break;
-                
-                case "8":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "0")+0.10;
-                    break;
-                case "9":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "0") + 0.10;
-                    break;
-
-
-                default:
-                    break;
-
-            }
-
-
-                return trucateVal;
-            }
-
         private void textBox17_TextChanged(object sender, EventArgs e)
         {
             SetTextChanged(sender, e);
@@ -1752,7 +1647,7 @@ namespace GST_InvoiceApplication
             textBox10.Text = String.Format("{0:n}", grandTotal);
         }
 
-        private bool checkInvoiceId(string invoiceId,int companyId = 0)
+        private bool checkInvoiceId(string invoiceId, int companyId = 0)
         {
             string invoiceQuery = "";
             if (companyId > 0)
@@ -1783,7 +1678,7 @@ namespace GST_InvoiceApplication
             if (!valid)
             {
                 MessageBox.Show("Given Invoice Id already exists in system. Please change Bill Number for company");
-               // return;
+                // return;
             }
 
             InvoiceDetails inv = new InvoiceDetails();
@@ -1862,7 +1757,7 @@ namespace GST_InvoiceApplication
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
                 InvoiceProducts currProduct = new InvoiceProducts();
-                if (dataGridView2.Rows[i].Cells[8].Value != null)
+                if (dataGridView2.Rows[i].Cells[7].Value != null)
                 {
                     currProduct.SaleId = inv.SaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == null ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
@@ -1871,8 +1766,7 @@ namespace GST_InvoiceApplication
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                    currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                    currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
 
                     currProduct.Id = SaveInvoiceTableData(currProduct);
                     try
@@ -1957,10 +1851,10 @@ namespace GST_InvoiceApplication
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
                 InvoiceProducts currProduct = new InvoiceProducts();
-                if (dataGridView2.Rows[i].Cells[8].Value != null)
+                if (dataGridView2.Rows[i].Cells[7].Value != null)
                 {
                     //currProduct.SaleId = inv.SaleId;
-                    currProduct.Id = dataGridView2.Rows[i].Cells[10].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[10].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[10].Value.ToString()) ? 0 : Convert.ToInt32(dataGridView2.Rows[i].Cells[10].Value);
+                    currProduct.Id = dataGridView2.Rows[i].Cells[9].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[9].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[9].Value.ToString()) ? 0 : Convert.ToInt32(dataGridView2.Rows[i].Cells[9].Value);
                     currProduct.SaleId = newSaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[0].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[0].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
                     currProduct.MtsDescription = dataGridView2.Rows[i].Cells[2].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[2].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[2].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[2].Value.ToString();
@@ -1968,8 +1862,7 @@ namespace GST_InvoiceApplication
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[4].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[5].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[6].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                    currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[7].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                    currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[8].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[8].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                    currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == System.DBNull.Value || dataGridView2.Rows[i].Cells[7].Value == null || string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[7].Value.ToString()) ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
 
                     if (publicSaleId < 1)
                     {
@@ -1985,7 +1878,7 @@ namespace GST_InvoiceApplication
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
                 InvoiceProducts currProduct = new InvoiceProducts();
-                if (dataGridView2.Rows[i].Cells[8].Value != null)
+                if (dataGridView2.Rows[i].Cells[7].Value != null)
                 {
                     currProduct.SaleId = inv.SaleId;
                     currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == null ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
@@ -1994,8 +1887,7 @@ namespace GST_InvoiceApplication
                     currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                     currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                     currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                    currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                    currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                    currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
                     currProduct.PreviousRate = dataGridView2.Rows[i].Cells[1].Value == null ? "" : dataGridView2.Rows[i].Cells[1].Value.ToString();
 
                     inv.Products.Add(currProduct);
@@ -2048,8 +1940,8 @@ namespace GST_InvoiceApplication
             bool proceedCopy = false;
             for (int i = 0; i < dataGridView2.Rows.Count; i++)
             {
-                
-                DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)dataGridView2.Rows[i].Cells[12];
+
+                DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)dataGridView2.Rows[i].Cells[11];
                 if (chk.Value != null && chk.Value.ToString() == "True" && dataGridView2.Rows[i].Cells[6].Value != null && dataGridView2.Rows[i].Cells[6].Value.ToString() != "")
                 {
                     proceedCopy = true;
@@ -2060,10 +1952,10 @@ namespace GST_InvoiceApplication
             {
                 MessageBox.Show("Please select products to copy");
                 return;
- 
+
             }
 
-            InvoiceDetails searchInv = getInvoiceDetails(companyId, billNo,true);
+            InvoiceDetails searchInv = getInvoiceDetails(companyId, billNo, true);
 
 
 
@@ -2076,7 +1968,7 @@ namespace GST_InvoiceApplication
                 }
                 //doFinalCheck();
 
-                bool valid = checkInvoiceId(textBox22.Text,Convert.ToInt32(comboBox3.SelectedValue));
+                bool valid = checkInvoiceId(textBox22.Text, Convert.ToInt32(comboBox3.SelectedValue));
 
                 if (!valid)
                 {
@@ -2089,7 +1981,7 @@ namespace GST_InvoiceApplication
                 inv.InvoiceId = textBox22.Text;
                 inv.InvoiceDate = dateTimePicker1.Value;
 
-                
+
                 if (comboBox4.SelectedItem != null && comboBox4.SelectedItem.ToString() == "CASH BILL")
                     inv.IsPaid = true;
 
@@ -2100,7 +1992,7 @@ namespace GST_InvoiceApplication
                 inv.CustomerAddress = textBox2.Text;
                 inv.CustomerPanAadhaar = textBox4.Text;
 
-                
+
                 inv.StrTransport = textBox5.Text;
                 inv.StrLRNo = textBox19.Text;
 
@@ -2125,7 +2017,7 @@ namespace GST_InvoiceApplication
                 for (int i = 0; i < dataGridView2.Rows.Count; i++)
                 {
                     InvoiceProducts currProduct = new InvoiceProducts();
-                    DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)dataGridView2.Rows[i].Cells[12];
+                    DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)dataGridView2.Rows[i].Cells[11];
                     if (chk.Value != null && chk.Value.ToString() == "True" && dataGridView2.Rows[i].Cells[6].Value != null && dataGridView2.Rows[i].Cells[6].Value.ToString() != "")
                     {
                         currProduct.SaleId = inv.SaleId;
@@ -2135,15 +2027,14 @@ namespace GST_InvoiceApplication
                         currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                         currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                         currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                        currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                        currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                        currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
 
                         currProduct.Id = SaveInvoiceTableData(currProduct);
 
                     }
 
                 }
- 
+
 
 
             }
@@ -2153,8 +2044,8 @@ namespace GST_InvoiceApplication
                 for (int i = 0; i < dataGridView2.Rows.Count; i++)
                 {
                     InvoiceProducts currProduct = new InvoiceProducts();
-                    DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)dataGridView2.Rows[i].Cells[12];
-                    if (chk.Value !=null &&  chk.Value.ToString() == "True" && dataGridView2.Rows[i].Cells[6].Value != null && dataGridView2.Rows[i].Cells[6].Value.ToString() != "")
+                    DataGridViewCheckBoxCell chk = (DataGridViewCheckBoxCell)dataGridView2.Rows[i].Cells[11];
+                    if (chk.Value != null && chk.Value.ToString() == "True" && dataGridView2.Rows[i].Cells[6].Value != null && dataGridView2.Rows[i].Cells[6].Value.ToString() != "")
                     {
                         currProduct.SaleId = searchInv.SaleId;
                         currProduct.ProductName = dataGridView2.Rows[i].Cells[0].Value == null ? "" : dataGridView2.Rows[i].Cells[0].Value.ToString();
@@ -2163,11 +2054,10 @@ namespace GST_InvoiceApplication
                         currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                         currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                         currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                        currProduct.Rate = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                        currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                        currProduct.Total = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
 
                         currProduct.Id = SaveInvoiceTableData(currProduct);
-                     
+
                     }
 
                 }
@@ -2185,7 +2075,7 @@ namespace GST_InvoiceApplication
 
         private void textBox6_Leave(object sender, EventArgs e)
         {
-            if (textBox6.Text.Length>3 &&    !textBox6.Text.StartsWith("37"))
+            if (textBox6.Text.Length > 3 && !textBox6.Text.StartsWith("37"))
             {
                 textBox18.Text = "5";
             }
@@ -2215,8 +2105,8 @@ namespace GST_InvoiceApplication
 
         public void SetTextChanged(object sender, EventArgs e)
         {
-            if(!isFirstSearchClick)
-              isFormModified = true;
+            if (!isFirstSearchClick)
+                isFormModified = true;
         }
 
         private void textBox12_TextChanged(object sender, EventArgs e)
@@ -2267,7 +2157,7 @@ namespace GST_InvoiceApplication
         {
             if (checkBox2.Checked)
             {
-                textBox12.Text = textBox12.Text + "-"+ Functions.getPreviousYear();
+                textBox12.Text = textBox12.Text + "-" + Functions.getPreviousYear();
             }
             else
             {

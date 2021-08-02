@@ -506,13 +506,29 @@ namespace GST_InvoiceApplication
 
             bool isCurrentYearBill = Functions.isCurrentFinancialYear(inv);
 
-            if (InvoiceId > 0 && CompanyId > 0 && isCurrentYearBill)
+            if (inv < new DateTime(2021, 08, 01))
             {
-                new AddInvoice(InvoiceId, CompanyId).Show();
+                if (InvoiceId > 0 && CompanyId > 0 && isCurrentYearBill)
+                {
+                    new AddInvoiceOld(InvoiceId, CompanyId).Show();
+                }
+                else if (InvoiceId > 0 && CompanyId > 0 && !isCurrentYearBill)
+                {
+                    new AddInvoiceOld(InvoiceId, CompanyId, "19").Show();
+                }
+
             }
-            else if(InvoiceId > 0 && CompanyId > 0 && !isCurrentYearBill)
+
+            else
             {
-                new AddInvoice(InvoiceId, CompanyId,"19").Show();
+                if (InvoiceId > 0 && CompanyId > 0 && isCurrentYearBill)
+                {
+                    new AddInvoice(InvoiceId, CompanyId).Show();
+                }
+                else if (InvoiceId > 0 && CompanyId > 0 && !isCurrentYearBill)
+                {
+                    new AddInvoice(InvoiceId, CompanyId, "19").Show();
+                }
             }
         }
 

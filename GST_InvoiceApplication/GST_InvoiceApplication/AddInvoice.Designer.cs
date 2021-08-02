@@ -49,6 +49,19 @@ namespace GST_InvoiceApplication
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.productNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ActualPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mtsDescriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.hSNCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.quantityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mtsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RateWithoutTax = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.saleIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.invoiceProductsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label11 = new System.Windows.Forms.Label();
             this.textBox7 = new System.Windows.Forms.TextBox();
@@ -97,19 +110,6 @@ namespace GST_InvoiceApplication
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.button9 = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.productNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ActualPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mtsDescriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.hSNCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.quantityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mtsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RateWithoutTax = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.saleIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceProductsBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -236,7 +236,7 @@ namespace GST_InvoiceApplication
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(869, 641);
+            this.button1.Location = new System.Drawing.Point(936, 644);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(132, 23);
             this.button1.TabIndex = 23;
@@ -293,462 +293,13 @@ namespace GST_InvoiceApplication
             this.dataGridView2.DataSource = this.invoiceProductsBindingSource;
             this.dataGridView2.Location = new System.Drawing.Point(26, 178);
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1250, 239);
+            this.dataGridView2.Size = new System.Drawing.Size(1250, 303);
             this.dataGridView2.TabIndex = 32;
             this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             this.dataGridView2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellEndEdit);
             this.dataGridView2.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.grd_bill_master_EditingControlShowing);
             this.dataGridView2.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgvUserDetails_RowPostPaint);
             this.dataGridView2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyDown);
-            // 
-            // invoiceProductsBindingSource
-            // 
-            this.invoiceProductsBindingSource.DataSource = typeof(Invoice.Models.InvoiceProducts);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(870, 475);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(131, 13);
-            this.label11.TabIndex = 33;
-            this.label11.Text = "Total Amount Before Tax :";
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(1018, 472);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.ReadOnly = true;
-            this.textBox7.Size = new System.Drawing.Size(164, 20);
-            this.textBox7.TabIndex = 34;
-            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // textBox8
-            // 
-            this.textBox8.Location = new System.Drawing.Point(1018, 494);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.ReadOnly = true;
-            this.textBox8.Size = new System.Drawing.Size(164, 20);
-            this.textBox8.TabIndex = 36;
-            this.textBox8.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(906, 494);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(42, 13);
-            this.label12.TabIndex = 35;
-            this.label12.Text = "CGST :";
-            // 
-            // textBox9
-            // 
-            this.textBox9.Location = new System.Drawing.Point(1018, 516);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(164, 20);
-            this.textBox9.TabIndex = 38;
-            this.textBox9.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(909, 516);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(39, 13);
-            this.label13.TabIndex = 37;
-            this.label13.Text = "SGST:";
-            // 
-            // textBox10
-            // 
-            this.textBox10.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox10.Location = new System.Drawing.Point(1018, 605);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.ReadOnly = true;
-            this.textBox10.Size = new System.Drawing.Size(164, 32);
-            this.textBox10.TabIndex = 40;
-            this.textBox10.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(860, 605);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(152, 29);
-            this.label14.TabIndex = 39;
-            this.label14.Text = "Grand Total: ";
-            // 
-            // textBox11
-            // 
-            this.textBox11.Location = new System.Drawing.Point(1018, 539);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.ReadOnly = true;
-            this.textBox11.Size = new System.Drawing.Size(164, 20);
-            this.textBox11.TabIndex = 43;
-            this.textBox11.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(913, 542);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(35, 13);
-            this.label15.TabIndex = 42;
-            this.label15.Text = "IGST:";
-            // 
-            // textBox12
-            // 
-            this.textBox12.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox12.Location = new System.Drawing.Point(832, 4);
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(130, 41);
-            this.textBox12.TabIndex = 44;
-            this.textBox12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox12.TextChanged += new System.EventHandler(this.textBox12_TextChanged);
-            // 
-            // button3
-            // 
-            this.button3.Font = new System.Drawing.Font("Sitka Text", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(968, 1);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(151, 48);
-            this.button3.TabIndex = 45;
-            this.button3.Text = "Search Bill";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "CREDIT BILL",
-            "CASH BILL"});
-            this.comboBox4.Location = new System.Drawing.Point(891, 67);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(121, 21);
-            this.comboBox4.TabIndex = 46;
-            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.SetTextChanged);
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(891, 92);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 47;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(838, 70);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(47, 13);
-            this.label9.TabIndex = 48;
-            this.label9.Text = "Bill Type";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(839, 99);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(46, 13);
-            this.label16.TabIndex = 49;
-            this.label16.Text = "Bill Date";
-            // 
-            // textBox13
-            // 
-            this.textBox13.Location = new System.Drawing.Point(1018, 449);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.ReadOnly = true;
-            this.textBox13.Size = new System.Drawing.Size(164, 20);
-            this.textBox13.TabIndex = 51;
-            this.textBox13.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(946, 452);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(55, 13);
-            this.label17.TabIndex = 50;
-            this.label17.Text = "Discount :";
-            // 
-            // textBox14
-            // 
-            this.textBox14.Location = new System.Drawing.Point(1018, 561);
-            this.textBox14.Name = "textBox14";
-            this.textBox14.ReadOnly = true;
-            this.textBox14.Size = new System.Drawing.Size(164, 20);
-            this.textBox14.TabIndex = 53;
-            this.textBox14.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(879, 564);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(122, 13);
-            this.label18.TabIndex = 52;
-            this.label18.Text = "Total Amount After Tax :";
-            // 
-            // textBox15
-            // 
-            this.textBox15.Location = new System.Drawing.Point(1018, 583);
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(164, 20);
-            this.textBox15.TabIndex = 55;
-            this.textBox15.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox15.TextChanged += new System.EventHandler(this.textBox15_TextChanged);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(929, 586);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(72, 13);
-            this.label19.TabIndex = 54;
-            this.label19.Text = "Rounded off :";
-            // 
-            // textBox16
-            // 
-            this.textBox16.Location = new System.Drawing.Point(954, 491);
-            this.textBox16.Name = "textBox16";
-            this.textBox16.Size = new System.Drawing.Size(31, 20);
-            this.textBox16.TabIndex = 56;
-            this.textBox16.Text = "2.5";
-            this.textBox16.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox16.TextChanged += new System.EventHandler(this.textBox17_TextChanged);
-            // 
-            // textBox17
-            // 
-            this.textBox17.Location = new System.Drawing.Point(954, 516);
-            this.textBox17.Name = "textBox17";
-            this.textBox17.Size = new System.Drawing.Size(31, 20);
-            this.textBox17.TabIndex = 57;
-            this.textBox17.Text = "2.5";
-            this.textBox17.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox17.TextChanged += new System.EventHandler(this.textBox17_TextChanged);
-            // 
-            // textBox18
-            // 
-            this.textBox18.Location = new System.Drawing.Point(954, 539);
-            this.textBox18.Name = "textBox18";
-            this.textBox18.Size = new System.Drawing.Size(31, 20);
-            this.textBox18.TabIndex = 58;
-            this.textBox18.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.textBox18.TextChanged += new System.EventHandler(this.textBox18_TextChanged);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(986, 490);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(15, 13);
-            this.label20.TabIndex = 59;
-            this.label20.Text = "%";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(986, 516);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(15, 13);
-            this.label21.TabIndex = 60;
-            this.label21.Text = "%";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(986, 542);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(15, 13);
-            this.label22.TabIndex = 61;
-            this.label22.Text = "%";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(830, 126);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(55, 13);
-            this.label7.TabIndex = 62;
-            this.label7.Text = "Transport:";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(838, 152);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(47, 13);
-            this.label23.TabIndex = 63;
-            this.label23.Text = "L.R. No:";
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(891, 123);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(163, 20);
-            this.textBox5.TabIndex = 64;
-            this.textBox5.TextChanged += new System.EventHandler(this.SetTextChanged);
-            // 
-            // textBox19
-            // 
-            this.textBox19.Location = new System.Drawing.Point(891, 152);
-            this.textBox19.Name = "textBox19";
-            this.textBox19.Size = new System.Drawing.Size(163, 20);
-            this.textBox19.TabIndex = 65;
-            this.textBox19.TextChanged += new System.EventHandler(this.SetTextChanged);
-            // 
-            // button4
-            // 
-            this.button4.Font = new System.Drawing.Font("Sitka Text", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(1125, 1);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(151, 48);
-            this.button4.TabIndex = 66;
-            this.button4.Text = "New Bill";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click_1);
-            // 
-            // button5
-            // 
-            this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(1044, 641);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(132, 23);
-            this.button5.TabIndex = 67;
-            this.button5.Text = "UPDATE BILL";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(-2, 0);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(15, 14);
-            this.checkBox1.TabIndex = 68;
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(12, 171);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(58, 13);
-            this.label24.TabIndex = 69;
-            this.label24.Text = "*updateqry";
-            this.label24.Visible = false;
-            // 
-            // textBox20
-            // 
-            this.textBox20.Location = new System.Drawing.Point(1018, 423);
-            this.textBox20.Name = "textBox20";
-            this.textBox20.ReadOnly = true;
-            this.textBox20.Size = new System.Drawing.Size(164, 20);
-            this.textBox20.TabIndex = 71;
-            this.textBox20.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(964, 426);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(37, 13);
-            this.label25.TabIndex = 70;
-            this.label25.Text = "Total :";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(869, 670);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(132, 23);
-            this.button2.TabIndex = 72;
-            this.button2.Text = "Save and Print";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
-            // 
-            // button7
-            // 
-            this.button7.Enabled = false;
-            this.button7.Location = new System.Drawing.Point(1044, 670);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(132, 23);
-            this.button7.TabIndex = 73;
-            this.button7.Text = "Update and Print";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(190, 477);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(51, 13);
-            this.label26.TabIndex = 74;
-            this.label26.Text = "Company";
-            // 
-            // textBox22
-            // 
-            this.textBox22.Location = new System.Drawing.Point(248, 511);
-            this.textBox22.Name = "textBox22";
-            this.textBox22.Size = new System.Drawing.Size(121, 20);
-            this.textBox22.TabIndex = 77;
-            this.textBox22.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(207, 514);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(34, 13);
-            this.label27.TabIndex = 76;
-            this.label27.Text = "BillNo";
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(210, 556);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(132, 23);
-            this.button8.TabIndex = 78;
-            this.button8.Text = "CopySelected";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
-            "CREDIT BILL",
-            "CASH BILL"});
-            this.comboBox3.Location = new System.Drawing.Point(248, 470);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(121, 21);
-            this.comboBox3.TabIndex = 79;
-            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
-            // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(759, 656);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(94, 23);
-            this.button9.TabIndex = 80;
-            this.button9.Text = "Print Bill Copy";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Visible = false;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(776, 48);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(50, 17);
-            this.checkBox2.TabIndex = 81;
-            this.checkBox2.Text = "2020";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // productNameDataGridViewTextBoxColumn
             // 
@@ -834,6 +385,461 @@ namespace GST_InvoiceApplication
             this.Select.HeaderText = "Select";
             this.Select.Name = "Select";
             this.Select.Width = 40;
+            // 
+            // invoiceProductsBindingSource
+            // 
+            this.invoiceProductsBindingSource.DataSource = typeof(Invoice.Models.InvoiceProducts);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(649, 561);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(131, 13);
+            this.label11.TabIndex = 33;
+            this.label11.Text = "Total Amount Before Tax :";
+            this.label11.Visible = false;
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(797, 558);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.ReadOnly = true;
+            this.textBox7.Size = new System.Drawing.Size(22, 20);
+            this.textBox7.TabIndex = 34;
+            this.textBox7.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox7.Visible = false;
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(1085, 516);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.ReadOnly = true;
+            this.textBox8.Size = new System.Drawing.Size(164, 20);
+            this.textBox8.TabIndex = 36;
+            this.textBox8.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(973, 516);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(42, 13);
+            this.label12.TabIndex = 35;
+            this.label12.Text = "CGST :";
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(1085, 538);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.ReadOnly = true;
+            this.textBox9.Size = new System.Drawing.Size(164, 20);
+            this.textBox9.TabIndex = 38;
+            this.textBox9.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(976, 538);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(39, 13);
+            this.label13.TabIndex = 37;
+            this.label13.Text = "SGST:";
+            // 
+            // textBox10
+            // 
+            this.textBox10.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox10.Location = new System.Drawing.Point(1085, 608);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.ReadOnly = true;
+            this.textBox10.Size = new System.Drawing.Size(164, 32);
+            this.textBox10.TabIndex = 40;
+            this.textBox10.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(927, 608);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(152, 29);
+            this.label14.TabIndex = 39;
+            this.label14.Text = "Grand Total: ";
+            // 
+            // textBox11
+            // 
+            this.textBox11.Location = new System.Drawing.Point(1085, 561);
+            this.textBox11.Name = "textBox11";
+            this.textBox11.ReadOnly = true;
+            this.textBox11.Size = new System.Drawing.Size(164, 20);
+            this.textBox11.TabIndex = 43;
+            this.textBox11.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(980, 564);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(35, 13);
+            this.label15.TabIndex = 42;
+            this.label15.Text = "IGST:";
+            // 
+            // textBox12
+            // 
+            this.textBox12.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox12.Location = new System.Drawing.Point(832, 4);
+            this.textBox12.Name = "textBox12";
+            this.textBox12.Size = new System.Drawing.Size(130, 41);
+            this.textBox12.TabIndex = 44;
+            this.textBox12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox12.TextChanged += new System.EventHandler(this.textBox12_TextChanged);
+            // 
+            // button3
+            // 
+            this.button3.Font = new System.Drawing.Font("Sitka Text", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(968, 1);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(151, 48);
+            this.button3.TabIndex = 45;
+            this.button3.Text = "Search Bill";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "CREDIT BILL",
+            "CASH BILL"});
+            this.comboBox4.Location = new System.Drawing.Point(891, 67);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(121, 21);
+            this.comboBox4.TabIndex = 46;
+            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.SetTextChanged);
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(891, 92);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.TabIndex = 47;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(838, 70);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 13);
+            this.label9.TabIndex = 48;
+            this.label9.Text = "Bill Type";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(839, 99);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(46, 13);
+            this.label16.TabIndex = 49;
+            this.label16.Text = "Bill Date";
+            // 
+            // textBox13
+            // 
+            this.textBox13.Location = new System.Drawing.Point(781, 529);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.ReadOnly = true;
+            this.textBox13.Size = new System.Drawing.Size(26, 20);
+            this.textBox13.TabIndex = 51;
+            this.textBox13.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox13.Visible = false;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(709, 532);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(55, 13);
+            this.label17.TabIndex = 50;
+            this.label17.Text = "Discount :";
+            this.label17.Visible = false;
+            // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(781, 584);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.ReadOnly = true;
+            this.textBox14.Size = new System.Drawing.Size(26, 20);
+            this.textBox14.TabIndex = 53;
+            this.textBox14.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox14.Visible = false;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(642, 587);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(122, 13);
+            this.label18.TabIndex = 52;
+            this.label18.Text = "Total Amount After Tax :";
+            this.label18.Visible = false;
+            // 
+            // textBox15
+            // 
+            this.textBox15.Location = new System.Drawing.Point(1085, 586);
+            this.textBox15.Name = "textBox15";
+            this.textBox15.Size = new System.Drawing.Size(164, 20);
+            this.textBox15.TabIndex = 55;
+            this.textBox15.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox15.TextChanged += new System.EventHandler(this.textBox15_TextChanged);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(996, 589);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(72, 13);
+            this.label19.TabIndex = 54;
+            this.label19.Text = "Rounded off :";
+            // 
+            // textBox16
+            // 
+            this.textBox16.Location = new System.Drawing.Point(1021, 513);
+            this.textBox16.Name = "textBox16";
+            this.textBox16.Size = new System.Drawing.Size(31, 20);
+            this.textBox16.TabIndex = 56;
+            this.textBox16.Text = "2.5";
+            this.textBox16.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox16.TextChanged += new System.EventHandler(this.textBox17_TextChanged);
+            // 
+            // textBox17
+            // 
+            this.textBox17.Location = new System.Drawing.Point(1021, 538);
+            this.textBox17.Name = "textBox17";
+            this.textBox17.Size = new System.Drawing.Size(31, 20);
+            this.textBox17.TabIndex = 57;
+            this.textBox17.Text = "2.5";
+            this.textBox17.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox17.TextChanged += new System.EventHandler(this.textBox17_TextChanged);
+            // 
+            // textBox18
+            // 
+            this.textBox18.Location = new System.Drawing.Point(1021, 561);
+            this.textBox18.Name = "textBox18";
+            this.textBox18.Size = new System.Drawing.Size(31, 20);
+            this.textBox18.TabIndex = 58;
+            this.textBox18.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox18.TextChanged += new System.EventHandler(this.textBox18_TextChanged);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(1053, 512);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(15, 13);
+            this.label20.TabIndex = 59;
+            this.label20.Text = "%";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(1053, 538);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(15, 13);
+            this.label21.TabIndex = 60;
+            this.label21.Text = "%";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(1053, 564);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(15, 13);
+            this.label22.TabIndex = 61;
+            this.label22.Text = "%";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(830, 126);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(55, 13);
+            this.label7.TabIndex = 62;
+            this.label7.Text = "Transport:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(838, 152);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(47, 13);
+            this.label23.TabIndex = 63;
+            this.label23.Text = "L.R. No:";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(891, 123);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(163, 20);
+            this.textBox5.TabIndex = 64;
+            this.textBox5.TextChanged += new System.EventHandler(this.SetTextChanged);
+            // 
+            // textBox19
+            // 
+            this.textBox19.Location = new System.Drawing.Point(891, 152);
+            this.textBox19.Name = "textBox19";
+            this.textBox19.Size = new System.Drawing.Size(163, 20);
+            this.textBox19.TabIndex = 65;
+            this.textBox19.TextChanged += new System.EventHandler(this.SetTextChanged);
+            // 
+            // button4
+            // 
+            this.button4.Font = new System.Drawing.Font("Sitka Text", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Location = new System.Drawing.Point(1125, 1);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(151, 48);
+            this.button4.TabIndex = 66;
+            this.button4.Text = "New Bill";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click_1);
+            // 
+            // button5
+            // 
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(1111, 644);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(132, 23);
+            this.button5.TabIndex = 67;
+            this.button5.Text = "UPDATE BILL";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(-2, 0);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(15, 14);
+            this.checkBox1.TabIndex = 68;
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(12, 171);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(58, 13);
+            this.label24.TabIndex = 69;
+            this.label24.Text = "*updateqry";
+            this.label24.Visible = false;
+            // 
+            // textBox20
+            // 
+            this.textBox20.Location = new System.Drawing.Point(1085, 490);
+            this.textBox20.Name = "textBox20";
+            this.textBox20.ReadOnly = true;
+            this.textBox20.Size = new System.Drawing.Size(164, 20);
+            this.textBox20.TabIndex = 71;
+            this.textBox20.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(1031, 493);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(37, 13);
+            this.label25.TabIndex = 70;
+            this.label25.Text = "Total :";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(936, 673);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(132, 23);
+            this.button2.TabIndex = 72;
+            this.button2.Text = "Save and Print";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
+            // button7
+            // 
+            this.button7.Enabled = false;
+            this.button7.Location = new System.Drawing.Point(1111, 673);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(132, 23);
+            this.button7.TabIndex = 73;
+            this.button7.Text = "Update and Print";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(189, 527);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(51, 13);
+            this.label26.TabIndex = 74;
+            this.label26.Text = "Company";
+            // 
+            // textBox22
+            // 
+            this.textBox22.Location = new System.Drawing.Point(247, 561);
+            this.textBox22.Name = "textBox22";
+            this.textBox22.Size = new System.Drawing.Size(121, 20);
+            this.textBox22.TabIndex = 77;
+            this.textBox22.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(206, 564);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(34, 13);
+            this.label27.TabIndex = 76;
+            this.label27.Text = "BillNo";
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(209, 606);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(132, 23);
+            this.button8.TabIndex = 78;
+            this.button8.Text = "CopySelected";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Items.AddRange(new object[] {
+            "CREDIT BILL",
+            "CASH BILL"});
+            this.comboBox3.Location = new System.Drawing.Point(247, 520);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(121, 21);
+            this.comboBox3.TabIndex = 79;
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(826, 659);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(94, 23);
+            this.button9.TabIndex = 80;
+            this.button9.Text = "Print Bill Copy";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Visible = false;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(776, 48);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(50, 17);
+            this.checkBox2.TabIndex = 81;
+            this.checkBox2.Text = "2020";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // AddInvoice
             // 
