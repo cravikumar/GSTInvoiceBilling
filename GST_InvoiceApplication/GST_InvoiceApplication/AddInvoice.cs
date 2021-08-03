@@ -643,10 +643,14 @@ namespace GST_InvoiceApplication
 
                 if (price > 0 && qnt > 0 && priceWithoutGST>0)
                 {
+                    double rowTotal = 0;
                     if (dataGridView2.CurrentRow.Cells[5].Value != null && !String.IsNullOrEmpty(dataGridView2.CurrentRow.Cells[5].Value.ToString()) && Convert.ToDouble(dataGridView2.CurrentRow.Cells[5].Value.ToString()) > 0)
+                    {
                         qnt = Convert.ToDouble(dataGridView2.CurrentRow.Cells[5].Value.ToString());
-                    double rowTotal = Math.Round((priceWithoutGST * qnt), 2);
-
+                         rowTotal =priceRound( Math.Round((priceWithoutGST * qnt), 2),2);
+                    }
+                    else
+                         rowTotal = Math.Round((priceWithoutGST * qnt), 2);
                     dataGridView2.CurrentRow.Cells[8].Value = rowTotal;
 
                     dataGridView2.CurrentRow.Cells[8].Style.BackColor = Color.White;
@@ -795,9 +799,11 @@ namespace GST_InvoiceApplication
                     if (String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) || String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()))
                     { dataGridView2.Rows.RemoveAt(i); break; }
 
-                    if ((dataGridView2.Rows[i].Cells[7].Value != DBNull.Value) &&Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value) == Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
+                    if ((dataGridView2.Rows[i].Cells[7].Value != DBNull.Value) && tallyRound(Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value) ,2)== Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
                     { }
-                    else if ((dataGridView2.Rows[i].Cells[7].Value != DBNull.Value) && Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * (string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString())?0: Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value)) == Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
+                    else if ((dataGridView2.Rows[i].Cells[7].Value != DBNull.Value) &&
+                        priceRound(Math.Round(Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * 
+                        (string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString())?0: Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value)), 2), 2) == Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
                     { }
                     else
                     {
@@ -825,9 +831,14 @@ namespace GST_InvoiceApplication
 
                         if (price > 0 && qnt > 0 && priceWithoutGST>0)
                         {
+                            double rowTotal = 0;
                             if (dataGridView2.Rows[i].Cells[5].Value != null && !String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString()) && Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value.ToString()) > 0)
+                            {
                                 qnt = Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value.ToString());
-                            double rowTotal = Math.Round((priceWithoutGST * qnt), 2);
+                                rowTotal = priceRound(Math.Round((priceWithoutGST * qnt), 2), 2);
+                            }
+                            else
+                             rowTotal = Math.Round((priceWithoutGST * qnt), 2);
 
                             dataGridView2.Rows[i].Cells[8].Value = rowTotal;
                         }
