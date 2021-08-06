@@ -141,6 +141,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GSTDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="HSNSalesReportNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HSNSalesReportNew.Designer.cs">
+      <DependentUpon>HSNSalesReportNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductSetup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,6 +211,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddInvoiceOld.resx">
       <DependentUpon>AddInvoiceOld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HSNSalesReportNew.resx">
+      <DependentUpon>HSNSalesReportNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InvoiceOriginalV2.rdlc" />
     <EmbeddedResource Include="ProductSetup.resx">

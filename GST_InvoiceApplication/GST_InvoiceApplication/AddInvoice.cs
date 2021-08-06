@@ -16,13 +16,14 @@ namespace GST_InvoiceApplication
 {
     public partial class AddInvoice : Form
     {
+        CheckBox headerCheckBox = new CheckBox();
         //AutoComplete(ComboBox cb, System.Windows.Forms.KeyPressEventArgs e, bool blnLimitToList);
         public CompanyDetails _selectedCompany;
         InvoiceDetails _savedInvoice;
         public int publicSaleId;
         bool notlastColumn = true; //class level variable--- to check either last column is reached or not
         public bool _isDiscountEditedManually=false;
-
+        public bool dontUncheckAll = false;
         AutoCompleteStringCollection _productList;
         AutoCompleteStringCollection _hsnList;
         public bool isFormModified = false;
@@ -185,8 +186,42 @@ namespace GST_InvoiceApplication
             LoadCustomerData();
             LoadCompanyData();
             searchInv1 = null;
+
+            //CheckBox checkbox = new CheckBox();
+            headerCheckBox.Size = new System.Drawing.Size(15, 15);
+            headerCheckBox.BackColor = Color.Transparent;
+
+            // Reset properties
+            headerCheckBox.Padding = new Padding(0);
+            headerCheckBox.Margin = new Padding(0);
+            headerCheckBox.Text = "";
+
+            // Add checkbox to datagrid cell
+            dataGridView2.Controls.Add(headerCheckBox);
+            DataGridViewHeaderCell header = dataGridView2.Columns[12].HeaderCell;
+            headerCheckBox.Location = new Point(
+                1215,
+                5
+            );
+
+            headerCheckBox.Click += new EventHandler(HeaderCheckBox_Clicked);
         }
 
+        private void HeaderCheckBox_Clicked(object sender, EventArgs e)
+        {
+            //Necessary to end the edit mode of the Cell.
+            dataGridView2.EndEdit();
+
+            //Loop and check and uncheck all row CheckBoxes based on Header Cell CheckBox.
+            foreach (DataGridViewRow row in dataGridView2.Rows)
+            {
+                if (row.Cells[8].Value !=null && !String.IsNullOrEmpty(row.Cells[8].Value.ToString()) )
+                {
+                    DataGridViewCheckBoxCell checkBox = (row.Cells["Select"] as DataGridViewCheckBoxCell);
+                    checkBox.Value = headerCheckBox.Checked;
+                }
+            }
+        }
         public AddInvoice(int InvoiceId, int companyId, string year="")
         {
             this.WindowState = FormWindowState.Maximized;
@@ -358,6 +393,17 @@ namespace GST_InvoiceApplication
             comboBox3.ValueMember = "Key";
         }
 
+        private bool isGSTApplicableForCompany(int companyId)
+        {
+            string sql = "select * from CompanyData where ID = " + companyId.ToString();
+            var ds = Functions.RunSelectSql(sql);
+            DataRow dr = ds.Tables[0].Rows[0];
+
+            return Convert.ToBoolean(dr["IsGSTApplicable"]);
+
+             
+        }
+
         private void button6_Click(object sender, EventArgs e)
         {
             if (isFormModified)
@@ -425,6 +471,23 @@ namespace GST_InvoiceApplication
                 dataGridView2.Rows.RemoveAt(e.RowIndex);
                 updateTotalBill();
             }
+            if (column == 12)
+            {
+                bool isChecked = true;
+                foreach (DataGridViewRow row in dataGridView2.Rows)
+                {
+                    if (Convert.ToBoolean(row.Cells["Select"].EditedFormattedValue) == false)
+                    {
+                        if (row.Cells[8].Value != null && !String.IsNullOrEmpty(row.Cells[8].Value.ToString()))
+                        {
+                            isChecked = false;
+                            break;
+                        }
+                            
+                    }
+                }
+                headerCheckBox.Checked = isChecked;
+            }
 
             if (converted && Id > 0 && column == 9)
             {
@@ -448,7 +511,7 @@ namespace GST_InvoiceApplication
                 double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
                 double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
                 double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
-                if (!_selectedCompany.IsGSTApplicable)
+                if (_selectedCompany != null && !_selectedCompany.IsGSTApplicable)
                     sgst = cgst = igst = 0;
 
                 double discount=0;
@@ -624,7 +687,7 @@ namespace GST_InvoiceApplication
                 double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
                 double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
                 double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
-                if (!_selectedCompany.IsGSTApplicable)
+                if (_selectedCompany!= null && !_selectedCompany.IsGSTApplicable)
                     sgst = cgst = igst = 0;
 
 
@@ -1714,7 +1777,7 @@ namespace GST_InvoiceApplication
                     trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "0");
                     break;
                 case "2":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "0");
+                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "5");
                     break;
 
                 case "3":
@@ -1733,7 +1796,7 @@ namespace GST_InvoiceApplication
                     break;
 
                 case "7":
-                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "5");
+                    trucateVal = Convert.ToDouble(trucateValStr.Remove(trucateValStr.Length - 1, 1) + "0") + 0.10;
                     break;
                 
                 case "8":
@@ -2128,8 +2191,8 @@ namespace GST_InvoiceApplication
                 inv.StrTransport = textBox5.Text;
                 inv.StrLRNo = textBox19.Text;
 
-                inv.CGSTValue = "2.5";
-                inv.SGSTValue = "2.5";
+                inv.CGSTValue = textBox16.Text;
+                inv.SGSTValue = textBox17.Text;
                 inv.IGSTValue = textBox18.Text;
 
                 try
@@ -2159,9 +2222,51 @@ namespace GST_InvoiceApplication
                         currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                         currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                         currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                        currProduct.RateWithoutTax = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                        currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
 
+                        double price = Convert.ToDouble(currProduct.Rate);
+                        double qnt = Convert.ToDouble(currProduct.Quantity);
+
+                        double priceWithoutGST = 0;
+
+                        double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
+                        double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
+                        double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
+                        if (isGSTApplicableForCompany(inv.CompanyId))
+                        {
+                            sgst = cgst = 2.5;
+                            if (!textBox6.Text.StartsWith("37")) igst = 5;
+
+                        }
+                        else
+                            sgst = cgst = igst = 0;
+
+
+                        if (igst > 0)
+                        {
+                            priceWithoutGST = priceRound(price - (price * (igst / (100 + igst))), 2);
+
+                            //sgst = igst / 2;
+                            //cgst = igst / 2;
+                        }
+                        else
+                            priceWithoutGST = priceRound(price - (price * ((sgst + cgst) / (100 + sgst + cgst))), 2);
+
+                        currProduct.RateWithoutTax = priceWithoutGST.ToString();
+
+
+                        if (price > 0 && qnt > 0 && priceWithoutGST > 0)
+                        {
+                            double rowTotal = 0;
+                            if ( !String.IsNullOrEmpty(currProduct.Mts) && Convert.ToDouble(currProduct.Mts) > 0)
+                            {
+                                qnt = Convert.ToDouble(currProduct.Mts);
+                                rowTotal = priceRound(Math.Round((priceWithoutGST * qnt), 2), 2);
+                            }
+                            else
+                                rowTotal = Math.Round((priceWithoutGST * qnt), 2);
+
+                            currProduct.Total = rowTotal.ToString();
+                        }
                         currProduct.Id = SaveInvoiceTableData(currProduct);
 
                     }
@@ -2187,8 +2292,43 @@ namespace GST_InvoiceApplication
                         currProduct.Quantity = dataGridView2.Rows[i].Cells[4].Value == null ? "" : dataGridView2.Rows[i].Cells[4].Value.ToString();
                         currProduct.Mts = dataGridView2.Rows[i].Cells[5].Value == null ? "" : dataGridView2.Rows[i].Cells[5].Value.ToString();
                         currProduct.Rate = dataGridView2.Rows[i].Cells[6].Value == null ? "" : dataGridView2.Rows[i].Cells[6].Value.ToString();
-                        currProduct.Rate = dataGridView2.Rows[i].Cells[7].Value == null ? "" : dataGridView2.Rows[i].Cells[7].Value.ToString();
-                        currProduct.Total = dataGridView2.Rows[i].Cells[8].Value == null ? "" : dataGridView2.Rows[i].Cells[8].Value.ToString();
+                        double price = Convert.ToDouble(currProduct.Rate);
+                        double qnt = Convert.ToDouble(currProduct.Quantity);
+
+                        double priceWithoutGST = 0;
+
+                        double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
+                        double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
+                        double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
+                        
+
+                        if (igst > 0)
+                        {
+                            priceWithoutGST = priceRound(price - (price * (igst / (100 + igst))), 2);
+
+                            //sgst = igst / 2;
+                            //cgst = igst / 2;
+                        }
+                        else
+                            priceWithoutGST = priceRound(price - (price * ((sgst + cgst) / (100 + sgst + cgst))), 2);
+
+                        currProduct.RateWithoutTax = priceWithoutGST.ToString();
+
+
+                        if (price > 0 && qnt > 0 && priceWithoutGST > 0)
+                        {
+                            double rowTotal = 0;
+                            if (!String.IsNullOrEmpty(currProduct.Mts) && Convert.ToDouble(currProduct.Mts) > 0)
+                            {
+                                qnt = Convert.ToDouble(currProduct.Mts);
+                                rowTotal = priceRound(Math.Round((priceWithoutGST * qnt), 2), 2);
+                            }
+                            else
+                                rowTotal = Math.Round((priceWithoutGST * qnt), 2);
+
+                            currProduct.Total = rowTotal.ToString();
+                        }
+                        currProduct.Id = SaveInvoiceTableData(currProduct);
 
                         currProduct.Id = SaveInvoiceTableData(currProduct);
                      
@@ -2212,6 +2352,8 @@ namespace GST_InvoiceApplication
             if (textBox6.Text.Length>3 &&    !textBox6.Text.StartsWith("37"))
             {
                 textBox18.Text = "5";
+                textBox16.Text = "";
+                textBox17.Text = "";
             }
             else
             {
@@ -2309,5 +2451,7 @@ namespace GST_InvoiceApplication
             _isDiscountEditedManually = true;
             updateTotalBill();
         }
+
+       
     }
 }
