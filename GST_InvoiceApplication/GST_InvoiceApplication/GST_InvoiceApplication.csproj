@@ -159,6 +159,12 @@
     <Compile Include="HSNSalesReport.Designer.cs">
       <DependentUpon>HSNSalesReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="TallyExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TallyExport.Designer.cs">
+      <DependentUpon>TallyExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="TallyUtility.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -223,6 +229,9 @@
     <EmbeddedResource Include="InvoiceRollerOriginal.rdlc" />
     <EmbeddedResource Include="HSNSalesReport.resx">
       <DependentUpon>HSNSalesReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TallyExport.resx">
+      <DependentUpon>TallyExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TallyUtility.resx">
       <DependentUpon>TallyUtility.cs</DependentUpon>

@@ -123,73 +123,78 @@ namespace GST_InvoiceApplication
 
         }
 
-      //  public static System.IO.Stream DownloadFile(
-      //IAuthenticator authenticator, File file)
-      //  {
-      //      if (!String.IsNullOrEmpty(file.DownloadUrl))
-      //      {
-      //          try
-      //          {
-      //              HttpWebRequest request = (HttpWebRequest)WebRequest.Create(
-      //                  new Uri(file.DownloadUrl));
-      //              authenticator.ApplyAuthenticationToRequest(request);
-      //              HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-      //              if (response.StatusCode == HttpStatusCode.OK)
-      //              {
-      //                  return response.GetResponseStream();
-      //              }
-      //              else
-      //              {
-      //                  Console.WriteLine(
-      //                      "An error occurred: " + response.StatusDescription);
-      //                  return null;
-      //              }
-      //          }
-      //          catch (Exception e)
-      //          {
-      //              Console.WriteLine("An error occurred: " + e.Message);
-      //              return null;
-      //          }
-      //      }
-      //      else
-      //      {
-      //          // The file doesn't have any content stored on Drive.
-      //          return null;
-      //      }
-      //  }
-      //  private bool SaveToDir(string downloadUrl, string filename)
-      //  {
-      //      string filePath = @"C:\Users\SAIRAM\Desktop\bills-shop\";
-      //      bool resp = false;
-      //      DriveService ds = new DriveService();
-      //      Uri temp = new Uri(downloadUrl);
-      //      string fileId = HttpUtility.ParseQueryString(temp.Query).Get("id");
-      //      var req = ds.Files.Get(fileId.Trim());
-      //      var stream = new MemoryStream();
-      //      req.MediaDownloader.ProgressChanged += (Google.Apis.Download.IDownloadProgress dp) =>
-      //      {
-      //          switch (dp.Status)
-      //          {
-      //              case Google.Apis.Download.DownloadStatus.Downloading:
-      //                  MessageBox.Show("downloading, please wait....");
-      //                  break;
-      //              case Google.Apis.Download.DownloadStatus.Completed:
-      //                  using (FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-      //                  {
-      //                      stream.WriteTo(file);
-      //                      MessageBox.Show("File Downloaded successfully.");
-      //                  }
-      //                  resp = true;
-      //                  break;
-      //              case Google.Apis.Download.DownloadStatus.Failed:
-      //                  MessageBox.Show("Failed to Download.");
-      //                  resp = false;
-      //                  break;
-      //          }
-      //      };
-      //      req.Download(stream);
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //  public static System.IO.Stream DownloadFile(
+        //IAuthenticator authenticator, File file)
+        //  {
+        //      if (!String.IsNullOrEmpty(file.DownloadUrl))
+        //      {
+        //          try
+        //          {
+        //              HttpWebRequest request = (HttpWebRequest)WebRequest.Create(
+        //                  new Uri(file.DownloadUrl));
+        //              authenticator.ApplyAuthenticationToRequest(request);
+        //              HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //              if (response.StatusCode == HttpStatusCode.OK)
+        //              {
+        //                  return response.GetResponseStream();
+        //              }
+        //              else
+        //              {
+        //                  Console.WriteLine(
+        //                      "An error occurred: " + response.StatusDescription);
+        //                  return null;
+        //              }
+        //          }
+        //          catch (Exception e)
+        //          {
+        //              Console.WriteLine("An error occurred: " + e.Message);
+        //              return null;
+        //          }
+        //      }
+        //      else
+        //      {
+        //          // The file doesn't have any content stored on Drive.
+        //          return null;
+        //      }
+        //  }
+        //  private bool SaveToDir(string downloadUrl, string filename)
+        //  {
+        //      string filePath = @"C:\Users\SAIRAM\Desktop\bills-shop\";
+        //      bool resp = false;
+        //      DriveService ds = new DriveService();
+        //      Uri temp = new Uri(downloadUrl);
+        //      string fileId = HttpUtility.ParseQueryString(temp.Query).Get("id");
+        //      var req = ds.Files.Get(fileId.Trim());
+        //      var stream = new MemoryStream();
+        //      req.MediaDownloader.ProgressChanged += (Google.Apis.Download.IDownloadProgress dp) =>
+        //      {
+        //          switch (dp.Status)
+        //          {
+        //              case Google.Apis.Download.DownloadStatus.Downloading:
+        //                  MessageBox.Show("downloading, please wait....");
+        //                  break;
+        //              case Google.Apis.Download.DownloadStatus.Completed:
+        //                  using (FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        //                  {
+        //                      stream.WriteTo(file);
+        //                      MessageBox.Show("File Downloaded successfully.");
+        //                  }
+        //                  resp = true;
+        //                  break;
+        //              case Google.Apis.Download.DownloadStatus.Failed:
+        //                  MessageBox.Show("Failed to Download.");
+        //                  resp = false;
+        //                  break;
+        //          }
+        //      };
+        //      req.Download(stream);
 
 
-      //  }
+        //  }
     }
 }

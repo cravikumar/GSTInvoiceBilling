@@ -312,14 +312,6 @@ namespace GST_InvoiceApplication
                 label10.Visible = true;
             }
             InvoiceDetails searchInv = getInvoiceDetails(_selectedCompany.CompanyID, InvoiceId.ToString(),false,year);
-            
-            if(searchInv.InvoiceDate < new DateTime(2021, 08, 01))
-            { 
-            
-            
-            
-            }
-
 
             SortedDictionary<int, string> userCache = new SortedDictionary<int, string>();
             userCache.Add(0, _selectedCompany.CompanyName);
@@ -501,9 +493,19 @@ namespace GST_InvoiceApplication
             double totalBillValue = 0;
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
-                if(!(dataGridView2.Rows[i].Cells[8].Value == DBNull.Value))
-                totalBillValue += Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value);
+                if (!(dataGridView2.Rows[i].Cells[8].Value == DBNull.Value))
+                {
+                    if (_selectedCompany != null && !_selectedCompany.IsGSTApplicable && dataGridView2.Rows[i].Cells[6].Value!=null)
+                    {
+                        if (dataGridView2.Rows[i].Cells[7].Value.ToString() != dataGridView2.Rows[i].Cells[6].Value.ToString())
+                        {
+                            dataGridView2.Rows[i].Cells[7].Value = dataGridView2.Rows[i].Cells[6].Value;
 
+
+                        }
+                    }
+                    totalBillValue += Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value);
+                }
             }
 
             if (totalBillValue > 0)
@@ -2233,9 +2235,9 @@ namespace GST_InvoiceApplication
                         double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
                         if (isGSTApplicableForCompany(inv.CompanyId))
                         {
-                            sgst = cgst = 2.5;
-                            if (!textBox6.Text.StartsWith("37")) igst = 5;
 
+                            if (!textBox6.Text.StartsWith("37")) igst = 5;
+                            else sgst = cgst = 2.5;
                         }
                         else
                             sgst = cgst = igst = 0;
@@ -2300,14 +2302,20 @@ namespace GST_InvoiceApplication
                         double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
                         double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
                         double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
-                        
+                        if (isGSTApplicableForCompany(searchInv.CompanyId))
+                        {
+                            
+                            if (!searchInv.CustomerGST.StartsWith("37")) igst = 5;
+                            else sgst = cgst = 2.5;
+
+                        }
+                        else
+                            sgst = cgst = igst = 0;
+
 
                         if (igst > 0)
                         {
                             priceWithoutGST = priceRound(price - (price * (igst / (100 + igst))), 2);
-
-                            //sgst = igst / 2;
-                            //cgst = igst / 2;
                         }
                         else
                             priceWithoutGST = priceRound(price - (price * ((sgst + cgst) / (100 + sgst + cgst))), 2);
@@ -2328,8 +2336,6 @@ namespace GST_InvoiceApplication
 
                             currProduct.Total = rowTotal.ToString();
                         }
-                        currProduct.Id = SaveInvoiceTableData(currProduct);
-
                         currProduct.Id = SaveInvoiceTableData(currProduct);
                      
                     }
