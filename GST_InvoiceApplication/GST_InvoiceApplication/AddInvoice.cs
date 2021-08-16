@@ -855,6 +855,47 @@ namespace GST_InvoiceApplication
             return isValid;
         }
 
+        private void recomputeRateByCompany()
+        {
+            for (int i = 0; i < dataGridView2.Rows.Count; ++i)
+            {
+                double price = dataGridView2.Rows[i].Cells[6].Value != null && !string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) ? Convert.ToDouble(dataGridView2.Rows[i].Cells[6].Value.ToString()) : 0;
+                double qnt = dataGridView2.Rows[i].Cells[4].Value != null && !string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()) ? Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value.ToString()) : 0;
+                // var gst = dataGridView2.CurrentRow.Cells[6].Value;
+
+                double priceWithoutGST = 0;
+
+                double sgst = string.IsNullOrEmpty(textBox16.Text) ? 0 : Convert.ToDouble(textBox16.Text);
+                double cgst = string.IsNullOrEmpty(textBox17.Text) ? 0 : Convert.ToDouble(textBox17.Text);
+                double igst = string.IsNullOrEmpty(textBox18.Text) ? 0 : Convert.ToDouble(textBox18.Text);
+                if (!_selectedCompany.IsGSTApplicable)
+                    sgst = cgst = igst = 0;
+
+
+                if (igst > 0)
+                {
+                    priceWithoutGST = priceRound(price - (price * (igst / (100 + igst))), 2);
+                }
+                else
+                    priceWithoutGST = priceRound(price - (price * ((sgst + cgst) / (100 + sgst + cgst))), 2);
+                dataGridView2.Rows[i].Cells[7].Value = priceWithoutGST;
+
+                if (price > 0 && qnt > 0 && priceWithoutGST > 0)
+                {
+                    double rowTotal = 0;
+                    if (dataGridView2.Rows[i].Cells[5].Value != null && !String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString()) && Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value.ToString()) > 0)
+                    {
+                        qnt = Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value.ToString());
+                        rowTotal = priceRound(Math.Round((priceWithoutGST * qnt), 2), 2);
+                    }
+                    else
+                        rowTotal = Math.Round((priceWithoutGST * qnt), 2);
+
+                    dataGridView2.Rows[i].Cells[8].Value = rowTotal;
+
+                }
+            }
+        }
         private void doFinalCheck()
         {
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
@@ -866,10 +907,10 @@ namespace GST_InvoiceApplication
 
                     if ((dataGridView2.Rows[i].Cells[7].Value != DBNull.Value) && tallyRound(Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value) ,2)== Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
                     { }
-                    else if ((dataGridView2.Rows[i].Cells[7].Value != DBNull.Value) &&
+                    else if ((dataGridView2.Rows[i].Cells[7].Value != DBNull.Value) && dataGridView2.Rows[i].Cells[5].Value !=null && (dataGridView2.Rows[i].Cells[5].Value != DBNull.Value) &&
                         priceRound(Math.Round(Convert.ToDouble(dataGridView2.Rows[i].Cells[7].Value) * 
                         (string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[5].Value.ToString())?0: Convert.ToDouble(dataGridView2.Rows[i].Cells[5].Value)), 2), 2) == Convert.ToDouble(dataGridView2.Rows[i].Cells[8].Value))
-                    { }
+                    { } 
                     else
                     {
                         // MessageBox.Show("Error in Calculation previously, Now updated");
@@ -1220,7 +1261,8 @@ namespace GST_InvoiceApplication
             
 
             textBox12.Text = currentInvoice.ToString();
-
+            recomputeRateByCompany();
+            doFinalCheck();
 
         }
 
@@ -2305,7 +2347,7 @@ namespace GST_InvoiceApplication
                         if (isGSTApplicableForCompany(searchInv.CompanyId))
                         {
                             
-                            if (!searchInv.CustomerGST.StartsWith("37")) igst = 5;
+                            if (searchInv.CustomerGST !=null &&   !searchInv.CustomerGST.StartsWith("37")) igst = 5;
                             else sgst = cgst = 2.5;
 
                         }
