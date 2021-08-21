@@ -218,26 +218,77 @@ namespace GST_InvoiceApplication
 
         private void MapTallyLedgers()
         {
-            ReadLedgerData();
-            for (int i = 0; i < dataGridView1.Rows.Count; ++i)
-            {
+            DataTable dt =  ReadLedgerData();
+            if (dt != null)
+                for (int i = 0; i < dataGridView1.Rows.Count; ++i)
+                {
+                    string billGST = dataGridView1.Rows[i].Cells[3].Value.ToString();
+                    if (!string.IsNullOrEmpty(billGST))
+                    {
+                        DataRow dr = dt.Select("$PartyGSTIN='" + billGST + "'").FirstOrDefault();
+                        if (dr!=null)
+                        {
+                            dataGridView1.Rows[i].Cells[11].Value = dr[0].ToString();
+                        //    MessageBox.Show("got a row"+dr[0].ToString()+dr[1].ToString());
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[3].Value.ToString()))
+                                dataGridView1.Rows[i].Cells[11].Value = "NewAccountLedger";
+                            else if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[3].Value.ToString()) &&  Convert.ToBoolean(dataGridView1.Rows[i].Cells[10].Value.ToString()))
+                                dataGridView1.Rows[i].Cells[11].Value = "Cash";
+                            else
+                                dataGridView1.Rows[i].Cells[11].Value = "NoGSTCreditLedger";
+                        }
 
-                dataGridView1.Rows[i].Cells[11].Value = "test";
-            }
+                    }
+                }
         }
 
-        private void ReadLedgerData()
+        private System.Data.DataTable  ReadLedgerData()
         {
-            string query = ConfigurationManager.AppSettings["TallyQuery"].ToString();
-            OdbcConnection con = new OdbcConnection(ConfigurationManager.AppSettings["TallyConnection"].ToString());
-            OdbcCommand cmd = new OdbcCommand(query, con);
-            con.Open();
-            OdbcDataAdapter da = new OdbcDataAdapter(query, con);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            dataGridView2.DataSource = ds;
-            con.Close();
+            try
+            {
+                string query = ConfigurationManager.AppSettings["TallyQuery"].ToString();
+                OdbcConnection con = new OdbcConnection(ConfigurationManager.AppSettings["TallyConnection"].ToString());
+                OdbcCommand cmd = new OdbcCommand(query, con);
+                con.Open();
+                OdbcDataAdapter da = new OdbcDataAdapter(query, con);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count>0)
+                {
+                    dataGridView2.DataSource = ds.Tables[0];
+                    return ds.Tables[0];
+                }
+                else
+                    MessageBox.Show("tally connection failed; table count zero");
+               
+                con.Close();
+            }
+            catch (Exception ex)
+            {
+                string filePath = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString() + "\\Error.txt";
 
+
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                {
+                    writer.WriteLine("-----------------------------------------------------------------------------");
+                    writer.WriteLine("Date : " + DateTime.Now.ToString());
+                    writer.WriteLine();
+
+                    while (ex != null)
+                    {
+                        writer.WriteLine(ex.GetType().FullName);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+
+                        ex = ex.InnerException;
+                    }
+                }
+
+            }
+            return null;
             //throw methodn
         }
     }
