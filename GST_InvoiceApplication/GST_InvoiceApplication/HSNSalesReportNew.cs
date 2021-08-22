@@ -453,6 +453,8 @@ namespace GST_InvoiceApplication
             worksheet.Columns["E"].Delete();
             worksheet.Columns["F"].Delete();
             worksheet.Columns["G"].Delete();
+            worksheet.Columns["I"].Delete();
+            worksheet.Columns["C"].Delete();
             //worksheet.Columns.Delete(6);
             //worksheet.Columns.Delete(7);
 
