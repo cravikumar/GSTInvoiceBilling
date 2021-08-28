@@ -85,7 +85,7 @@ namespace GST_InvoiceApplication
             List<CompanyDetails> companies = GetCompanyData();
 
             SortedDictionary<int, string> userCache = new SortedDictionary<int, string>();
-            userCache.Add(0, "--Select--");
+            
             foreach (CompanyDetails curr in companies)
             {
                 userCache.Add(curr.CompanyID, curr.CompanyName);
@@ -213,36 +213,74 @@ namespace GST_InvoiceApplication
             dataGridView1.DataSource = dt;
 
 
+            
+
+            if (!(dt.Rows.Count > 0))
+                return;
+
             MapTallyLedgers();
+            TallyXMLProcessor pro = new TallyXMLProcessor();
+            string xml= pro.GetTallyXML(dt, Convert.ToInt32(comboBox3.SelectedValue));
+            string filePath;
+            using (var fbd = new FolderBrowserDialog())
+            {
+                DialogResult result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+
+                    filePath = fbd.SelectedPath+@"\DayBookExport.xml";
+                    if (File.Exists(filePath))
+                    {
+                        // If file found, delete it    
+                        File.Delete(filePath);
+                    }
+                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                    {
+                        writer.WriteLine(xml);
+                    }
+                    MessageBox.Show("File successfully created..!!" + filePath);
+                }
+            }
+
+            
+
         }
 
         private void MapTallyLedgers()
         {
             DataTable dt =  ReadLedgerData();
-            if (dt != null)
-                for (int i = 0; i < dataGridView1.Rows.Count; ++i)
+            //if (dt != null)
+            for (int i = 0; i < dataGridView1.Rows.Count; ++i)
+            {
+                string billGST = dataGridView1.Rows[i].Cells[3].Value == null ? null : dataGridView1.Rows[i].Cells[3].Value.ToString();
+                if (!string.IsNullOrEmpty(billGST))
                 {
-                    string billGST = dataGridView1.Rows[i].Cells[3].Value.ToString();
-                    if (!string.IsNullOrEmpty(billGST))
+                    DataRow dr = dt == null ? null : dt.Select("$PartyGSTIN='" + billGST + "'").FirstOrDefault();
+                    if (dr != null)
                     {
-                        DataRow dr = dt.Select("$PartyGSTIN='" + billGST + "'").FirstOrDefault();
-                        if (dr!=null)
-                        {
-                            dataGridView1.Rows[i].Cells[11].Value = dr[0].ToString();
+                        dataGridView1.Rows[i].Cells[11].Value = dr[0].ToString();
                         //    MessageBox.Show("got a row"+dr[0].ToString()+dr[1].ToString());
-                        }
-                        else
-                        {
-                            if (!string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[3].Value.ToString()))
-                                dataGridView1.Rows[i].Cells[11].Value = "NewAccountLedger";
-                            else if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[3].Value.ToString()) &&  Convert.ToBoolean(dataGridView1.Rows[i].Cells[10].Value.ToString()))
-                                dataGridView1.Rows[i].Cells[11].Value = "Cash";
-                            else
-                                dataGridView1.Rows[i].Cells[11].Value = "NoGSTCreditLedger";
-                        }
-
                     }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[3].Value.ToString()))
+                            dataGridView1.Rows[i].Cells[11].Value = "NewAccountLedger";
+                        else if (string.IsNullOrEmpty(dataGridView1.Rows[i].Cells[3].Value.ToString()) && Convert.ToBoolean(dataGridView1.Rows[i].Cells[10].Value.ToString()))
+                            dataGridView1.Rows[i].Cells[11].Value = "Cash";
+                        else
+                            dataGridView1.Rows[i].Cells[11].Value = "NoGSTCreditLedger";
+                    }
+
                 }
+                else
+                {
+                    if (dataGridView1.Rows[i].Cells[10].Value!=null && Convert.ToBoolean(dataGridView1.Rows[i].Cells[10].Value.ToString()))
+                        dataGridView1.Rows[i].Cells[11].Value = "Cash";
+                    else
+                        dataGridView1.Rows[i].Cells[11].Value = "NoGSTCreditLedger";
+                }
+            }
         }
 
         private System.Data.DataTable  ReadLedgerData()
@@ -290,6 +328,14 @@ namespace GST_InvoiceApplication
             }
             return null;
             //throw methodn
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            var form2 = new MasterPage();
+            form2.Closed += (s, args) => this.Close();
+            form2.Show();
         }
     }
 }

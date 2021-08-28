@@ -49,6 +49,19 @@ namespace GST_InvoiceApplication
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.productNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ActualPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mtsDescriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.hSNCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.quantityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mtsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RateWithoutTax = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.saleIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.invoiceProductsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label11 = new System.Windows.Forms.Label();
             this.textBox7 = new System.Windows.Forms.TextBox();
@@ -97,19 +110,6 @@ namespace GST_InvoiceApplication
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.button9 = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.productNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ActualPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mtsDescriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.hSNCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.quantityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mtsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RateWithoutTax = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.saleIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Select = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.invoiceProductsBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -301,6 +301,91 @@ namespace GST_InvoiceApplication
             this.dataGridView2.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgvUserDetails_RowPostPaint);
             this.dataGridView2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyDown);
             // 
+            // productNameDataGridViewTextBoxColumn
+            // 
+            this.productNameDataGridViewTextBoxColumn.DataPropertyName = "ProductName";
+            this.productNameDataGridViewTextBoxColumn.HeaderText = "ProductName";
+            this.productNameDataGridViewTextBoxColumn.Name = "productNameDataGridViewTextBoxColumn";
+            this.productNameDataGridViewTextBoxColumn.Width = 300;
+            // 
+            // ActualPrice
+            // 
+            this.ActualPrice.HeaderText = "~~";
+            this.ActualPrice.Name = "ActualPrice";
+            this.ActualPrice.ReadOnly = true;
+            this.ActualPrice.Width = 60;
+            // 
+            // mtsDescriptionDataGridViewTextBoxColumn
+            // 
+            this.mtsDescriptionDataGridViewTextBoxColumn.DataPropertyName = "MtsDescription";
+            this.mtsDescriptionDataGridViewTextBoxColumn.HeaderText = "MtsDescription";
+            this.mtsDescriptionDataGridViewTextBoxColumn.Name = "mtsDescriptionDataGridViewTextBoxColumn";
+            // 
+            // hSNCodeDataGridViewTextBoxColumn
+            // 
+            this.hSNCodeDataGridViewTextBoxColumn.DataPropertyName = "HSNCode";
+            this.hSNCodeDataGridViewTextBoxColumn.HeaderText = "HSNCode";
+            this.hSNCodeDataGridViewTextBoxColumn.Name = "hSNCodeDataGridViewTextBoxColumn";
+            // 
+            // quantityDataGridViewTextBoxColumn
+            // 
+            this.quantityDataGridViewTextBoxColumn.DataPropertyName = "Quantity";
+            this.quantityDataGridViewTextBoxColumn.HeaderText = "Quantity";
+            this.quantityDataGridViewTextBoxColumn.Name = "quantityDataGridViewTextBoxColumn";
+            // 
+            // mtsDataGridViewTextBoxColumn
+            // 
+            this.mtsDataGridViewTextBoxColumn.DataPropertyName = "Mts";
+            this.mtsDataGridViewTextBoxColumn.HeaderText = "Mts";
+            this.mtsDataGridViewTextBoxColumn.Name = "mtsDataGridViewTextBoxColumn";
+            // 
+            // rateDataGridViewTextBoxColumn
+            // 
+            this.rateDataGridViewTextBoxColumn.DataPropertyName = "Rate";
+            this.rateDataGridViewTextBoxColumn.HeaderText = "Rate";
+            this.rateDataGridViewTextBoxColumn.Name = "rateDataGridViewTextBoxColumn";
+            // 
+            // RateWithoutTax
+            // 
+            this.RateWithoutTax.DataPropertyName = "RateWithoutTax";
+            this.RateWithoutTax.HeaderText = "RateWithoutTax";
+            this.RateWithoutTax.Name = "RateWithoutTax";
+            this.RateWithoutTax.ReadOnly = true;
+            // 
+            // totalDataGridViewTextBoxColumn
+            // 
+            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
+            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
+            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
+            this.totalDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // Delete
+            // 
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Name = "Delete";
+            this.Delete.Text = "Delete";
+            this.Delete.UseColumnTextForButtonValue = true;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // saleIdDataGridViewTextBoxColumn
+            // 
+            this.saleIdDataGridViewTextBoxColumn.DataPropertyName = "SaleId";
+            this.saleIdDataGridViewTextBoxColumn.HeaderText = "SaleId";
+            this.saleIdDataGridViewTextBoxColumn.Name = "saleIdDataGridViewTextBoxColumn";
+            this.saleIdDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // Select
+            // 
+            this.Select.HeaderText = ".";
+            this.Select.Name = "Select";
+            this.Select.Width = 40;
+            // 
             // invoiceProductsBindingSource
             // 
             this.invoiceProductsBindingSource.DataSource = typeof(Invoice.Models.InvoiceProducts);
@@ -408,6 +493,7 @@ namespace GST_InvoiceApplication
             this.textBox12.TabIndex = 44;
             this.textBox12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBox12.TextChanged += new System.EventHandler(this.textBox12_TextChanged);
+            this.textBox12.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox12_KeyPress);
             // 
             // button3
             // 
@@ -702,6 +788,7 @@ namespace GST_InvoiceApplication
             this.textBox22.Size = new System.Drawing.Size(121, 20);
             this.textBox22.TabIndex = 77;
             this.textBox22.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBox22.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox22_KeyPress);
             // 
             // label27
             // 
@@ -755,91 +842,6 @@ namespace GST_InvoiceApplication
             this.checkBox2.Text = "2020";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
-            // 
-            // productNameDataGridViewTextBoxColumn
-            // 
-            this.productNameDataGridViewTextBoxColumn.DataPropertyName = "ProductName";
-            this.productNameDataGridViewTextBoxColumn.HeaderText = "ProductName";
-            this.productNameDataGridViewTextBoxColumn.Name = "productNameDataGridViewTextBoxColumn";
-            this.productNameDataGridViewTextBoxColumn.Width = 300;
-            // 
-            // ActualPrice
-            // 
-            this.ActualPrice.HeaderText = "~~";
-            this.ActualPrice.Name = "ActualPrice";
-            this.ActualPrice.ReadOnly = true;
-            this.ActualPrice.Width = 60;
-            // 
-            // mtsDescriptionDataGridViewTextBoxColumn
-            // 
-            this.mtsDescriptionDataGridViewTextBoxColumn.DataPropertyName = "MtsDescription";
-            this.mtsDescriptionDataGridViewTextBoxColumn.HeaderText = "MtsDescription";
-            this.mtsDescriptionDataGridViewTextBoxColumn.Name = "mtsDescriptionDataGridViewTextBoxColumn";
-            // 
-            // hSNCodeDataGridViewTextBoxColumn
-            // 
-            this.hSNCodeDataGridViewTextBoxColumn.DataPropertyName = "HSNCode";
-            this.hSNCodeDataGridViewTextBoxColumn.HeaderText = "HSNCode";
-            this.hSNCodeDataGridViewTextBoxColumn.Name = "hSNCodeDataGridViewTextBoxColumn";
-            // 
-            // quantityDataGridViewTextBoxColumn
-            // 
-            this.quantityDataGridViewTextBoxColumn.DataPropertyName = "Quantity";
-            this.quantityDataGridViewTextBoxColumn.HeaderText = "Quantity";
-            this.quantityDataGridViewTextBoxColumn.Name = "quantityDataGridViewTextBoxColumn";
-            // 
-            // mtsDataGridViewTextBoxColumn
-            // 
-            this.mtsDataGridViewTextBoxColumn.DataPropertyName = "Mts";
-            this.mtsDataGridViewTextBoxColumn.HeaderText = "Mts";
-            this.mtsDataGridViewTextBoxColumn.Name = "mtsDataGridViewTextBoxColumn";
-            // 
-            // rateDataGridViewTextBoxColumn
-            // 
-            this.rateDataGridViewTextBoxColumn.DataPropertyName = "Rate";
-            this.rateDataGridViewTextBoxColumn.HeaderText = "Rate";
-            this.rateDataGridViewTextBoxColumn.Name = "rateDataGridViewTextBoxColumn";
-            // 
-            // RateWithoutTax
-            // 
-            this.RateWithoutTax.DataPropertyName = "RateWithoutTax";
-            this.RateWithoutTax.HeaderText = "RateWithoutTax";
-            this.RateWithoutTax.Name = "RateWithoutTax";
-            this.RateWithoutTax.ReadOnly = true;
-            // 
-            // totalDataGridViewTextBoxColumn
-            // 
-            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
-            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
-            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
-            this.totalDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // Delete
-            // 
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Name = "Delete";
-            this.Delete.Text = "Delete";
-            this.Delete.UseColumnTextForButtonValue = true;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // saleIdDataGridViewTextBoxColumn
-            // 
-            this.saleIdDataGridViewTextBoxColumn.DataPropertyName = "SaleId";
-            this.saleIdDataGridViewTextBoxColumn.HeaderText = "SaleId";
-            this.saleIdDataGridViewTextBoxColumn.Name = "saleIdDataGridViewTextBoxColumn";
-            this.saleIdDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // Select
-            // 
-            this.Select.HeaderText = ".";
-            this.Select.Name = "Select";
-            this.Select.Width = 40;
             // 
             // AddInvoice
             // 

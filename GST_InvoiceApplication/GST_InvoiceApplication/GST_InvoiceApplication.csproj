@@ -209,6 +209,7 @@
     <Compile Include="SetupCompany.Designer.cs">
       <DependentUpon>SetupCompany.cs</DependentUpon>
     </Compile>
+    <Compile Include="TallyXMLProcessor.cs" />
     <EmbeddedResource Include="AddCustomer.resx">
       <DependentUpon>AddCustomer.cs</DependentUpon>
     </EmbeddedResource>

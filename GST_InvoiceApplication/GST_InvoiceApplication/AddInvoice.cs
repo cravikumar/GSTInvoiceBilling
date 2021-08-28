@@ -968,13 +968,7 @@ namespace GST_InvoiceApplication
             }
             doFinalCheck();
 
-            bool valid = checkInvoiceId(textBox12.Text);
-
-            if (!valid)
-            {
-                MessageBox.Show("Given Invoice Id already exists in system. Please change Bill Number for company");
-                return;
-            }
+            
 
             InvoiceDetails inv = new InvoiceDetails();
             inv.CompanyId = _selectedCompany.CompanyID;
@@ -1047,6 +1041,10 @@ namespace GST_InvoiceApplication
             if (inv.SaleId > 0)
             {
                 UpdateInvoiceNoForCompany(inv.CompanyId, inv.InvoiceId);
+            }
+            else
+            {
+                return;
             }
             inv.Products = new List<InvoiceProducts>();
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
@@ -1133,6 +1131,15 @@ namespace GST_InvoiceApplication
 
         public int SaveInvoiceTableData(InvoiceDetails inv)
         {
+
+            bool valid = checkInvoiceId(inv.InvoiceId);
+
+            if (!valid)
+            {
+                MessageBox.Show("Given Invoice Id already exists in system. Please change Bill Number for company");
+                return 0;
+            }
+
             string query = "insert into SalesInvoiceDetail " +
                 "(CompanyId     ,     InvoiceId     ,    InvoiceDate    ,StrBillTotal,    StrDiscount    , StrTotalAfterDiscountOrBeforeTax ,StrSGST      ,StrCGST      ,StrIGST      , StrTotalAfterTax  ,    StrRounded     ,  StrTotalPayable  ,IsPaid       ,    CustomerId     ,   CustomerName    ,    CustomerGST    ,  CustomerMobile   ,  CustomerAddress  , CustomerPanAadhaar ,   StrTransport    ,StrLRNo      ,     CGSTValue     ,     SGSTValue     ,     IGSTValue,CreatedOn,ModifiedOn ) values" +
                 " ('" + inv.CompanyId +
@@ -1662,6 +1669,8 @@ namespace GST_InvoiceApplication
             {
 
             }
+            if (newSaleId < 1)
+                return;
 
             Functions.RunExecuteNonQuery("update InvoiceProductDetails set isActive='0'" +
                         ", ModifiedOn = '" + DateTime.Now + "'" +
@@ -1989,6 +1998,8 @@ namespace GST_InvoiceApplication
             {
                 UpdateInvoiceNoForCompany(inv.CompanyId, inv.InvoiceId);
             }
+            else
+                return;
             inv.Products = new List<InvoiceProducts>();
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
@@ -2080,6 +2091,8 @@ namespace GST_InvoiceApplication
             {
 
             }
+            if (newSaleId < 1)
+                return;
 
             Functions.RunExecuteNonQuery("update InvoiceProductDetails set isActive='0'" +
                         ", ModifiedOn = '" + DateTime.Now + "'" +
@@ -2252,6 +2265,8 @@ namespace GST_InvoiceApplication
                 {
                     UpdateInvoiceNoForCompany(inv.CompanyId, inv.InvoiceId);
                 }
+                else
+                    return;
                 inv.Products = new List<InvoiceProducts>();
                 for (int i = 0; i < dataGridView2.Rows.Count; i++)
                 {
@@ -2500,6 +2515,14 @@ namespace GST_InvoiceApplication
             updateTotalBill();
         }
 
-       
+        private void textBox12_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled =! (char.IsDigit(e.KeyChar)|| e.KeyChar == '-'||e.KeyChar== '\b');
+        }
+
+        private void textBox22_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == '\b');
+        }
     }
 }

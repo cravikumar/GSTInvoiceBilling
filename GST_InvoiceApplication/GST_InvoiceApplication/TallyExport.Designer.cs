@@ -52,6 +52,7 @@ namespace GST_InvoiceApplication
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.button6 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -74,7 +75,7 @@ namespace GST_InvoiceApplication
             this.TallyLedger});
             this.dataGridView1.Location = new System.Drawing.Point(12, 104);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(1293, 146);
+            this.dataGridView1.Size = new System.Drawing.Size(1293, 417);
             this.dataGridView1.TabIndex = 1;
             // 
             // InvoiceId
@@ -227,16 +228,28 @@ namespace GST_InvoiceApplication
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(12, 303);
+            this.dataGridView2.Location = new System.Drawing.Point(12, 563);
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1293, 150);
+            this.dataGridView2.Size = new System.Drawing.Size(1293, 85);
             this.dataGridView2.TabIndex = 91;
+            // 
+            // button6
+            // 
+            this.button6.Font = new System.Drawing.Font("Sitka Text", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button6.Location = new System.Drawing.Point(1107, 22);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(186, 48);
+            this.button6.TabIndex = 92;
+            this.button6.Text = "Home";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // TallyExport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1317, 519);
+            this.ClientSize = new System.Drawing.Size(1317, 660);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.textBox2);
@@ -281,5 +294,6 @@ namespace GST_InvoiceApplication
         private System.Windows.Forms.DataGridViewTextBoxColumn IsPaid;
         private System.Windows.Forms.DataGridViewTextBoxColumn TallyLedger;
         private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.Button button6;
     }
 }
