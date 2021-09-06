@@ -229,7 +229,7 @@ namespace GST_InvoiceApplication
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
 
-                    filePath = fbd.SelectedPath+@"\DayBookExport.xml";
+                    filePath = fbd.SelectedPath+@"\DayBook.xml";
                     if (File.Exists(filePath))
                     {
                         // If file found, delete it    

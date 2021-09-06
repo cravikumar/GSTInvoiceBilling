@@ -1132,7 +1132,7 @@ namespace GST_InvoiceApplication
         public int SaveInvoiceTableData(InvoiceDetails inv)
         {
 
-            bool valid = checkInvoiceId(inv.InvoiceId);
+            bool valid = checkInvoiceId(inv.InvoiceId,inv.CompanyId);
 
             if (!valid)
             {
@@ -1810,8 +1810,9 @@ namespace GST_InvoiceApplication
         }
 
         private double tallyRound(double value, int decimals)
-        {
-            return Math.Round(value, decimals, MidpointRounding.AwayFromZero);
+        { 
+            return 
+                Convert.ToDouble(Math.Round(Convert.ToDecimal(value), decimals, MidpointRounding.AwayFromZero));
         }
 
         private double priceRound(double value,int decimals)
