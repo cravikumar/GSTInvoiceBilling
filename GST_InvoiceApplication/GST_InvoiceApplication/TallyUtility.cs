@@ -20,10 +20,13 @@ namespace GST_InvoiceApplication
 {
     public partial class TallyUtility : Form
     {
+        public string latestFileId="";
         public TallyUtility()
         {
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
+
+            getLatestFileData();
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -37,8 +40,8 @@ namespace GST_InvoiceApplication
         private void button2_Click(object sender, EventArgs e)
         {
 
-            SearchFiles();
-            //downloadFileById("","");
+            //SearchFiles();
+            GetListofAvailableBackupFiles();
 
             //ProcessDownloadedFile("");
         }
@@ -53,8 +56,8 @@ namespace GST_InvoiceApplication
             filesList.Append("SearchResult::::::");
             foreach (string con in filePaths)
             {
-                string sql = "Select InvoiceId,CompanyID from SalesInvoiceDetail where StrTotalPayable like '%" + textBox2.Text + "%'";
-                DataSet ds = Functions.RunSelectSqlWithCon(sql,con);
+                string sql = "Select InvoiceId,CompanyID from SalesInvoiceDetail where StrTotalPayable like '%" + "" + "%'";
+                DataSet ds = Functions.RunSelectSqlWithCon(sql, con);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     foreach (DataRow dr in ds.Tables[0].Rows)
@@ -65,7 +68,7 @@ namespace GST_InvoiceApplication
 
             foreach (string con in filePaths)
             {
-                string sql = "Select InvoiceId,CompanyID from SalesInvoiceDetail where StrTotalAfterDiscountOrBeforeTax like '%" + textBox2.Text + "%'";
+                string sql = "Select InvoiceId,CompanyID from SalesInvoiceDetail where StrTotalAfterDiscountOrBeforeTax like '%" + "" + "%'";
                 DataSet ds = Functions.RunSelectSqlWithCon(sql, con);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
@@ -81,19 +84,21 @@ namespace GST_InvoiceApplication
 
         private void ProcessDownloadedFile(string path)
         {
-            
+
 
 
         }
 
-        private bool downloadFileById(string fileId, string localPath)
+
+        private void getLatestFileData()
         {
+
             try
             {
                 //fileId = "1jiJPklSRgho4DDx4XZIn5foTidxya6FF";
                 UserCredential credential;
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                          new ClientSecrets { ClientId = "49588927530-r4nbmm11rvmcftdlugihs46m3klss9p4.apps.googleusercontent.com", ClientSecret = "6CeiaTu3pgIH81DAyM_P3K9z" },
+                          new ClientSecrets { ClientId = System.Configuration.ConfigurationManager.AppSettings["DriveClientId"].ToString(), ClientSecret = System.Configuration.ConfigurationManager.AppSettings["DriveClientSecret"].ToString() },
                           new[] { DriveService.Scope.Drive,
                                   DriveService.Scope.DriveFile },
                           "user",
@@ -106,15 +111,76 @@ namespace GST_InvoiceApplication
                     ApplicationName = "Drive API Sample",
                 });
 
-                var request = driveService.Files.Get(fileId);
-                var stream = new System.IO.MemoryStream();
-                request.Download(stream);
+                FilesResource.ListRequest listRequest = driveService.Files.List();
+                listRequest.Q = "'1-32FlVNQHVUFz9Qr0MxCWEDuxHjfOCdl' in parents and mimeType = 'application/mdb'";
+                listRequest.OrderBy = "modifiedTime desc";
+                var files = listRequest.Execute();
+                latestFileId = files.Files[0].Id;
+                label1.Text = files.Files[0].Name;
 
-                //System.IO.FileStream file = new System.IO.FileStream(System.Configuration.ConfigurationManager.AppSettings["ConnectionString"].ToString(), System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                System.IO.FileStream file = new System.IO.FileStream(localPath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                stream.WriteTo(file);
-                file.Close();
-                stream.Close();
+            }
+            catch (Exception ex)
+            { }
+        }
+    
+
+        private bool GetListofAvailableBackupFiles()
+        {
+            try
+            {
+                //fileId = "1jiJPklSRgho4DDx4XZIn5foTidxya6FF";
+                UserCredential credential;
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                          new ClientSecrets { ClientId = System.Configuration.ConfigurationManager.AppSettings["DriveClientId"].ToString(), ClientSecret = System.Configuration.ConfigurationManager.AppSettings["DriveClientSecret"].ToString() },
+                          new[] { DriveService.Scope.Drive,
+                                  DriveService.Scope.DriveFile },
+                          "user",
+                          CancellationToken.None,
+                          new FileDataStore("Drive.Auth.Store")).Result;
+
+                DriveService driveService = new DriveService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "Drive API Sample",
+                });
+
+                FilesResource.ListRequest listRequest = driveService.Files.List();
+                listRequest.Q = "'1-32FlVNQHVUFz9Qr0MxCWEDuxHjfOCdl' in parents and mimeType = 'application/mdb'";
+                var files = listRequest.Execute();
+                if (files.Files.Count > 0)
+                {
+                    string Output = "";
+                    DataTable dt = new DataTable();
+
+                    dt.Columns.Add("File Name");
+                    dt.Columns.Add("File Type");
+                    dt.Columns.Add("File ID");
+                    foreach (Google.Apis.Drive.v3.Data.File localfile in files.Files)
+                    {
+                        DataRow dr = dt.NewRow();
+                        dr["File Name"] = localfile.Name;
+                        dr["File Type"] = localfile.MimeType;
+                        dr["File ID"] = localfile.Id;
+                        dt.Rows.Add(dr);
+                    }
+                    dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("No file found");
+                }
+
+                return true;
+
+                //var request = driveService.Files.Get(fileId);
+                //var stream = new System.IO.MemoryStream();
+                //request.Download(stream);
+
+                ////System.IO.FileStream file = new System.IO.FileStream(System.Configuration.ConfigurationManager.AppSettings["ConnectionString"].ToString(), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                //System.IO.FileStream file = new System.IO.FileStream(localPath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                //stream.WriteTo(file);
+                //file.Close();
+                //stream.Close();
 
             }
             catch(Exception ex)
@@ -126,6 +192,147 @@ namespace GST_InvoiceApplication
         private void button1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            progressBar1.Visible = true;
+            progressBar1.Value = 50;
+            progressBar1.Refresh();
+
+
+            if (!doDataBackup())
+            {
+                MessageBox.Show("Can't Proceed as backup of existing is failing..");
+                progressBar1.Value = 100;
+                progressBar1.Refresh();
+                return;
+            }
+            try
+            {
+                //fileId = "1jiJPklSRgho4DDx4XZIn5foTidxya6FF";
+                UserCredential credential;
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                          new ClientSecrets { ClientId = System.Configuration.ConfigurationManager.AppSettings["DriveClientId"].ToString(), ClientSecret = System.Configuration.ConfigurationManager.AppSettings["DriveClientSecret"].ToString() },
+                          new[] { DriveService.Scope.Drive,
+                                  DriveService.Scope.DriveFile },
+                          "user",
+                          CancellationToken.None,
+                          new FileDataStore("Drive.Auth.Store")).Result;
+
+                DriveService driveService = new DriveService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "Drive API Sample",
+                });
+
+
+                var request = driveService.Files.Get(latestFileId);
+                var stream = new System.IO.MemoryStream();
+                request.Download(stream);
+
+                string localPath = System.Configuration.ConfigurationManager.AppSettings["ConnectionString"].ToString();
+                bool exists = Directory.Exists(localPath);
+
+                //System.IO.FileStream file = new System.IO.FileStream(System.Configuration.ConfigurationManager.AppSettings["ConnectionString"].ToString(), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                System.IO.FileStream file = new System.IO.FileStream(localPath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                stream.WriteTo(file);
+                file.Close();
+                stream.Close();
+
+                progressBar1.Value = 100;
+                progressBar1.Refresh();
+                MessageBox.Show("File download success...");
+            }
+            catch (Exception ex)
+            {
+                progressBar1.Value = 100;
+                progressBar1.Refresh();
+                MessageBox.Show("File download Error..Please verify Internet");
+            }
+            
+
+        }
+
+        private bool doDataBackup()
+        {
+
+            //downloadFileById(downloadLatestFile());
+
+            //return true;
+
+            string fileID = string.Empty;
+            try
+            {
+                UserCredential credential;
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                          new ClientSecrets { ClientId = System.Configuration.ConfigurationManager.AppSettings["DriveClientId"].ToString(), ClientSecret = System.Configuration.ConfigurationManager.AppSettings["DriveClientSecret"].ToString() },
+                          new[] { DriveService.Scope.Drive,
+                                  DriveService.Scope.DriveFile },
+                          "user",
+                          CancellationToken.None,
+                          new FileDataStore("Drive.Auth.Store")).Result;
+
+                DriveService driveService = new DriveService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "Drive API Sample",
+                });
+                driveService.HttpClient.Timeout = TimeSpan.FromMinutes(30);
+
+                var fileMetadata = new Google.Apis.Drive.v3.Data.File()
+                {
+                    Name = "InvoiceBackup_" + DateTime.Now.ToString("dd_MMM_yy_HH_mm") + ".mdb",
+                    MimeType = "application/mdb",
+                    Parents = new List<string>
+                    {
+                        "1u_iyM9dKwJamabwuqmgiE3889MOdLlkO"
+                    }
+                };
+                FilesResource.CreateMediaUpload request;
+                using (var stream = new System.IO.FileStream(System.Configuration.ConfigurationManager.AppSettings["ConnectionString"].ToString(),
+                                        System.IO.FileMode.Open))
+                {
+                    request = driveService.Files.Create(
+                        fileMetadata, stream, "text/csv");
+
+                    
+                    request.Fields = "id";
+
+                    request.Upload();
+                }
+                var file = request.ResponseBody;
+                Console.WriteLine("File ID: " + file.Id);
+                fileID = file.Id;
+            }
+            catch (Exception ex)
+            {
+                string filePath = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString() + "\\Error.txt";
+
+
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                {
+                    writer.WriteLine("-----------------------------------------------------------------------------");
+                    writer.WriteLine("Date : " + DateTime.Now.ToString());
+                    writer.WriteLine();
+
+                    while (ex != null)
+                    {
+                        writer.WriteLine(ex.GetType().FullName);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+
+                        ex = ex.InnerException;
+                    }
+                }
+            }
+
+            if (fileID.Length > 0)
+            {
+                
+                return true;
+            }
+            return false;
         }
 
         //  public static System.IO.Stream DownloadFile(
