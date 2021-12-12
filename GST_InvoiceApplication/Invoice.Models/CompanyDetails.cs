@@ -13,6 +13,7 @@ namespace Invoice.Models
         public string Address { get; set; }
         public string PhoneNumbers { get; set; }
         public bool IsGSTApplicable { get; set; }
+        public double DefaultTax { get; set; }
         public string GSTIN { get; set; }
         public string PANCard { get; set; }
         public string Aadhaar { get; set; }

@@ -627,6 +627,7 @@ namespace GST_InvoiceApplication
 
         private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            isFirstSearchClick = false;
             SetTextChanged(sender, e);
             if (button1.Enabled || button5.Enabled)
             { }
@@ -1206,7 +1207,8 @@ namespace GST_InvoiceApplication
             currentCompany.BillNo = Convert.ToInt32(dr["BillNo"]);
             currentCompany.BillDate = Convert.ToDateTime(dr["BillDate"]);
             currentCompany.BillPrefix = dr["BillPrefix"].ToString();
-
+            currentCompany.DefaultTax = _defaultTax = Convert.ToDouble(dr["DefaultTax"]);
+            textBox16.Text = textBox17.Text = (_defaultTax / 2).ToString();
             _selectedCompany = currentCompany;
 
             if (currentCompany.IsGSTApplicable == false)
@@ -1503,6 +1505,7 @@ namespace GST_InvoiceApplication
             else
             {
                 productList.Clear();
+                hsnList.Clear();
             }
 
 

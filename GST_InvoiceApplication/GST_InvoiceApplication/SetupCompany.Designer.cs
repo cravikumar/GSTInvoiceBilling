@@ -88,6 +88,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBox14 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.companyDetailsBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -631,11 +633,31 @@
             this.progressBar1.TabIndex = 46;
             this.progressBar1.Visible = false;
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(328, 220);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(89, 20);
+            this.label17.TabIndex = 47;
+            this.label17.Text = "TaxPercent";
+            // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(423, 218);
+            this.textBox14.MinimumSize = new System.Drawing.Size(4, 26);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.Size = new System.Drawing.Size(70, 26);
+            this.textBox14.TabIndex = 48;
+            // 
             // SetupCompany
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1275, 669);
+            this.Controls.Add(this.textBox14);
+            this.Controls.Add(this.label17);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -745,5 +767,7 @@
         private System.Windows.Forms.DataGridViewButtonColumn Edit;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox textBox14;
     }
 }

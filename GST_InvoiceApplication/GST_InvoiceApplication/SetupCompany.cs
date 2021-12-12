@@ -84,6 +84,7 @@ namespace GST_InvoiceApplication
                 ", BankAccNo = '" + textBox8.Text + "'" +
                 ", BankBranchAddress = '" + textBox9.Text + "'" +
                 ", IFSCCode = '" + textBox10.Text + "'" +
+                ", DefaultTax = '" + textBox14.Text + "'" +
                 " where Id = " + textBox11.Text;
 
             try { Functions.RunExecuteNonQuery(query); }
@@ -104,6 +105,7 @@ namespace GST_InvoiceApplication
             details.PropriterName = textBox1.Text;
             details.Address = richTextBox1.Text;
             details.IsGSTApplicable = checkBox1.Checked;
+            details.DefaultTax = Convert.ToDouble(textBox4.Text);
             details.GSTIN = textBox4.Text;
             details.PANCard = textBox5.Text;
             details.Aadhaar = textBox6.Text;
@@ -130,6 +132,7 @@ namespace GST_InvoiceApplication
                 textBox1.Text = dr["PropriterName"].ToString();
                 richTextBox1.Text = dr["Address"].ToString();
                 checkBox1.Checked = Convert.ToBoolean(dr["IsGSTApplicable"]);
+                textBox14.Text = dr["DefaultTax"].ToString();
                 textBox4.Text = dr["GSTIN"].ToString();
                 textBox5.Text = dr["PANCard"].ToString();
                 textBox6.Text = dr["Aadhaar"].ToString();
