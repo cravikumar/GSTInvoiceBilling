@@ -5,6 +5,7 @@ using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -25,6 +26,7 @@ namespace GST_InvoiceApplication
         private static List<Stream> m_streams;
         private static int m_currentPageIndex = 0;
         private static int productCount = 0;
+        public double _defaultTax = Convert.ToDouble(ConfigurationManager.AppSettings["TaxPercent"]);
         public HSNSalesReportNew()
         {
             this.WindowState = FormWindowState.Maximized;
@@ -133,13 +135,7 @@ namespace GST_InvoiceApplication
 
             sql = "select F.HSNCode,count(F.HSNCode) as NoOfBills,Sum(F.Total) as TotalWithGST from (SELECT F.InvoiceId, * FROM (select s.InvoiceId,p.SaleId,s.InvoiceDate,p.HSNcode,sum(p.Total) as Total from ((SalesInvoiceDetail s inner join InvoiceProductDetails p on p.SaleId = s.SaleId) inner join CompanyData c on c.ID = s.CompanyId)  where s.InvoiceId not like '%Backup%' and s.InvoiceDate >#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") +
                "# and " + whereCondition + " s.InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# group by p.HSNCode,s.InvoiceDate,s.InvoiceId,P.SaleId)  AS F WHERE (((F.InvoiceId) Not Like '%Backup%')))X group by X.HSNCode";
-
-
             DataSet ds = Functions.RunSelectSql(sql);
-
-
-
-
             System.Data.DataTable dt = ds.Tables[0];
             dt.Columns.Add("TotalWithOutGST");
             dt.Columns.Add("IGSTWithGST");
@@ -183,7 +179,7 @@ namespace GST_InvoiceApplication
             double discount;
             double totalBillValue = 0;
             double totalBillValueWithoutGST = 0;
-            double tax = 5;
+            double tax = _defaultTax;
             foreach (DataRow dr in dt.Rows)
             {
                 double currentTotal = 0;
@@ -222,8 +218,8 @@ namespace GST_InvoiceApplication
 
             foreach (DataRow row in dt.Rows)
             {
-                tax = 5;
-                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where "+ whereCondition+" InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and IGSTValue = '5') and HSNCode='" + row[0].ToString() + "'";
+                tax = _defaultTax;
+                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where "+ whereCondition+" InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and (SGSTValue='')) and HSNCode='" + row[0].ToString() + "'";
                 ds = Functions.RunSelectSql(sql);
                 double igstTotal = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
                 discount = tallyRound((igstTotal * (tax / (100 + tax))), 2);
@@ -232,16 +228,16 @@ namespace GST_InvoiceApplication
 
                 double igstTotalWithoutGST = igstTotal - discount;
 
-                igstTotalWithoutGST = tallyRound((igstTotal * 5 * 0.01), 2);//igstTotalWithoutGST * 0.05;
+                igstTotalWithoutGST = tallyRound((igstTotal * tax * 0.01), 2);//igstTotalWithoutGST * 0.05;
 
-                tax = 5;
-                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where " + whereCondition + " InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and SGSTValue = '2.5') and HSNCode='" + row[0].ToString() + "'";
+                tax = _defaultTax;
+                sql = "select sum(total) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where " + whereCondition + " InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%' and (IGSTValue='')) and HSNCode='" + row[0].ToString() + "'";
                 ds = Functions.RunSelectSql(sql);
                 double sgstTotal = ds.Tables[0].Rows[0][0] == DBNull.Value ? 0 : Convert.ToDouble(ds.Tables[0].Rows[0][0]);
                 discount = (tallyRound((sgstTotal * (tax / (100 + tax))), 2)) / 2;
                 double sgstTotalWithoutGST = sgstTotal - discount - discount;
 
-                sgstTotalWithoutGST = tallyRound((sgstTotal * 2.5 * 0.01), 2);//sgstTotalWithoutGST * 0.025;
+                sgstTotalWithoutGST = tallyRound((sgstTotal * (tax / 2) * 0.01), 2);//sgstTotalWithoutGST * 0.025;
 
                 sql = "select sum(Quantity) from invoiceproductDetails where saleID in (select saleID from SalesInvoiceDetail where " + whereCondition + " InvoiceDate>#" + Convert.ToDateTime(FromDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and CompanyId =  " + Convert.ToInt32(comboBox3.SelectedValue) + " and  InvoiceDate <#" + Convert.ToDateTime(ToDate.ToShortDateString()).ToString("yyyy-MM-dd") + "# and InvoiceId Not Like '%Backup%') and HSNCode='" + row[0].ToString() + "'";
                 ds = Functions.RunSelectSql(sql);

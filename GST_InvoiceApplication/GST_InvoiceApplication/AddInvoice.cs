@@ -29,6 +29,8 @@ namespace GST_InvoiceApplication
         public bool isFormModified = false;
         public bool isFirstSearchClick = false;
         public InvoiceDetails searchInv1;
+        public double _defaultTax = Convert.ToDouble(ConfigurationManager.AppSettings["TaxPercent"]);
+        
         public AutoCompleteStringCollection productList
         {
             get
@@ -181,6 +183,7 @@ namespace GST_InvoiceApplication
 
         public AddInvoice()
         {
+            
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
             LoadCustomerData();
@@ -205,6 +208,7 @@ namespace GST_InvoiceApplication
             );
 
             headerCheckBox.Click += new EventHandler(HeaderCheckBox_Clicked);
+            textBox16.Text = textBox17.Text = (_defaultTax / 2).ToString();
         }
 
         private void HeaderCheckBox_Clicked(object sender, EventArgs e)
@@ -441,13 +445,13 @@ namespace GST_InvoiceApplication
 
             if (textBox6.Text.Length > 3 && !textBox6.Text.StartsWith("37"))
             {
-                textBox18.Text = "5";
+                textBox18.Text = _defaultTax.ToString();
             }
             else
             {
                 textBox18.Text = "";
-                textBox16.Text = "2.5";
-                textBox17.Text = "2.5";
+                textBox16.Text = (_defaultTax/2).ToString();
+                textBox17.Text = (_defaultTax / 2).ToString();
             }
             updateTotalBill();
         }
@@ -2294,8 +2298,8 @@ namespace GST_InvoiceApplication
                         if (isGSTApplicableForCompany(inv.CompanyId))
                         {
 
-                            if (!textBox6.Text.StartsWith("37")) igst = 5;
-                            else sgst = cgst = 2.5;
+                            if (!textBox6.Text.StartsWith("37")) igst = _defaultTax;
+                            else sgst = cgst = _defaultTax/2;
                         }
                         else
                             sgst = cgst = igst = 0;
@@ -2363,8 +2367,8 @@ namespace GST_InvoiceApplication
                         if (isGSTApplicableForCompany(searchInv.CompanyId))
                         {
                             
-                            if (searchInv.CustomerGST !=null &&   !searchInv.CustomerGST.StartsWith("37")) igst = 5;
-                            else sgst = cgst = 2.5;
+                            if (searchInv.CustomerGST !=null &&   !searchInv.CustomerGST.StartsWith("37")) igst = _defaultTax;
+                            else sgst = cgst = _defaultTax/2;
 
                         }
                         else
@@ -2415,15 +2419,15 @@ namespace GST_InvoiceApplication
         {
             if (textBox6.Text.Length>3 &&    !textBox6.Text.StartsWith("37"))
             {
-                textBox18.Text = "5";
+                textBox18.Text = (_defaultTax).ToString();
                 textBox16.Text = "";
                 textBox17.Text = "";
             }
             else
             {
                 textBox18.Text = "";
-                textBox16.Text = "2.5";
-                textBox17.Text = "2.5";
+                textBox16.Text = (_defaultTax / 2).ToString();
+                textBox17.Text = (_defaultTax / 2).ToString();
             }
             updateTotalBill();
         }

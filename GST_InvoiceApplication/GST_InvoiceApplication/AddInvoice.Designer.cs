@@ -607,7 +607,6 @@ namespace GST_InvoiceApplication
             this.textBox16.Name = "textBox16";
             this.textBox16.Size = new System.Drawing.Size(31, 20);
             this.textBox16.TabIndex = 56;
-            this.textBox16.Text = "2.5";
             this.textBox16.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBox16.TextChanged += new System.EventHandler(this.textBox17_TextChanged);
             // 
@@ -617,7 +616,6 @@ namespace GST_InvoiceApplication
             this.textBox17.Name = "textBox17";
             this.textBox17.Size = new System.Drawing.Size(31, 20);
             this.textBox17.TabIndex = 57;
-            this.textBox17.Text = "2.5";
             this.textBox17.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBox17.TextChanged += new System.EventHandler(this.textBox17_TextChanged);
             // 
