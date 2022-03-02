@@ -1207,7 +1207,7 @@ namespace GST_InvoiceApplication
             currentCompany.BillNo = Convert.ToInt32(dr["BillNo"]);
             currentCompany.BillDate = Convert.ToDateTime(dr["BillDate"]);
             currentCompany.BillPrefix = dr["BillPrefix"].ToString();
-            currentCompany.DefaultTax = _defaultTax = Convert.ToDouble(dr["DefaultTax"]);
+            currentCompany.DefaultTax = _defaultTax = 5;// Convert.ToDouble(dr["DefaultTax"]);
             textBox16.Text = textBox17.Text = (_defaultTax / 2).ToString();
             _selectedCompany = currentCompany;
 

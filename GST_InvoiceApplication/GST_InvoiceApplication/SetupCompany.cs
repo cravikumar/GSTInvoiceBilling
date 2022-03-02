@@ -132,7 +132,7 @@ namespace GST_InvoiceApplication
                 textBox1.Text = dr["PropriterName"].ToString();
                 richTextBox1.Text = dr["Address"].ToString();
                 checkBox1.Checked = Convert.ToBoolean(dr["IsGSTApplicable"]);
-                textBox14.Text = dr["DefaultTax"].ToString();
+                textBox14.Text = "5";// dr["DefaultTax"].ToString();
                 textBox4.Text = dr["GSTIN"].ToString();
                 textBox5.Text = dr["PANCard"].ToString();
                 textBox6.Text = dr["Aadhaar"].ToString();

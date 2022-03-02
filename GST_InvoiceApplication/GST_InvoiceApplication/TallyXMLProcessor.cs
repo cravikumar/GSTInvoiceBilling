@@ -11,6 +11,7 @@ namespace GST_InvoiceApplication
     {
         public string UMTPrefix = "<ENVELOPE><HEADER> <TALLYREQUEST>Import Data</TALLYREQUEST></HEADER><BODY> <IMPORTDATA>  <REQUESTDESC>   <REPORTNAME>All Masters</REPORTNAME>   <STATICVARIABLES>    <SVCURRENTCOMPANY>Umamaheswara Textiles</SVCURRENTCOMPANY>   </STATICVARIABLES>  </REQUESTDESC>  <REQUESTDATA>   <TALLYMESSAGE xmlns:UDF=\"TallyUDF\">   ";
         public string UMTSGSTVocher = "<VOUCHER  VCHTYPE=\"Sales\" ACTION=\"Create\" OBJVIEW=\"Invoice Voucher View\"><OLDAUDITENTRYIDS.LIST TYPE=\"Number\"> <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS></OLDAUDITENTRYIDS.LIST><DATE>##DATE##</DATE><VOUCHERTYPENAME>Sales</VOUCHERTYPENAME><REFERENCE>##INVOICENO##</REFERENCE><VOUCHERNUMBER>##INVOICENO##</VOUCHERNUMBER><PARTYLEDGERNAME>##CUSTOMERNAME##</PARTYLEDGERNAME><EFFECTIVEDATE>##DATE##</EFFECTIVEDATE><ISINVOICE>Yes</ISINVOICE><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>  <LEDGERNAME>##CUSTOMERNAME##</LEDGERNAME> <GSTCLASS/> <ISPARTYLEDGER>Yes</ISPARTYLEDGER> <ISLASTDEEMEDPOSITIVE>Yes</ISLASTDEEMEDPOSITIVE> <AMOUNT>-##TOTAL##</AMOUNT> </LEDGERENTRIES.LIST><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>  <LEDGERNAME>Sale @ 5 %</LEDGERNAME> <AMOUNT>##AMOUNT##</AMOUNT> <VATEXPAMOUNT>##AMOUNT##</VATEXPAMOUNT> </LEDGERENTRIES.LIST><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>  <LEDGERNAME>Cgst Output @2.5%</LEDGERNAME> <AMOUNT>##CGST##</AMOUNT> <VATEXPAMOUNT>##CGST##</VATEXPAMOUNT> </LEDGERENTRIES.LIST><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>        <LEDGERNAME>Sgst Output @ 2.5%</LEDGERNAME> <AMOUNT>##CGST##</AMOUNT> <VATEXPAMOUNT>##CGST##</VATEXPAMOUNT> </LEDGERENTRIES.LIST><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>  <ROUNDTYPE>Normal Rounding</ROUNDTYPE> <LEDGERNAME>Round Off</LEDGERNAME> <ROUNDLIMIT> 1</ROUNDLIMIT> <AMOUNT>##ROUND##</AMOUNT> <VATEXPAMOUNT>##ROUND##</VATEXPAMOUNT> </LEDGERENTRIES.LIST>     </VOUCHER>";
+        public string UMTCashVocher = "<VOUCHER VCHTYPE=\"Receipt\" ACTION=\"Create\" OBJVIEW=\"Accounting Voucher View\"><OLDAUDITENTRYIDS.LIST TYPE=\"Number\"><OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS></OLDAUDITENTRYIDS.LIST><DATE>##DATE##</DATE><VOUCHERTYPENAME>Receipt</VOUCHERTYPENAME><PARTYLEDGERNAME>##CUSTOMERNAME##</PARTYLEDGERNAME><FBTPAYMENTTYPE>Default</FBTPAYMENTTYPE><PERSISTEDVIEW>Accounting Voucher View</PERSISTEDVIEW><EFFECTIVEDATE>##DATE##</EFFECTIVEDATE><HASCASHFLOW>Yes</HASCASHFLOW><ISINVOICE>No</ISINVOICE> <ISVATDUTYPAID>Yes</ISVATDUTYPAID><ALLLEDGERENTRIES.LIST><OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS><LEDGERNAME>##CUSTOMERNAME##</LEDGERNAME><GSTCLASS/><ISPARTYLEDGER>Yes</ISPARTYLEDGER><AMOUNT>##TOTAL##</AMOUNT><VATEXPAMOUNT>##TOTAL##</VATEXPAMOUNT></ALLLEDGERENTRIES.LIST><ALLLEDGERENTRIES.LIST><OLDAUDITENTRYIDS.LIST TYPE =\"Number\"><OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS></OLDAUDITENTRYIDS.LIST><LEDGERNAME>CASH</LEDGERNAME><GSTCLASS/><ISPARTYLEDGER>Yes</ISPARTYLEDGER><AMOUNT>-##TOTAL##</AMOUNT><VATEXPAMOUNT>-##TOTAL##</VATEXPAMOUNT></ALLLEDGERENTRIES.LIST></VOUCHER>";
         public string UMTIGSTVocher = "<VOUCHER  VCHTYPE=\"Sales\" ACTION=\"Create\" OBJVIEW=\"Invoice Voucher View\"><OLDAUDITENTRYIDS.LIST TYPE=\"Number\"> <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS></OLDAUDITENTRYIDS.LIST><DATE>##DATE##</DATE><VOUCHERTYPENAME>Sales</VOUCHERTYPENAME><REFERENCE>##INVOICENO##</REFERENCE><VOUCHERNUMBER>##INVOICENO##</VOUCHERNUMBER><PARTYLEDGERNAME>##CUSTOMERNAME##</PARTYLEDGERNAME><EFFECTIVEDATE>##DATE##</EFFECTIVEDATE><ISINVOICE>Yes</ISINVOICE><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>  <LEDGERNAME>##CUSTOMERNAME##</LEDGERNAME> <GSTCLASS/> <ISPARTYLEDGER>Yes</ISPARTYLEDGER> <ISLASTDEEMEDPOSITIVE>Yes</ISLASTDEEMEDPOSITIVE> <AMOUNT>-##TOTAL##</AMOUNT> </LEDGERENTRIES.LIST><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>  <LEDGERNAME>Igst Sales @ 5%</LEDGERNAME> <AMOUNT>##AMOUNT##</AMOUNT> <VATEXPAMOUNT>##AMOUNT##</VATEXPAMOUNT> </LEDGERENTRIES.LIST><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>  <LEDGERNAME>Igst Output @ 5%</LEDGERNAME> <AMOUNT>##IGST##</AMOUNT> <VATEXPAMOUNT>##IGST##</VATEXPAMOUNT> </LEDGERENTRIES.LIST><LEDGERENTRIES.LIST><ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>  <ROUNDTYPE>Normal Rounding</ROUNDTYPE> <LEDGERNAME>Round Off</LEDGERNAME> <ROUNDLIMIT> 1</ROUNDLIMIT> <AMOUNT>##ROUND##</AMOUNT> <VATEXPAMOUNT>##ROUND##</VATEXPAMOUNT> </LEDGERENTRIES.LIST>     </VOUCHER>";
         public string UMTSuffix = "</TALLYMESSAGE><TALLYMESSAGE xmlns:UDF=\"TallyUDF\"> <COMPANY>  <REMOTECMPINFO.LIST MERGE=\"Yes\">   <NAME>c11ad8d7-08cd-44d8-bfef-bb63c7c785a0</NAME>   <REMOTECMPNAME>Umamaheswara Textiles</REMOTECMPNAME>   <REMOTECMPSTATE>Andhra Pradesh</REMOTECMPSTATE>  </REMOTECMPINFO.LIST> </COMPANY></TALLYMESSAGE></REQUESTDATA></IMPORTDATA> </BODY></ENVELOPE> ";
 
@@ -45,20 +46,26 @@ namespace GST_InvoiceApplication
                 dr[5].ToString(),//cgst
                 dr[7].ToString(),//igst
                 dr[8].ToString(),//round
-                dr[9].ToString());//grandtotal
+                dr[9].ToString(),//grandtotal
+                Convert.ToBoolean(dr[10].ToString()));//Paid
             }
 
             return XML + UMTSuffix;
         }
 
 
-        public string GetUMTLedgerData(string ledgerName, string billno, string date, string beforetaxtotal, string cgst, string igst, string round, string fulltotal)
+        public string GetUMTLedgerData(string ledgerName, string billno, string date, string beforetaxtotal, string cgst, string igst, string round, string fulltotal, bool isPaid)
         {
             string ledger = UMTSGSTVocher;
             if (!string.IsNullOrEmpty(igst))
             {
                 ledger = UMTIGSTVocher;
             }
+            if (isPaid && ledgerName.ToUpper() != "CASH")
+            {
+                ledger = ledger + UMTCashVocher;
+            }
+
 
             ledger = ledger.Replace("##DATE##", date);
             ledger = ledger.Replace("##INVOICENO##", billno);
@@ -69,6 +76,7 @@ namespace GST_InvoiceApplication
             ledger = ledger.Replace("##IGST##", igst);
             ledger = ledger.Replace("##ROUND##", round);
 
+            
             return ledger;
         }
 
@@ -87,20 +95,26 @@ namespace GST_InvoiceApplication
                 dr[5].ToString(),//cgst
                 dr[7].ToString(),//igst
                 dr[8].ToString(),//round
-                dr[9].ToString());//grandtotal
+                dr[9].ToString(),//grandtotal
+                Convert.ToBoolean(dr[10].ToString()));//Paid
             }
 
             return XML + SSTSuffix;
         }
 
 
-        public string GetSSTLedgerData(string ledgerName, string billno, string date, string beforetaxtotal, string cgst, string igst, string round, string fulltotal)
+        public string GetSSTLedgerData(string ledgerName, string billno, string date, string beforetaxtotal, string cgst, string igst, string round, string fulltotal,bool isPaid)
         {
             string ledger = SSTSGSTVocher;
             if (!string.IsNullOrEmpty(igst))
             {
                 ledger = SSTIGSTVocher;
             }
+            if (isPaid && ledgerName.ToUpper() != "CASH")
+            {
+                ledger = ledger + UMTCashVocher;
+            }
+
 
             ledger = ledger.Replace("##DATE##", date);
             ledger = ledger.Replace("##INVOICENO##", billno);
