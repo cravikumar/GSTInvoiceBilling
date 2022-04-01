@@ -837,7 +837,7 @@ namespace GST_InvoiceApplication
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(50, 17);
             this.checkBox2.TabIndex = 81;
-            this.checkBox2.Text = "2020";
+            this.checkBox2.Text = "2021";
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 

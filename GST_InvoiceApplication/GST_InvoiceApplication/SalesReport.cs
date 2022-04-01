@@ -514,7 +514,7 @@ namespace GST_InvoiceApplication
                 }
                 else if (InvoiceId > 0 && CompanyId > 0 && !isCurrentYearBill)
                 {
-                    new AddInvoiceOld(InvoiceId, CompanyId, "19").Show();
+                    new AddInvoiceOld(InvoiceId, CompanyId, "21").Show();
                 }
 
             }
@@ -527,7 +527,7 @@ namespace GST_InvoiceApplication
                 }
                 else if (InvoiceId > 0 && CompanyId > 0 && !isCurrentYearBill)
                 {
-                    new AddInvoice(InvoiceId, CompanyId, "19").Show();
+                    new AddInvoice(InvoiceId, CompanyId, "21").Show();
                 }
             }
         }

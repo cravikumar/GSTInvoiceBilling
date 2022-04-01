@@ -119,12 +119,12 @@ namespace Invoice.DataAccess
             if (month > 3)
             {
                 FinancialYearStart = Convert.ToDateTime("01/04/" + year);
-                FinancialYearEnd = Convert.ToDateTime("31/03/" + (year + 1));
+                FinancialYearEnd = Convert.ToDateTime("31/03/" + (year + 1)+" 23:59");
             }
             else if (month < 4)
             {
                 FinancialYearStart = Convert.ToDateTime("01/04/" + (year - 1));
-                FinancialYearEnd = Convert.ToDateTime("31/03/" + year);
+                FinancialYearEnd = Convert.ToDateTime("31/03/" + year + " 23:59");
             }
 
             if (invDate >= FinancialYearStart && invDate <= FinancialYearEnd)

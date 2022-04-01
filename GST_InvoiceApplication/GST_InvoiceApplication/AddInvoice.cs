@@ -1403,7 +1403,7 @@ namespace GST_InvoiceApplication
             {
                 if (Convert.ToInt32(dr["InvoiceId"].ToString()) > 0 && inv.CompanyId > 0 )
                 {
-                    new AddInvoiceOld(Convert.ToInt32(dr["InvoiceId"].ToString()), inv.CompanyId).Show();
+                    new AddInvoiceOld(Convert.ToInt32(dr["InvoiceId"].ToString()), inv.CompanyId, billYear).Show();
                 }
 
                 return inv;
