@@ -147,6 +147,12 @@
     <Compile Include="HSNSalesReportNew.Designer.cs">
       <DependentUpon>HSNSalesReportNew.cs</DependentUpon>
     </Compile>
+    <Compile Include="TallyQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TallyQuery.Designer.cs">
+      <DependentUpon>TallyQuery.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductSetup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -223,6 +229,9 @@
       <DependentUpon>HSNSalesReportNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InvoiceOriginalV2.rdlc" />
+    <EmbeddedResource Include="TallyQuery.resx">
+      <DependentUpon>TallyQuery.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProductSetup.resx">
       <DependentUpon>ProductSetup.cs</DependentUpon>
     </EmbeddedResource>

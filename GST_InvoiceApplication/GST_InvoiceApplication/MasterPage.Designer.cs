@@ -88,13 +88,12 @@
             // 
             // button5
             // 
-            this.button5.Enabled = false;
             this.button5.Font = new System.Drawing.Font("Sitka Text", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button5.Location = new System.Drawing.Point(780, 12);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(202, 48);
             this.button5.TabIndex = 4;
-            this.button5.Text = "Add Receipts";
+            this.button5.Text = "Tally Query";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
