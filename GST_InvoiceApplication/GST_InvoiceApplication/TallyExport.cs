@@ -208,19 +208,31 @@ namespace GST_InvoiceApplication
             dataGridView1.Columns[11].DataPropertyName = "TallyLedger";
 
 
+            System.Data.DataTable dtCloned = dt.Clone();
+            dtCloned.Columns[0].DataType = typeof(Int32);
+            foreach (DataRow row in dt.Rows)
+            {
+                dtCloned.ImportRow(row);
+            }
+            dataGridView1.DataSource = dtCloned;
 
 
-            dataGridView1.DataSource = dt;
-
+            //dataGridView1.DataSource = dt;
+            dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
 
             
+
 
             if (!(dt.Rows.Count > 0))
                 return;
 
             MapTallyLedgers();
+
+            dtCloned.DefaultView.Sort = "InvoiceId";
+            dtCloned = dtCloned.DefaultView.ToTable();
+
             TallyXMLProcessor pro = new TallyXMLProcessor();
-            string xml= pro.GetTallyXML(dt, Convert.ToInt32(comboBox3.SelectedValue));
+            string xml= pro.GetTallyXML(dtCloned, Convert.ToInt32(comboBox3.SelectedValue));
             string filePath;
             using (var fbd = new FolderBrowserDialog())
             {
