@@ -1,4 +1,8 @@
-﻿using Invoice.Models;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
+using Invoice.Models;
 using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
@@ -12,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,7 +30,8 @@ namespace GST_InvoiceApplication
         private static List<Stream> m_streams;
         private static int m_currentPageIndex = 0;
         private static int productCount = 0;
-        
+        long fileSize = 0;
+
         CompanyDetails _currentCompany;
         public InvoicePrint(InvoiceDetails inv,CompanyDetails currentCompany,bool withOutLoading = false)
         {
@@ -42,7 +48,7 @@ namespace GST_InvoiceApplication
             InitializeComponent();
         }
 
-        private void PrintWithoutLoadingA4() {
+        private void PrintWithoutLoadingA4(bool pdf = false) {
             LocalReport report = new LocalReport();
             var asem = Assembly.GetExecutingAssembly().Location;
             var path = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString();
@@ -141,12 +147,198 @@ namespace GST_InvoiceApplication
                 p26,p27,p28, p29, p30,p31
             });
 
+            if(pdf)
+                PrintToPdf(report);
+            else
             PrintToPrinter(report);
             
         
         
         }
 
+        private void PrintToPdf(LocalReport report)
+        {
+            string deviceInfo =
+             @"<DeviceInfo>
+                <OutputFormat>EMF</OutputFormat>
+                <PageWidth>8.27in</PageWidth>
+                <PageHeight>11.69in</PageHeight>
+                <MarginTop>0.2in</MarginTop>
+                <MarginLeft>0.4in</MarginLeft>
+                <MarginRight>0.4in</MarginRight>
+                <MarginBottom>0.2in</MarginBottom>
+            </DeviceInfo>";
+            Warning[] warnings;
+            m_streams = new List<Stream>();
+            //Code for roller printer
+            //report.Render("Image", deviceInfo, CreateStream, out warnings);
+
+           
+            string[] streamids;
+            string mimeType;
+            string encoding;
+            string filenameExtension;
+            byte[] bytes = report.Render(
+    "PDF", null, out mimeType, out encoding, out filenameExtension,
+    out streamids, out warnings);
+
+            using (FileStream fs = new FileStream("output.pdf", FileMode.Create))
+            {
+                fs.Write(bytes, 0, bytes.Length);
+            }
+            uploadToDrive();
+        }
+
+        public bool uploadToDrive()
+        {
+            FileExistingLogic();
+
+
+            string fileID = string.Empty;
+            try
+            {
+                UserCredential credential;
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                          new ClientSecrets { ClientId = System.Configuration.ConfigurationManager.AppSettings["DriveClientId"].ToString(), ClientSecret = System.Configuration.ConfigurationManager.AppSettings["DriveClientSecret"].ToString() },
+                          new[] { DriveService.Scope.Drive,
+                                  DriveService.Scope.DriveFile },
+                          "user",
+                          CancellationToken.None,
+                          new FileDataStore("Drive.Auth.Store")).Result;
+
+                DriveService driveService = new DriveService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "Drive API Sample",
+                });
+                driveService.HttpClient.Timeout = TimeSpan.FromMinutes(30);
+
+                var fileMetadata = new Google.Apis.Drive.v3.Data.File()
+                {
+                    Name = _currentCompany.BillPrefix+"_"+_currentInvoice.InvoiceId,//"ravi.pdf",//"InvoiceBackup_" + DateTime.Now.ToString("dd_MMM_yy_HH_mm") + ".mdb",
+                    MimeType = "application/pdf",
+                    Parents = new List<string>
+                    {
+                        "1-32FlVNQHVUFz9Qr0MxCWEDuxHjfOCdl"
+                    }
+                };
+                FilesResource.CreateMediaUpload request;
+                using (var stream = new System.IO.FileStream("output.pdf",
+                                        System.IO.FileMode.Open))
+                {
+                    request = driveService.Files.Create(
+                        fileMetadata, stream, "application/pdf");
+
+                    fileSize = stream.Length;
+
+                    //request.ProgressChanged += Upload_ProgressChanged;
+                    request.Fields = "id";
+
+                    request.Upload();
+                }
+                var file = request.ResponseBody;
+                Console.WriteLine("File ID: " + file.Id);
+                fileID = file.Id;
+            }
+            catch (Exception ex)
+            {
+                string filePath = System.Configuration.ConfigurationManager.AppSettings["PrintReportPath"].ToString() + "\\Error.txt";
+
+
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath, true))
+                {
+                    writer.WriteLine("-----------------------------------------------------------------------------");
+                    writer.WriteLine("Date : " + DateTime.Now.ToString());
+                    writer.WriteLine();
+
+                    while (ex != null)
+                    {
+                        writer.WriteLine(ex.GetType().FullName);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+
+                        ex = ex.InnerException;
+                    }
+                }
+            }
+
+            if (fileID.Length > 0)
+            {
+                //MessageBox.Show("Data backup successfull");
+                
+                return true;
+            }
+            return false;
+        }
+
+        private bool FileExistingLogic()
+        {
+            try
+            {
+                //fileId = "1jiJPklSRgho4DDx4XZIn5foTidxya6FF";
+                UserCredential credential;
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                          new ClientSecrets { ClientId = System.Configuration.ConfigurationManager.AppSettings["DriveClientId"].ToString(), ClientSecret = System.Configuration.ConfigurationManager.AppSettings["DriveClientSecret"].ToString() },
+                          new[] { DriveService.Scope.Drive,
+                                  DriveService.Scope.DriveFile },
+                          "user",
+                          CancellationToken.None,
+                          new FileDataStore("Drive.Auth.Store")).Result;
+
+                DriveService driveService = new DriveService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = "Drive API Sample",
+                });
+
+                FilesResource.ListRequest listRequest = driveService.Files.List();
+                listRequest.Q = "'1-32FlVNQHVUFz9Qr0MxCWEDuxHjfOCdl' in parents and mimeType = 'application/pdf'";
+                var files = listRequest.Execute();
+                if (files.Files.Count > 0)
+                {
+                    string Output = "";
+                    DataTable dt = new DataTable();
+
+                    dt.Columns.Add("File Name");
+                    dt.Columns.Add("File Type");
+                    dt.Columns.Add("File ID");
+                    foreach (Google.Apis.Drive.v3.Data.File localfile in files.Files)
+                    {
+                        if(localfile.Name== _currentCompany.BillPrefix + "_" + _currentInvoice.InvoiceId)
+                        {
+                            var request = driveService.Files.Delete(localfile.Id);
+                            request.Execute();
+                            
+                        }
+                        
+                    }
+                    //dataGridView1.DataSource = dt;
+                }
+                else
+                {
+                    MessageBox.Show("No file found");
+                }
+
+                return true;
+
+                //var request = driveService.Files.Get(fileId);
+                //var stream = new System.IO.MemoryStream();
+                //request.Download(stream);
+
+                ////System.IO.FileStream file = new System.IO.FileStream(System.Configuration.ConfigurationManager.AppSettings["ConnectionString"].ToString(), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                //System.IO.FileStream file = new System.IO.FileStream(localPath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                //stream.WriteTo(file);
+                //file.Close();
+                //stream.Close();
+
+            }
+            catch (Exception ex)
+            { }
+            return true;
+
+        }
+            //throw new NotImplementedException();
+        
 
         public InvoicePrint()
         {
@@ -385,12 +577,16 @@ namespace GST_InvoiceApplication
             }
         }
 
+        private async Task PDF()
+        {
+            await Task.Run(() => PrintWithoutLoadingA4(true));
 
+        }
 
         private void InvoicePrint_Load(object sender, EventArgs e)
         {
             //TestPrint();
-           // PrintWithoutLoading();
+            PDF();
             //return;
             this.reportViewer1.RefreshReport();
             reportViewer1.Visible = true;
