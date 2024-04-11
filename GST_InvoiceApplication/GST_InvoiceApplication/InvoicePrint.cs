@@ -43,6 +43,7 @@ namespace GST_InvoiceApplication
             if (withOutLoading)
             {
                 PrintWithoutLoadingA4();
+                PDF();
                 return;
             }
             InitializeComponent();
