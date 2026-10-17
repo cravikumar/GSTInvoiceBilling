@@ -30,6 +30,17 @@ namespace GST_InvoiceApplication
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.button6 = new System.Windows.Forms.Button();
             this.InvoiceId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InvoiceDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,17 +53,8 @@ namespace GST_InvoiceApplication
             this.GrandTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IsPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TallyLedger = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.button6 = new System.Windows.Forms.Button();
+            this.TallyState = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TallyGST = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -72,80 +74,13 @@ namespace GST_InvoiceApplication
             this.RoundOff,
             this.GrandTotal,
             this.IsPaid,
-            this.TallyLedger});
+            this.TallyLedger,
+            this.TallyState,
+            this.TallyGST});
             this.dataGridView1.Location = new System.Drawing.Point(12, 104);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(1293, 417);
             this.dataGridView1.TabIndex = 1;
-            // 
-            // InvoiceId
-            // 
-            this.InvoiceId.HeaderText = "InvoiceId";
-            this.InvoiceId.Name = "InvoiceId";
-            // 
-            // InvoiceDate
-            // 
-            this.InvoiceDate.HeaderText = "InvoiceDate";
-            this.InvoiceDate.Name = "InvoiceDate";
-            // 
-            // CustomerName
-            // 
-            this.CustomerName.HeaderText = "CustomerName";
-            this.CustomerName.Name = "CustomerName";
-            this.CustomerName.ReadOnly = true;
-            // 
-            // CustomerGST
-            // 
-            this.CustomerGST.HeaderText = "CustomerGST";
-            this.CustomerGST.Name = "CustomerGST";
-            this.CustomerGST.ReadOnly = true;
-            // 
-            // TotalAmount
-            // 
-            this.TotalAmount.HeaderText = "TotalAmount";
-            this.TotalAmount.Name = "TotalAmount";
-            this.TotalAmount.ReadOnly = true;
-            // 
-            // SGST
-            // 
-            this.SGST.HeaderText = "SGST";
-            this.SGST.Name = "SGST";
-            this.SGST.ReadOnly = true;
-            // 
-            // CGST
-            // 
-            this.CGST.HeaderText = "CGST";
-            this.CGST.Name = "CGST";
-            this.CGST.ReadOnly = true;
-            // 
-            // IGST
-            // 
-            this.IGST.HeaderText = "IGST";
-            this.IGST.Name = "IGST";
-            this.IGST.ReadOnly = true;
-            // 
-            // RoundOff
-            // 
-            this.RoundOff.HeaderText = "RoundOff";
-            this.RoundOff.Name = "RoundOff";
-            this.RoundOff.ReadOnly = true;
-            // 
-            // GrandTotal
-            // 
-            this.GrandTotal.HeaderText = "GrandTotal";
-            this.GrandTotal.Name = "GrandTotal";
-            this.GrandTotal.ReadOnly = true;
-            // 
-            // IsPaid
-            // 
-            this.IsPaid.HeaderText = "IsPaid";
-            this.IsPaid.Name = "IsPaid";
-            this.IsPaid.ReadOnly = true;
-            // 
-            // TallyLedger
-            // 
-            this.TallyLedger.HeaderText = "TallyLedger";
-            this.TallyLedger.Name = "TallyLedger";
             // 
             // comboBox3
             // 
@@ -244,6 +179,85 @@ namespace GST_InvoiceApplication
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // InvoiceId
+            // 
+            this.InvoiceId.HeaderText = "InvoiceId";
+            this.InvoiceId.Name = "InvoiceId";
+            // 
+            // InvoiceDate
+            // 
+            this.InvoiceDate.HeaderText = "InvoiceDate";
+            this.InvoiceDate.Name = "InvoiceDate";
+            // 
+            // CustomerName
+            // 
+            this.CustomerName.HeaderText = "CustomerName";
+            this.CustomerName.Name = "CustomerName";
+            this.CustomerName.ReadOnly = true;
+            // 
+            // CustomerGST
+            // 
+            this.CustomerGST.HeaderText = "CustomerGST";
+            this.CustomerGST.Name = "CustomerGST";
+            this.CustomerGST.ReadOnly = true;
+            // 
+            // TotalAmount
+            // 
+            this.TotalAmount.HeaderText = "TotalAmount";
+            this.TotalAmount.Name = "TotalAmount";
+            this.TotalAmount.ReadOnly = true;
+            // 
+            // SGST
+            // 
+            this.SGST.HeaderText = "SGST";
+            this.SGST.Name = "SGST";
+            this.SGST.ReadOnly = true;
+            // 
+            // CGST
+            // 
+            this.CGST.HeaderText = "CGST";
+            this.CGST.Name = "CGST";
+            this.CGST.ReadOnly = true;
+            // 
+            // IGST
+            // 
+            this.IGST.HeaderText = "IGST";
+            this.IGST.Name = "IGST";
+            this.IGST.ReadOnly = true;
+            // 
+            // RoundOff
+            // 
+            this.RoundOff.HeaderText = "RoundOff";
+            this.RoundOff.Name = "RoundOff";
+            this.RoundOff.ReadOnly = true;
+            // 
+            // GrandTotal
+            // 
+            this.GrandTotal.HeaderText = "GrandTotal";
+            this.GrandTotal.Name = "GrandTotal";
+            this.GrandTotal.ReadOnly = true;
+            // 
+            // IsPaid
+            // 
+            this.IsPaid.HeaderText = "IsPaid";
+            this.IsPaid.Name = "IsPaid";
+            this.IsPaid.ReadOnly = true;
+            // 
+            // TallyLedger
+            // 
+            this.TallyLedger.HeaderText = "TallyLedger";
+            this.TallyLedger.Name = "TallyLedger";
+            // 
+            // TallyState
+            // 
+            this.TallyState.HeaderText = "TallyState";
+            this.TallyState.Name = "TallyState";
+            // 
+            // TallyGST
+            // 
+            this.TallyGST.HeaderText = "TallyGST";
+            this.TallyGST.Name = "TallyGST";
+            // 
             // TallyExport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -281,6 +295,8 @@ namespace GST_InvoiceApplication
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.DataGridViewTextBoxColumn InvoiceId;
         private System.Windows.Forms.DataGridViewTextBoxColumn InvoiceDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
@@ -293,7 +309,7 @@ namespace GST_InvoiceApplication
         private System.Windows.Forms.DataGridViewTextBoxColumn GrandTotal;
         private System.Windows.Forms.DataGridViewTextBoxColumn IsPaid;
         private System.Windows.Forms.DataGridViewTextBoxColumn TallyLedger;
-        private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TallyState;
+        private System.Windows.Forms.DataGridViewTextBoxColumn TallyGST;
     }
 }

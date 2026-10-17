@@ -188,8 +188,8 @@ namespace GST_InvoiceApplication
             System.Data.DataTable dt = ds.Tables[0];
 
             dt.Columns.Add("TallyLedger");
-            
-
+            dt.Columns.Add("TallyState");
+            dt.Columns.Add("TallyGST");
 
             dataGridView1.Columns[0].DataPropertyName = "InvoiceId";
             dataGridView1.Columns[1].DataPropertyName = "InvoiceDate";
@@ -206,6 +206,8 @@ namespace GST_InvoiceApplication
             dataGridView1.Columns[10].DataPropertyName = "IsPaid";
 
             dataGridView1.Columns[11].DataPropertyName = "TallyLedger";
+            dataGridView1.Columns[12].DataPropertyName = "TallyState";
+            dataGridView1.Columns[13].DataPropertyName = "TallyGST";
 
 
             System.Data.DataTable dtCloned = dt.Clone();
@@ -271,7 +273,10 @@ namespace GST_InvoiceApplication
                     DataRow dr = dt == null ? null : dt.Select("$PartyGSTIN='" + billGST + "'").FirstOrDefault();
                     if (dr != null)
                     {
-                        dataGridView1.Rows[i].Cells[11].Value = dr[0].ToString();
+                        dataGridView1.Rows[i].Cells[11].Value = dr[0].ToString();//ledgername
+                        dataGridView1.Rows[i].Cells[12].Value = dr[1].ToString();//state
+                        dataGridView1.Rows[i].Cells[13].Value = dr[2].ToString();//GST
+
                         //    MessageBox.Show("got a row"+dr[0].ToString()+dr[1].ToString());
                     }
                     else
