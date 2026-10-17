@@ -1,5 +1,6 @@
 ﻿using Invoice.DataAccess;
 using Invoice.Models;
+using SergeUtils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -354,9 +355,11 @@ namespace GST_InvoiceApplication
                 userCache.Add(Convert.ToInt32(dr["ID"]), dr["CustomerName"].ToString() + " - " + dr["Address"].ToString());
 
             }
+            comboBox2.MatchingMethod = StringMatchingMethod.UseRegexs;
             comboBox2.DataSource = new BindingSource(userCache, null);
             comboBox2.DisplayMember = "Value";
             comboBox2.ValueMember = "Key";
+
         }
 
         public void LoadCompanyData()
@@ -425,7 +428,19 @@ namespace GST_InvoiceApplication
             // TODO: This line of code loads data into the 'gSTDataSet.InvoiceProductDetails' table. You can move, or remove it, as needed.
             //this.invoiceProductDetailsTableAdapter.Fill(this.gSTDataSet.InvoiceProductDetails);
             ProductAutoCompleteColumn.ProductNamesProvider = () => productList.Cast<string>();
+            ChangeCasing();
 
+        }
+
+        private void ChangeCasing()
+        {
+            textBox1.CharacterCasing = CharacterCasing.Upper;
+            textBox2.CharacterCasing = CharacterCasing.Upper;
+            textBox6.CharacterCasing = CharacterCasing.Upper;
+            textBox5.CharacterCasing = CharacterCasing.Upper;
+            textBox19.CharacterCasing = CharacterCasing.Upper;
+            textBox4.CharacterCasing = CharacterCasing.Upper;
+            textBox3.CharacterCasing = CharacterCasing.Upper;
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -1483,6 +1498,7 @@ namespace GST_InvoiceApplication
 
             if (column == 0) //&& ConfigurationManager.AppSettings["isAutoCompleteEnabled"] == "true")
             {
+               
                 //TextBox tb = e.Control as TextBox;
                 //if (tb != null)
                 //{

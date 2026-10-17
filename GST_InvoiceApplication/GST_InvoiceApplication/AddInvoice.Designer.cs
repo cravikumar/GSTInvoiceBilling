@@ -35,7 +35,7 @@ namespace GST_InvoiceApplication
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.comboBox2 = new SergeUtils.EasyCompletionComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -156,15 +156,12 @@ namespace GST_InvoiceApplication
             // 
             // comboBox2
             // 
-            this.comboBox2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.comboBox2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(144, 53);
+            this.comboBox2.Location = new System.Drawing.Point(144, 52);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(317, 21);
-            this.comboBox2.TabIndex = 12;
+            this.comboBox2.Size = new System.Drawing.Size(444, 21);
+            this.comboBox2.TabIndex = 83;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
-            this.comboBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox2_KeyPress);
             // 
             // label3
             // 
@@ -931,7 +928,7 @@ namespace GST_InvoiceApplication
         //private System.Windows.Forms.BindingSource invoiceProductDetailsBindingSource;
         //private GSTDataSetTableAdapters.InvoiceProductDetailsTableAdapter invoiceProductDetailsTableAdapter;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private SergeUtils.EasyCompletionComboBox comboBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label4;
