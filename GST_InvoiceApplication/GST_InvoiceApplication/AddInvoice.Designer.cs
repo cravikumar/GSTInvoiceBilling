@@ -49,7 +49,7 @@ namespace GST_InvoiceApplication
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.productNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.productNameDataGridViewTextBoxColumn = new GST_InvoiceApplication.ProductAutoCompleteColumn();
             this.ActualPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mtsDescriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hSNCodeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -993,7 +993,7 @@ namespace GST_InvoiceApplication
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn productNameDataGridViewTextBoxColumn;
+        private GST_InvoiceApplication.ProductAutoCompleteColumn productNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ActualPrice;
         private System.Windows.Forms.DataGridViewTextBoxColumn mtsDescriptionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn hSNCodeDataGridViewTextBoxColumn;

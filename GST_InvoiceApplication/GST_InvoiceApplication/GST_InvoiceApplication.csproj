@@ -147,6 +147,7 @@
     <Compile Include="HSNSalesReportNew.Designer.cs">
       <DependentUpon>HSNSalesReportNew.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProductAutoCompleteColumn.cs" />
     <Compile Include="TallyQuery.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -324,6 +325,10 @@
     <ProjectReference Include="..\Invoice.Models\Invoice.Models.csproj">
       <Project>{c5f0328f-dc7f-4768-b752-0f0b76924bd1}</Project>
       <Name>Invoice.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SergeUtils\SergeUtils.csproj">
+      <Project>{25438301-ddf3-4efd-8c17-4aa3249cc9e0}</Project>
+      <Name>SergeUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

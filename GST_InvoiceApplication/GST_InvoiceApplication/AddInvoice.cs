@@ -424,6 +424,7 @@ namespace GST_InvoiceApplication
         {
             // TODO: This line of code loads data into the 'gSTDataSet.InvoiceProductDetails' table. You can move, or remove it, as needed.
             //this.invoiceProductDetailsTableAdapter.Fill(this.gSTDataSet.InvoiceProductDetails);
+            ProductAutoCompleteColumn.ProductNamesProvider = () => productList.Cast<string>();
 
         }
 
@@ -1480,15 +1481,15 @@ namespace GST_InvoiceApplication
         {
             int column = dataGridView2.CurrentCell.ColumnIndex;
 
-            if (column == 0 && ConfigurationManager.AppSettings["isAutoCompleteEnabled"] == "true")
+            if (column == 0) //&& ConfigurationManager.AppSettings["isAutoCompleteEnabled"] == "true")
             {
-                TextBox tb = e.Control as TextBox;
-                if (tb != null)
-                {
-                    tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-                    tb.AutoCompleteCustomSource = AutoCompleteLoad();
-                    tb.AutoCompleteSource = AutoCompleteSource.CustomSource;
-                }
+                //TextBox tb = e.Control as TextBox;
+                //if (tb != null)
+                //{
+                //    tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                //    tb.AutoCompleteCustomSource = AutoCompleteLoad();
+                //    tb.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                //}
                 return;
             }
             else if (column == 3)
