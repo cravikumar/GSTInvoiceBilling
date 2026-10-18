@@ -9,7 +9,7 @@ namespace GST_InvoiceApplication
 {
     public class ProductAutoCompleteColumn : DataGridViewColumn
     {
-        public static Func<IEnumerable<string>> ProductNamesProvider { get; set; }
+        public static Func<String[]> ProductNamesProvider { get; set; }
 
         public ProductAutoCompleteColumn() : base(new ProductAutoCompleteCell())
         { }
@@ -46,16 +46,8 @@ namespace GST_InvoiceApplication
 
             if(DataGridView.EditingControl is ProductAutoCompleteEditingControl control)
             {
-                bool autoCompleteEnabled = true;
 
-                control.Items.Clear();
-
-                IEnumerable<string> products = autoCompleteEnabled ? ProductAutoCompleteColumn.ProductNamesProvider?.Invoke() : null;
-
-                if (products != null)
-                {
-                    control.Items.AddRange(products.Distinct().ToArray());
-                }
+                control.SuggestionSource = ProductAutoCompleteColumn.ProductNamesProvider?.Invoke();
                 control.MatchingMethod = StringMatchingMethod.UseRegexs;
                 control.Text = initialFormattedValue?.ToString() ?? string.Empty;
             }
@@ -151,7 +143,15 @@ namespace GST_InvoiceApplication
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if(DroppedDown && (keyData == Keys.Enter || keyData == Keys.Escape))
+            
+            if(keyData == Keys.Tab && (DroppedDown || Text.Length>0))
+            {
+                base.OnKeyDown(new KeyEventArgs(Keys.Enter));
+                return true;
+            }
+
+            bool commitEnter = keyData == Keys.Enter && Text.Length > 0;
+            if(commitEnter || (DroppedDown && (keyData == Keys.Enter || keyData == Keys.Escape)))
             {
                 base.OnKeyDown(new KeyEventArgs(keyData));
                 return true;
