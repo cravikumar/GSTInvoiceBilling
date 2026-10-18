@@ -2,6 +2,7 @@
 using Invoice.Models;
 using SergeUtils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
@@ -205,6 +206,10 @@ namespace GST_InvoiceApplication
         {
             
             InitializeComponent();
+
+
+            dataGridView2.DataSource = null;
+            dataGridView2.DataError += dataGridView2_DataError;
             this.WindowState = FormWindowState.Maximized;
             LoadCustomerData();
             LoadCompanyData();
@@ -251,6 +256,10 @@ namespace GST_InvoiceApplication
         {
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
+            invoiceProductsBindingSource.DataSource = new BindingList<InvoiceProducts>();
+            dataGridView2.DataSource = invoiceProductsBindingSource;
+            dataGridView2.DataError += dataGridView2_DataError;
+            DiscardPendingNewRow();
             //LoadCompanyData();
 
             //comboBox1.SelectedItem = "Test";
@@ -528,6 +537,8 @@ namespace GST_InvoiceApplication
 
         private void MoveToProductNameCell()
         {
+            DiscardPendingNewRow();
+
             if (dataGridView2.Rows.Count == 0 || dataGridView2.Columns.Count == 0)
                 return;
 
@@ -541,16 +552,79 @@ namespace GST_InvoiceApplication
             if (hasExistingProduct)
                 return;
 
+
+            if(dataGridView2.IsCurrentCellInEditMode)
+            {
+                var editing = dataGridView2.CurrentCell;
+                if(editing != null && editing.ColumnIndex == 0 && editing.OwningRow.IsNewRow && dataGridView2.EditingControl != null)
+                {
+                    dataGridView2.EditingControl.Select();
+                    return;
+                }
+                if (!dataGridView2.EndEdit())
+                    return;
+            }
+
+            DiscardPendingNewRow();
+
             int row = dataGridView2.NewRowIndex;
             if (row < 0 || row >= dataGridView2.Rows.Count)
                 return;
 
             if (!dataGridView2.Rows[row].Visible || dataGridView2.Rows[row].Cells[0].ReadOnly)
                 return;
+            try
+            {
+                dataGridView2.CurrentCell = dataGridView2.Rows[row].Cells[0];
+                if (dataGridView2.CurrentCell == null)
+                    return;
+                dataGridView2.Select();
+                dataGridView2.BeginEdit(true);
+            }
+            catch(InvalidOperationException)
+            {
+                DiscardPendingNewRow();
+            }
+        }
 
-            dataGridView2.Focus();
-            dataGridView2.CurrentCell = dataGridView2.Rows[row].Cells[0];
-            dataGridView2.BeginEdit(true);
+
+
+
+
+
+        private void DiscardPendingNewRow()
+        {
+            var source = dataGridView2.DataSource as BindingSource;
+            if (source == null)
+                return;
+
+            dataGridView2.CancelEdit();
+            source.CancelEdit();
+
+            if (!(source.List is BindingList<InvoiceProducts> list))
+                return;
+
+            source.RaiseListChangedEvents = false;
+            try
+            {
+                for(int i = list.Count - 1; i>0;i--)
+                {
+                    InvoiceProducts item = list[i];
+                    bool isBlank = item == null ||
+                        (
+                        string.IsNullOrWhiteSpace(item.ProductName) &&
+                        string.IsNullOrWhiteSpace(item.Quantity) &&
+                        string.IsNullOrWhiteSpace(item.Rate) &&
+                        string.IsNullOrWhiteSpace(item.Total)
+                        );
+                    if (isBlank) list.RemoveAt(i);
+                }
+            }
+            finally
+            {
+                source.RaiseListChangedEvents = true;
+                source.ResetBindings(false);
+            }
         }
 
         private void ProductCell_SelectionCompleted(object sender, EventArgs e)
@@ -565,18 +639,25 @@ namespace GST_InvoiceApplication
 
         private void MoveToQuantityCell(int row)
         {
-            var current = dataGridView2.CurrentCell;
-            if (current == null || current.ColumnIndex != 0 || current.RowIndex!= row)
-                return;
+            try
+            {
+                var current = dataGridView2.CurrentCell;
+                if (current == null || current.ColumnIndex != 0 || current.RowIndex != row)
+                    return;
 
-            if (!dataGridView2.EndEdit())
-                return;
+                if (!dataGridView2.EndEdit())
+                    return;
 
-            if (row >= dataGridView2.Rows.Count)
-                return;
+                if (row >= dataGridView2.Rows.Count)
+                    return;
 
-            dataGridView2.CurrentCell = dataGridView2.Rows[row].Cells[quantityDataGridViewTextBoxColumn.Index];
-            dataGridView2.BeginEdit(true);
+                dataGridView2.CurrentCell = dataGridView2.Rows[row].Cells[quantityDataGridViewTextBoxColumn.Index];
+                dataGridView2.BeginEdit(true);
+            }
+            catch(InvalidOperationException)
+            {
+                DiscardPendingNewRow();
+            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -593,54 +674,70 @@ namespace GST_InvoiceApplication
 
         private bool MoveFromQuantityCell()
         {
-            var current = dataGridView2.CurrentCell;
-            if (!dataGridView2.ContainsFocus || current == null || current.ColumnIndex != quantityDataGridViewTextBoxColumn.Index)
-                return false;
+            try
+            {
+                var current = dataGridView2.CurrentCell;
+                if (!dataGridView2.ContainsFocus || current == null || current.ColumnIndex != quantityDataGridViewTextBoxColumn.Index)
+                    return false;
 
-            int row = current.RowIndex;
-            if (dataGridView2.Rows[row].IsNewRow)
-                return false;
+                int row = current.RowIndex;
+                if (dataGridView2.Rows[row].IsNewRow)
+                    return false;
 
-            if (!dataGridView2.EndEdit())
+                if (!dataGridView2.EndEdit())
+                    return true;
+
+                dataGridView2.CurrentCell = dataGridView2.Rows[row].Cells[rateDataGridViewTextBoxColumn.Index];
+                dataGridView2.BeginEdit(true);
                 return true;
-
-            dataGridView2.CurrentCell = dataGridView2.Rows[row].Cells[rateDataGridViewTextBoxColumn.Index];
-            dataGridView2.BeginEdit(true);
-            return true;
+            }
+            catch (InvalidOperationException)
+            {
+                DiscardPendingNewRow();
+                return true;
+            }
         }
 
 
 
         private bool MoveFromRateCell(bool blankRateGoesToProduct)
         {
-            var current = dataGridView2.CurrentCell;
-            if (!dataGridView2.ContainsFocus || current == null || current.ColumnIndex != rateDataGridViewTextBoxColumn.Index)
-                return false;
+            try
+            {
+                var current = dataGridView2.CurrentCell;
+                if (!dataGridView2.ContainsFocus || current == null || current.ColumnIndex != rateDataGridViewTextBoxColumn.Index)
+                    return false;
 
-            int row = current.RowIndex;
-            if (dataGridView2.Rows[row].IsNewRow)
-                return false;
+                int row = current.RowIndex;
+                if (dataGridView2.Rows[row].IsNewRow)
+                    return false;
 
-            if (!dataGridView2.EndEdit())
+                if (!dataGridView2.EndEdit())
+                    return true;
+
+                int next = row + 1;
+                object rate = dataGridView2.Rows[row].Cells[rateDataGridViewTextBoxColumn.Index].Value;
+                bool rateIsBlank = rate == null || rate == DBNull.Value || string.IsNullOrWhiteSpace(rate.ToString());
+
+                DataGridViewCell target;
+                if (blankRateGoesToProduct && rateIsBlank && next < dataGridView2.Rows.Count)
+                    target = dataGridView2.Rows[next].Cells[0];
+                else if (next < dataGridView2.Rows.Count && !dataGridView2.Rows[next].IsNewRow)
+                    target = dataGridView2.Rows[next].Cells[rateDataGridViewTextBoxColumn.Index];
+                else if (dataGridView2.NewRowIndex >= 0)
+                    target = dataGridView2.Rows[dataGridView2.NewRowIndex].Cells[0];
+                else
+                    return true;
+
+                dataGridView2.CurrentCell = target;
+                dataGridView2.BeginEdit(true);
                 return true;
-
-            int next = row + 1;
-            object rate = dataGridView2.Rows[row].Cells[rateDataGridViewTextBoxColumn.Index].Value;
-            bool rateIsBlank = rate == null || rate == DBNull.Value || string.IsNullOrWhiteSpace(rate.ToString());
-
-            DataGridViewCell target;
-            if (blankRateGoesToProduct && rateIsBlank && next < dataGridView2.Rows.Count)
-                target = dataGridView2.Rows[next].Cells[0];
-            else if (next < dataGridView2.Rows.Count && !dataGridView2.Rows[next].IsNewRow)
-                target = dataGridView2.Rows[next].Cells[rateDataGridViewTextBoxColumn.Index];
-            else if (dataGridView2.NewRowIndex >= 0)
-                target = dataGridView2.Rows[dataGridView2.NewRowIndex].Cells[0];
-            else
+            }
+            catch (InvalidOperationException)
+            {
+                DiscardPendingNewRow();
                 return true;
-
-            dataGridView2.CurrentCell = target;
-            dataGridView2.BeginEdit(true);
-            return true;
+            }
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -684,6 +781,9 @@ namespace GST_InvoiceApplication
             double totalBillValue = 0;
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
+                if (dataGridView2.Rows[i].IsNewRow)
+                    continue;
+
                 if (!(dataGridView2.Rows[i].Cells[8].Value == DBNull.Value))
                 {
                     if (_selectedCompany != null && !_selectedCompany.IsGSTApplicable && dataGridView2.Rows[i].Cells[6].Value!=null)
@@ -1049,6 +1149,9 @@ namespace GST_InvoiceApplication
         {
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
+                if (dataGridView2.Rows[i].IsNewRow)
+                    continue;
+
                 double price = dataGridView2.Rows[i].Cells[6].Value != null && !string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) ? Convert.ToDouble(dataGridView2.Rows[i].Cells[6].Value.ToString()) : 0;
                 double qnt = dataGridView2.Rows[i].Cells[4].Value != null && !string.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()) ? Convert.ToDouble(dataGridView2.Rows[i].Cells[4].Value.ToString()) : 0;
                 // var gst = dataGridView2.CurrentRow.Cells[6].Value;
@@ -1090,6 +1193,9 @@ namespace GST_InvoiceApplication
         {
             for (int i = 0; i < dataGridView2.Rows.Count; ++i)
             {
+                if (dataGridView2.Rows[i].IsNewRow)
+                    continue;
+
                 if (dataGridView2.Rows[i].Cells[6].Value != null && dataGridView2.Rows[i].Cells[6].Value != DBNull.Value)
                 {
                     if (String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[6].Value.ToString()) || String.IsNullOrEmpty(dataGridView2.Rows[i].Cells[4].Value.ToString()))
@@ -1365,6 +1471,7 @@ namespace GST_InvoiceApplication
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            EnsureGridStateIsValid();
             _isDiscountEditedManually = false;
             if (comboBox1.SelectedIndex < 1)
                 return;
@@ -1459,9 +1566,11 @@ namespace GST_InvoiceApplication
             
 
             textBox12.Text = currentInvoice.ToString();
-            recomputeRateByCompany();
-            doFinalCheck();
-
+            if (dataGridView2.Rows.Cast<DataGridViewRow>().Any(r => !r.IsNewRow))
+            {
+                recomputeRateByCompany();
+                doFinalCheck();
+            }
         }
 
 
@@ -1663,6 +1772,11 @@ namespace GST_InvoiceApplication
 
         private void grd_bill_master_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
+            
+            
+            if (dataGridView2.CurrentCell == null)
+                return;
+            
             int column = dataGridView2.CurrentCell.ColumnIndex;
 
             e.CellStyle.BackColor = Color.Yellow;
@@ -1717,6 +1831,26 @@ namespace GST_InvoiceApplication
             e.Control.KeyPress += Control_KeyPressForNumber;
         }
 
+        private void EnsureGridStateIsValid()
+        {
+            try
+            {
+                if (dataGridView2.IsCurrentCellInEditMode)
+                    dataGridView2.EndEdit();
+
+                DiscardPendingNewRow();
+            }
+            catch(InvalidOperationException)
+            {
+                DiscardPendingNewRow();
+            }
+        }
+
+        private void dataGridView2_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
+            EnsureGridStateIsValid();
+        }
         private void Control_KeyPressForMts(object sender, KeyPressEventArgs e)
         {
             int column = dataGridView2.CurrentCell.ColumnIndex;
@@ -2355,10 +2489,10 @@ namespace GST_InvoiceApplication
 
         private void dataGridView2_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && notlastColumn) //if not last column move to nex
+            if (e.KeyCode == Keys.Enter) //if not last column move to nex
             {
-                SendKeys.Send("{Up}");
-                SendKeys.Send("{Right}");
+                e.SuppressKeyPress = true;
+                e.Handled = true;
             }
             //else if (e.KeyCode == Keys.Enter)
             //{
