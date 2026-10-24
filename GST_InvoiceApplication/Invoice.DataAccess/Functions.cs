@@ -94,6 +94,27 @@ namespace Invoice.DataAccess
  
         }
 
+        public static void CloseKeepAliveConnection()
+        {
+            if (_keepAliveConnection == null)
+                return;
+
+            try
+            {
+                if (_keepAliveConnection.State != ConnectionState.Closed)
+                    _keepAliveConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                LogException(ex);
+            }
+            finally
+            {
+                _keepAliveConnection.Dispose();
+                _keepAliveConnection = null;
+            }
+        }
+
         public static int RunExecuteScalarSql_getIdentity(string sql)
         {
             int identity = 0;

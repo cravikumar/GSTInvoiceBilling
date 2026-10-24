@@ -314,7 +314,7 @@ namespace GST_InvoiceApplication
                     ApplicationName = "Drive API Sample",
                 });
                 driveService.HttpClient.Timeout = TimeSpan.FromMinutes(30);
-
+                Invoice.DataAccess.Functions.CloseKeepAliveConnection();
                 var fileMetadata = new File()
                 {
                     Name = "InvoiceBackup_" + DateTime.Now.ToString("dd_MMM_yy_HH_mm") + ".mdb",
